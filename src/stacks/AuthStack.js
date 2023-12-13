@@ -13,13 +13,13 @@ const AuthStack = () => {
             backBehavior={'history'}
             initialRouteName="Login"
             screenOptions={({navigation, route}) =>({
-
+                headerShown:false
             })}
         >
-            <Stack.Screen name="InitialScreen" component={InitialScreen} options={{headerShown: false}}/>
-            <Stack.Screen name="ValidateCode" component={ValidateCodeScreen} options={{headerShown: false}} />
-            <Stack.Screen name='Register' component={RegisterScreen} options={{headerShown: false}} />
-            <Stack.Screen name="RegisterDone" component={RegisterDone} options={{headerShown: false}} />
+            <Stack.Screen name="InitialScreen" component={InitialScreen} />
+            <Stack.Screen name="ValidateCode" component={ValidateCodeScreen}  />
+            <Stack.Screen name='Register' component={RegisterScreen}  />
+            <Stack.Screen name="RegisterDone" component={RegisterDone}  />
         </Stack.Navigator>
     )
 }

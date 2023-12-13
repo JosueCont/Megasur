@@ -3,12 +3,15 @@ import { NavigationContainer } from "@react-navigation/native";
 import {Spinner, View} from "native-base";
 import LoggedStack from "./LoggedStack";
 import AuthStack from "./AuthStack";
+import SplashScreen from "../screens/SplashScreen";
+import { preventAutoHideAsync } from "expo-splash-screen";
 
+preventAutoHideAsync();
 
 const NavigationContainerConfig = () => {
     const [loggedIn, setLoggedIn] = useState(null)
     const [loading, setLoading] = useState(true)
-    const status = false;
+    const status = true;
 
     useEffect(() => {
         if (status) {
@@ -16,17 +19,16 @@ const NavigationContainerConfig = () => {
         } else {
             setLoggedIn(false)
         }
-        setTimeout(() => {
-            setLoading(false)
-        }, 300)
+        //setTimeout(() => {
+        //    setLoading(false)
+        //}, 300)
     },[status])
 
     return(
         <NavigationContainer>
             {loading ? (
-                <View flex={1} bgColor={'#284ED4'} alignItems={'center'} justifyContent={'center'}>
-                    <Spinner size={'sm'} color={'white'}></Spinner>
-                </View>
+                <SplashScreen onComplete={(val) => setLoading(val)}/>
+                
             ): (loading != true && loggedIn) ? <LoggedStack /> : <AuthStack />}
         </NavigationContainer>
     )

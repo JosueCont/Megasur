@@ -4,18 +4,27 @@ import { getFontSize } from "../../utils/functions";
 import { Colors } from "../../utils/Colors";
 import Input from "../CustomInput";
 import {Select} from 'native-base'
+import { useDispatch, useSelector } from "react-redux";
+import { changeInput } from "../../store/ducks/authDuck";
 
 const {height, width} = Dimensions.get('window');
 
 const GenderComponent = () => {
+    const dispatch = useDispatch();
+    const gender = useSelector(state => state.authDuck.gender)
     return(
         <View style={styles.container}>
             <Text style={styles.title}>Elige tu género, ¡queremos personalizar tu experiencia!</Text>
+            <Text style={styles.lbl}>Género</Text>
             <View style={styles.input}>
                 <Select
-                borderWidth={0}
-                placeholder="Escoge tu genero"
-                    style={{}}></Select>
+                    onValueChange={(value) => dispatch(changeInput({prop:'gender', value}))}
+                    borderWidth={0}
+                    placeholder="Escoge tu genero"
+                    style={{}}>
+                        <Select.Item value="1" label="Masculino"/>
+                        <Select.Item value="2" label="Femenino"/>
+                    </Select>
 
             </View>
             <View style={{ width: width/1.4}}>
@@ -57,6 +66,14 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.25, 
         shadowRadius: 4, 
-    }
+    },
+    lbl:{
+        fontSize:getFontSize(14), 
+        color: Colors.grayStrong, 
+        fontWeight:'400', 
+        marginBottom:4,
+        alignSelf:'flex-start',
+        marginLeft:25
+    },
 })
 export default GenderComponent;

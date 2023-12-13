@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     btn:{
         width:120, 
         height:40, 
-        backgroundColor:Colors.green, 
+        backgroundColor:Colors.blueGreen, 
         borderRadius:8, 
         justifyContent:'center', 
         alignItems:'center'

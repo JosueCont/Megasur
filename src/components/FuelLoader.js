@@ -7,7 +7,7 @@ import Animated,{useSharedValue, useAnimatedStyle, withSpring} from "react-nativ
 
 const {height, width} = Dimensions.get('window');
 /*position:'absolute', bottom:0, right: width/4*/
-const FuelLoader = ({withBorder=false, flow}) => {
+const FuelLoader = ({withBorder=false, flow, color, isBig=false}) => {
     const progress = useSharedValue(0)
 
     useEffect(() => {
@@ -21,21 +21,28 @@ const FuelLoader = ({withBorder=false, flow}) => {
             width: withSpring(`${(progress.value*100)+4}%`,{duration:1000})
         }
     })
+    
     return(
-        <View style={styles.container}>
-            <Animated.View style={[styles.progressBar,widthStyle,{ borderTopRightRadius: withBorder ? 90 : 0, borderBottomRightRadius: withBorder ? 90 : 0 }]}/>
-            <Text style={[styles.lbl,{color: Colors.white}]}>E</Text>
-            <Text style={styles.lbl}>|</Text>
+        <View style={[styles.container,{width: isBig ? width/1.2 : width/1.4,}]}>
+            <Animated.View 
+                style={[
+                    styles.progressBar,widthStyle,
+                    { 
+                        backgroundColor:color, 
+                        borderTopRightRadius: withBorder ? 90 : 0, 
+                        borderBottomRightRadius: withBorder ? 90 : 0,
+                        }]}/>
+            <Animated.Text style={[styles.lbl,{color: (progress.value*100)+4  >= 0 ? Colors.white : Colors.blackInit }]}>E</Animated.Text>
+            <Animated.Text style={[styles.lbl, {color: (progress.value*100)+4 >= 0 ? Colors.white : Colors.blackInit }]}>|</Animated.Text>
             <Fuel />
-            <Text style={styles.lbl}>|</Text>
-            <Text style={styles.lbl}>F</Text>
+            <Animated.Text style={[styles.lbl,{color: (progress.value*100)+4 >= 50 ? Colors.white : Colors.blackInit }]}>|</Animated.Text>
+            <Animated.Text style={[styles.lbl, {color: (progress.value*100)+4 >= 75 ? Colors.white : Colors.blackInit }]}>F</Animated.Text>
         </View> 
     )
 }
 
 const styles = StyleSheet.create({
-    container:{
-        width: width/1.4, 
+    container:{ 
         alignSelf:'center', 
         backgroundColor: Colors.white, 
         borderRadius:90, 
@@ -43,16 +50,23 @@ const styles = StyleSheet.create({
         flexDirection:'row', 
         padding:5, 
         justifyContent:'space-between', 
-        marginBottom:20
+        //marginBottom:20,
+        elevation:4,
+        shadowColor: '#000', // Color de la sombra
+        shadowOffset: {
+          width: 0,  
+          height: 4,
+        },
+        shadowOpacity: 0.25, 
+        shadowRadius: 4, 
     },
     lbl:{
         fontSize: getFontSize(16), 
         fontWeight:'700',
-        color: Colors.lightGray
+        //color: Colors.blackInit
     },
     progressBar:{
         height:30, 
-        backgroundColor:Colors.green, 
         position:'absolute',
         borderTopLeftRadius:90,
         borderBottomLeftRadius:90

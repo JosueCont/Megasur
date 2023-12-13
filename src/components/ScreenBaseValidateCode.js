@@ -1,5 +1,5 @@
 import React,{useEffect, useState} from "react";
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Dimensions } from "react-native";
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Dimensions, Image } from "react-native";
 import { StatusBar } from 'expo-status-bar';
 
 import { Colors } from "../utils/Colors";
@@ -7,6 +7,7 @@ import { getFontSize } from "../utils/functions";
 import HeaderGreen from "../../assets/svg/HeaderGreen";
 import { AntDesign } from '@expo/vector-icons'; 
 import SMS from "../../assets/svg/SMS";
+import LogoMega from "../../assets/svg/LogoMega";
 
 const {height, width} = Dimensions.get('window');
 
@@ -16,22 +17,27 @@ const ScreenBaseValidateCode = ({children, goBack}) => {
         <View style={styles.container}>
             <StatusBar
                 animated={true}
-                backgroundColor={Colors.green}
+                backgroundColor='transparent'
                 style="light"
                 hidden={false}
             />
+            <Image source={require('../../assets/waves.png')} style={{width: width, height: 130, resizeMode:'stretch'}}/>
              <TouchableOpacity onPress={goBack} style={styles.back}>
                     <AntDesign name="arrowleft" size={28} color={Colors.white} />
                 </TouchableOpacity>
-            <HeaderGreen>
+                <View style={{alignSelf:'center', backgroundColor: Colors.lightGray, marginBottom:10, marginTop:10 }}>
+                        <LogoMega />
+
+                    </View>
+            {/*<HeaderGreen>
                 <View style={styles.contHeader}>
-                    <View style={{alignSelf:'center', backgroundColor: Colors.green }}>
+                    <View style={{alignSelf:'center', backgroundColor: Colors.blueGreen }}>
                         <SMS />
 
                     </View>
                     <Text style={styles.titleHeader}>Ingresar código de verificación</Text>
                 </View>
-            </HeaderGreen>
+    </HeaderGreen>*/}
             <ScrollView
                 keyboardShouldPersistTaps='handled'
                 automaticallyAdjustKeyboardInsets

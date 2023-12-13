@@ -5,30 +5,29 @@ import { getFontSize } from "../utils/functions";
 import { Colors } from "../utils/Colors";
 import { StatusBar } from 'expo-status-bar';
 import FuelLoader from "./FuelLoader";
+import LogoMega from "../../assets/svg/LogoMega";
 
 const {height, width} = Dimensions.get('window');
 
-const ScreenBaseRegister = ({children, changeSection,componentType, onsubmit}) => {
+const ScreenBaseRegister = ({children, changeSection,componentType, onsubmit, isDisabled,scrollViewRef}) => {
     //MAndar una variable isDisable para que identifique en cada componente si esta desabilitado el boton
+
     return(
         <View style={styles.container}>
             <StatusBar
                 animated={true}
-                backgroundColor={Colors.green}
+                backgroundColor="transparent"
                 color={Colors.white}
-                style="light"
+                style='light'
                 hidden={false}
             />
-            <View style={{zIndex:10, backgroundColor: Colors.green, height:220}}>
-                <View style={styles.contHeader}>
-                    <Image source={require('../../assets/bienvenido.png')} style={styles.imgWelcome}/>
-                </View>
+            <Image source={require('../../assets/waves.png')} style={{width: width, height: 130, resizeMode:'stretch'}}/>
+            <View style={{alignItems:'center', marginVertical:20}}>
+                <LogoMega />
             </View>
-        
-                <View style={styles.contImage}>
-                    <Image source={require('../../assets/Station.jpg')} style={styles.img}  />
-                </View>
+            <Text style={{fontSize: getFontSize(40), color: Colors.blackInit, textAlign:'center', fontWeight:'800', marginBottom:10}}>¡Bienvenido!</Text>
             <ScrollView
+                ref={scrollViewRef}
                 keyboardShouldPersistTaps='handled'
                 automaticallyAdjustKeyboardInsets
                 nestedScrollEnabled={true}
@@ -42,8 +41,8 @@ const ScreenBaseRegister = ({children, changeSection,componentType, onsubmit}) =
             <View style={{marginBottom:20}}>
                 {children}
             </View>
-            <FuelLoader withBorder={true} flow={componentType}/>
-            <TouchableOpacity onPress={changeSection} style={styles.btnContinue}>
+            <FuelLoader withBorder={true} flow={componentType} color={Colors.orange}/>
+            <TouchableOpacity onPress={changeSection} style={[styles.btnContinue,{backgroundColor: isDisabled ? Colors.gray : Colors.blueGreen,}]} disabled={isDisabled}>
                 <Text style={styles.lblContinue}>Continuar</Text>
             </TouchableOpacity>
             {componentType === 3 || componentType === 4  ? (
@@ -60,23 +59,12 @@ const styles = StyleSheet.create({
         flex:1,
         backgroundColor: Colors.lightGray
     },
-    contHeader:{
-        paddingHorizontal:24, 
-        justifyContent:'center', 
-        alignItems:'center',
-        height: '100%',
-    },
     title:{
         fontSize: getFontSize(45),
         color: Colors.white,
         fontWeight:'800',
         textAlign:'center',
         marginHorizontal:20
-    },
-    imgWelcome:{
-        height:70, 
-        width: width, 
-        resizeMode:'contain'
     },
     contPoint:{
         flexDirection:'row', 
@@ -88,31 +76,14 @@ const styles = StyleSheet.create({
         justifyContent:'center', 
         alignItems:'center'
     },
-    contImage:{
-        //width: width, 
-        //aspectRatio: 428 / 350, 
-        position:'relative', 
-        bottom:60,
-        width: width, 
-        height:255, 
-        zIndex:20,
-    },
-    img:{
-        flex:1, 
-        height:undefined, 
-        width:undefined, 
-        resizeMode:'stretch',
-        borderTopLeftRadius:70,
-        borderTopRightRadius:70,
-    },
     btnContinue:{
         width: width/1.2, 
-        height:44, 
-        backgroundColor: Colors.green, 
+        height:44,  
         borderRadius:8, 
         alignSelf:'center', 
         justifyContent:'center', 
-        alignItems:'center'
+        alignItems:'center',
+        marginTop:20
     },
     lblContinue:{
         color: Colors.white, 

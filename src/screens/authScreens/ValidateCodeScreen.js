@@ -10,12 +10,16 @@ import KeyboardAvoidingCustom from "../../components/KeyboardAvoidingCustom";
 import ScreenBaseValidateCode from "../../components/ScreenBaseValidateCode";
 import ModalAlertSuccess from "../../components/modals/AlertModalSucces";
 import ModalAlertFailed from "../../components/modals/ModalAlertFail";
+import { useDispatch, useSelector } from "react-redux";
+import { updateVerificationCode } from "../../store/ducks/authDuck";
 
 const {height, width} = Dimensions.get('window');
 
 const ValidateCodeScreen = () => {
     const navigation = useNavigation()
-    const [verificationCode, setVerificationCode] = useState('');
+    const dispatch = useDispatch();
+    const verificationCode = useSelector(state => state.authDuck.verificationCode);
+    //const [verificationCode, setVerificationCode] = useState('');
     const [modalAlertSuccess, setModalAlertSuccess] = useState(false)
     const [modalAlertFailed, setModalAlertFailed] = useState(false)
     const [message, setMesagge] = useState('');
@@ -40,17 +44,17 @@ const ValidateCodeScreen = () => {
           };
     },[])*/
 
-    const handleCodeChange = (index, value) => {
-        setVerificationCode((prevCode) => {
-          const newCode = [...prevCode];
-          newCode[index] = value;
-          return newCode.join('');
-        });
-    
-        if (value && inputRefs.current[index + 1]) {
-          inputRefs.current[index + 1].focus();
-        }
-    };
+    //const handleCodeChange = (index, value) => {
+    //    setVerificationCode((prevCode) => {
+    //      const newCode = [...prevCode];
+    //      newCode[index] = value;
+    //      return newCode.join('');
+    //    });
+    //
+    //    if (value && inputRefs.current[index + 1]) {
+    //      inputRefs.current[index + 1].focus();
+    //    }
+    //};
 
     const handleKeyPress = (index, key) => {
         if (key === 'Backspace' && index > 0 && !verificationCode[index]) {
@@ -70,7 +74,12 @@ const ValidateCodeScreen = () => {
                   maxLength={1}
                   keyboardType="number-pad"
                   returnKeyLabel="Hecho"
-                  onChangeText={(value) => handleCodeChange(i, value)}
+                  onChangeText={(value) => {
+                    dispatch(updateVerificationCode(i,value))
+                    if (value && inputRefs.current[i + 1]) {
+                        inputRefs.current[i + 1].focus();
+                    }
+                  }/*handleCodeChange(i, value)*/}
                   onKeyPress={({ nativeEvent: { key } }) => handleKeyPress(i, key)}
                   value={verificationCode[i] || ''}
                 />
@@ -92,10 +101,13 @@ const ValidateCodeScreen = () => {
     return(
         <ScreenBaseValidateCode goBack={() => navigation.goBack()}>
 
-            <Text style={styles.subtitle}>Ingresa el código de verificación que enviamos a tu correo.</Text>
+            <Text style={styles.subtitle}>Ingresa el código de verificación que enviamos.</Text>
             <View style={styles.validateCont}>{renderCodeInputs()}</View>
             <View style={styles.center}>
-                <TouchableOpacity style={styles.btnValidate} onPress={() => sendCode()}>
+                <TouchableOpacity 
+                    disabled={verificationCode.length < 4 }
+                    style={[styles.btnValidate,{backgroundColor: verificationCode.length < 4 ? Colors.gray :Colors.blueGreen, }]} 
+                    onPress={() => sendCode()}>
                     <Text style={styles.txtValidate}>Verificar</Text>
                 </TouchableOpacity>
                 <TouchableOpacity>
@@ -169,7 +181,6 @@ const styles = StyleSheet.create({
         alignItems:'center'
     },
     btnValidate:{
-        backgroundColor: Colors.green, 
         width: width/1.2, 
         height: 44, 
         borderRadius:8, 

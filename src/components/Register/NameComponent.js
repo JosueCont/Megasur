@@ -3,18 +3,24 @@ import { View, Text, TextInput, StyleSheet, Dimensions } from "react-native";
 import { Colors } from "../../utils/Colors";
 import { getFontSize } from "../../utils/functions";
 import Input from "../CustomInput";
+import { useDispatch, useSelector } from "react-redux";
+import { changeInput } from "../../store/ducks/authDuck";
 
 const {height, width} = Dimensions.get('window');
 
 const NameComponent = () => {
+    const dispatch = useDispatch();
+    const name = useSelector(state => state.authDuck.name)
+    const lastName = useSelector(state => state.authDuck.lastName)
+
     return(
         <View style={styles.container}>
             <Text style={styles.title}>¿Nos dices tu nombre, por favor?</Text>
             <View style={styles.contForm}>
                 <Text style={styles.lbl}>Nombre(s)</Text>
-                <Input />
+                <Input value={name} onChangeText={(value) => dispatch(changeInput({prop:'name',value})) }/>
                 <Text style={[styles.lbl,{marginTop:13}]}>Apellido(s)</Text>
-                <Input />
+                <Input value={lastName} onChangeText={(value) => dispatch(changeInput({prop:'lastName',value})) }/>
             </View>
             <View style={{ width: width/1.2}}>
                 <Text style={styles.legend}>Queremos saludarte por tu nombre cuando nos visites</Text>

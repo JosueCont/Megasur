@@ -13,7 +13,7 @@ const HeaderGreen = ({props, children}) => (
     {...props}
   >
     <Path
-      fill="#166838"
+      fill="#04667C"
       d="M428 0H0v294.193C65.412 277.998 137.822 269 214 269s148.588 8.998 214 25.193V0Z"
     />
     {children}

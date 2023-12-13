@@ -1,17 +1,22 @@
-import React,{useState, useEffect} from "react";
+import React,{useState, useEffect, useDebugValue} from "react";
 import { View, Text, TouchableOpacity, Dimensions, StyleSheet, Pressable, Platform } from "react-native";
 import { getFontSize } from "../../utils/functions";
 import { Colors } from "../../utils/Colors";
 import Input from "../CustomInput";
 import DateTimePicker from '@react-native-community/datetimepicker'
 import moment from "moment";
+import { useDispatch, useSelector } from "react-redux";
+import { changeInput } from "../../store/ducks/authDuck";
 
 const {height, width} = Dimensions.get('window');
 
 const BirthdayComponent = () => {
+    //MAndar funcion para ver si estará deshabilitado el boton en BaseRegister
+    const dispatch = useDispatch();
     const [date, setDate] = useState(new Date());
-    const [birthdayDate, setBirthdayDate] = useState('')
+    //const [birthdayDate, setBirthdayDate] = useState('')
     const [showDatePicker, setShowDatePicker] = useState(false);
+    const birthdayDate = useSelector(state => state.authDuck.birthday)
 
     const onShowDatepicker = () => {
         setShowDatePicker(!showDatePicker);
@@ -23,7 +28,8 @@ const BirthdayComponent = () => {
             const currentDate = selectedDate || date;
             setDate(currentDate);
             if(Platform.OS === 'android'){
-                setBirthdayDate(moment(currentDate.toDateString()).format('DD/MM/YYYY'))
+                dispatch(changeInput({prop:'birthday',value: moment(currentDate.toDateString()).format('DD/MM/YYYY')}))
+                //setBirthdayDate(moment(currentDate.toDateString()).format('DD/MM/YYYY'))
                 setShowDatePicker(false)
             }
             //setShowDatePicker(false);
@@ -34,15 +40,18 @@ const BirthdayComponent = () => {
     };
 
     const confirmIOSDate = () => {
-        setBirthdayDate(moment(date.toDateString()).format('DD/MM/YYYY'))
+        dispatch(changeInput({prop:'birthday',value: moment(date.toDateString()).format('DD/MM/YYYY')}))
+        //setBirthdayDate(moment(date.toDateString()).format('DD/MM/YYYY'))
         onShowDatepicker()
     }
 
     return(
         <View style={styles.container}>
             <Text style={styles.title}>¿Cuándo podemos celebrar tu cumpleaños?</Text>
+            <Text style={styles.lbl}>Fecha de nacimiento</Text>
             {showDatePicker && (
                 <DateTimePicker
+                    locale="es-ES"
                     value={date}
                     mode="date"
                     display="spinner"
@@ -51,11 +60,11 @@ const BirthdayComponent = () => {
             )}
             {showDatePicker && Platform.OS === 'ios' && (
                 <View style={{flexDirection:'row',justifyContent:'space-between', width: width/2}}>
-                    <TouchableOpacity onPress={onShowDatepicker}>
-                        <Text>Cancelar</Text>
+                    <TouchableOpacity onPress={onShowDatepicker} style={{padding:7, backgroundColor:Colors.red, borderRadius:7}}>
+                        <Text style={{color:Colors.white}}>Cancelar</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={confirmIOSDate}>
-                        <Text>Confirmar</Text>
+                    <TouchableOpacity onPress={confirmIOSDate} style={{padding:7, backgroundColor:Colors.orange, borderRadius:7}}>
+                        <Text style={{color:Colors.white}}>Confirmar</Text>
                     </TouchableOpacity>
                 </View>
             )}
@@ -65,7 +74,7 @@ const BirthdayComponent = () => {
                         placeholder='DD/MM/YYYY' 
                         editable={false} 
                         onPressIn={onShowDatepicker}
-                        style={{width:150, height:44, backgroundColor:'white', justifyContent:'center',alignItems:'center', paddingLeft:30}}
+                        //style={{width:150, height:44, backgroundColor:'white', justifyContent:'center',alignItems:'center', paddingLeft:30}}
                         value={birthdayDate}
                         //onChange={(val) => se}    
                     />
@@ -106,6 +115,14 @@ const styles = StyleSheet.create({
         fontWeight:'400',
         textAlign:'center',
         marginTop:50
-    }
+    },
+    lbl:{
+        fontSize:getFontSize(14), 
+        color: Colors.grayStrong, 
+        fontWeight:'400', 
+        marginBottom:4,
+        alignSelf:'flex-start',
+        marginLeft:25
+    },
 })
 export default BirthdayComponent;

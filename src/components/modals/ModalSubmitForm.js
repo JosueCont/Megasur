@@ -20,7 +20,7 @@ const ModalSubmit = ({visible, setVisible, onSubmit}) => {
                         <TouchableOpacity style={[styles.btn,{backgroundColor:Colors.grayStrong,}]} onPress={setVisible}>
                             <Text style={styles.txtBtn}>Continuar</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={[styles.btn,{backgroundColor:Colors.green,}]} onPress={onSubmit}>
+                        <TouchableOpacity style={[styles.btn,{backgroundColor:Colors.blueGreen,}]} onPress={onSubmit}>
                             <Text style={styles.txtBtn}>Si, omitir</Text>
                         </TouchableOpacity>
 
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
         paddingHorizontal:10,
         fontSize: getFontSize(20), 
         fontWeight:'300', 
-        color: Colors.green, 
+        color: Colors.blackInit, 
         textAlign:'center'
     },
     contBtns:{
