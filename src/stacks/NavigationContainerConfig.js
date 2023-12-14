@@ -11,7 +11,7 @@ preventAutoHideAsync();
 const NavigationContainerConfig = () => {
     const [loggedIn, setLoggedIn] = useState(null)
     const [loading, setLoading] = useState(true)
-    const status = true;
+    const status = false;
 
     useEffect(() => {
         if (status) {

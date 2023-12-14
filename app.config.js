@@ -16,6 +16,9 @@ const commonConfig = {
     "web": {
         "favicon": "./assets/icon.png"
     },
+    "runtimeVersion": {
+        "policy": "sdkVersion"
+    },
     "plugins": [
         [
           "expo-av",
@@ -23,7 +26,17 @@ const commonConfig = {
             "microphonePermission": "Allow megasur to access your microphone."
           }
         ]
-      ]
+    ],
+    "updates": {
+        "url": "https://u.expo.dev/117d988c-e564-452d-bf28-f4a60e61cf8e"
+    },
+    
+    "extra": {
+      "eas": {
+        "projectId": "117d988c-e564-452d-bf28-f4a60e61cf8e"
+      }
+    }
+  
 }
 
 const android = {
