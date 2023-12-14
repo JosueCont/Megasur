@@ -1,6 +1,7 @@
 import React, {useEffect, useState, useRef} from "react";
 import { View, Text, TouchableOpacity, StatusBar, Image, TouchableHighlight, Dimensions, StyleSheet, TextInput, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback } from "react-native";
 import { getFontSize } from "../../utils/functions";
+import { Spinner } from "native-base";
 import { Colors } from "../../utils/Colors";
 import HeaderGreen from '../../../assets/svg/HeaderGreen';
 import { AntDesign } from '@expo/vector-icons'; 
@@ -11,7 +12,7 @@ import ScreenBaseValidateCode from "../../components/ScreenBaseValidateCode";
 import ModalAlertSuccess from "../../components/modals/AlertModalSucces";
 import ModalAlertFailed from "../../components/modals/ModalAlertFail";
 import { useDispatch, useSelector } from "react-redux";
-import { updateVerificationCode } from "../../store/ducks/authDuck";
+import { updateVerificationCode, validateCode, changeModal } from "../../store/ducks/authDuck";
 
 const {height, width} = Dimensions.get('window');
 
@@ -19,42 +20,17 @@ const ValidateCodeScreen = () => {
     const navigation = useNavigation()
     const dispatch = useDispatch();
     const verificationCode = useSelector(state => state.authDuck.verificationCode);
+    const phone = useSelector(state => state.authDuck.phone)
+    const modalAlertSuccess = useSelector(state => state.authDuck.modalSucces)
+    const modalAlertFailed = useSelector(state => state.authDuck.modalFailed)
+    const message = useSelector(state => state.authDuck.message)
+    const loader = useSelector(state => state.authDuck.loading)
     //const [verificationCode, setVerificationCode] = useState('');
-    const [modalAlertSuccess, setModalAlertSuccess] = useState(false)
-    const [modalAlertFailed, setModalAlertFailed] = useState(false)
-    const [message, setMesagge] = useState('');
-
-    //const [keyboardOpen, setKeyboardOpen] = useState(false);
+    //const [modalAlertSuccess, setModalAlertSuccess] = useState(false)
+    //const [modalAlertFailed, setModalAlertFailed] = useState(false)
+    //const [message, setMesagge] = useState('');
 
     const inputRefs = useRef([]);
-
-    /*useEffect(() => {
-        const keyboardDidShowListener = Keyboard.addListener('keyboardWillShow', () => {
-            setKeyboardOpen(true);
-            //setAnimationScroll()
-          });
-      
-          const keyboardDidHideListener = Keyboard.addListener('keyboardWillHide', () => {
-            setKeyboardOpen(false);
-          });
-      
-          return () => {
-            keyboardDidShowListener.remove();
-            keyboardDidHideListener.remove();
-          };
-    },[])*/
-
-    //const handleCodeChange = (index, value) => {
-    //    setVerificationCode((prevCode) => {
-    //      const newCode = [...prevCode];
-    //      newCode[index] = value;
-    //      return newCode.join('');
-    //    });
-    //
-    //    if (value && inputRefs.current[index + 1]) {
-    //      inputRefs.current[index + 1].focus();
-    //    }
-    //};
 
     const handleKeyPress = (index, key) => {
         if (key === 'Backspace' && index > 0 && !verificationCode[index]) {
@@ -65,7 +41,7 @@ const ValidateCodeScreen = () => {
 
     const renderCodeInputs = () => {
         const codeInputs = [];
-        for (let i = 0; i < 4; i++){
+        for (let i = 0; i < 5; i++){
             codeInputs.push(
                 <TextInput
                   key={i}
@@ -88,16 +64,16 @@ const ValidateCodeScreen = () => {
         return codeInputs
     }
 
-    const sendCode = () => {
-        let success = true;
-        if(success){
-            setModalAlertSuccess(true)
-            setMesagge('Verificación exitosa')
-        }else{
-            setModalAlertFailed(true)
-            setMesagge('Código incorrecto')
-        } 
-    }
+    //const sendCode = () => {
+    //    let success = true;
+    //    if(success){
+    //        setModalAlertSuccess(true)
+    //        setMesagge('Verificación exitosa')
+    //    }else{
+    //        setModalAlertFailed(true)
+    //        setMesagge('Código incorrecto')
+    //    } 
+    //}
     return(
         <ScreenBaseValidateCode goBack={() => navigation.goBack()}>
 
@@ -105,10 +81,10 @@ const ValidateCodeScreen = () => {
             <View style={styles.validateCont}>{renderCodeInputs()}</View>
             <View style={styles.center}>
                 <TouchableOpacity 
-                    disabled={verificationCode.length < 4 }
-                    style={[styles.btnValidate,{backgroundColor: verificationCode.length < 4 ? Colors.gray :Colors.blueGreen, }]} 
-                    onPress={() => sendCode()}>
-                    <Text style={styles.txtValidate}>Verificar</Text>
+                    disabled={verificationCode.length < 5 }
+                    style={[styles.btnValidate,{backgroundColor: verificationCode.length < 5 ? Colors.gray :Colors.blueGreen, }]} 
+                    onPress={() => dispatch(validateCode({verificationCode, phone}))}>
+                    {loader ? <Spinner size={'sm'} color={'white'} /> : <Text style={styles.txtValidate}>Verificar</Text>}
                 </TouchableOpacity>
                 <TouchableOpacity>
                     <Text style={styles.resend}>Reenviar código</Text>
@@ -118,7 +94,9 @@ const ValidateCodeScreen = () => {
                 visible={modalAlertSuccess}
                 message={message}
                 setVisible={() => {
-                    setModalAlertSuccess(false)
+                    //setModalAlertSuccess(false)
+                    dispatch(changeModal({prop:'modalSucces',val:false}))
+
                     setTimeout(() => {
                         //navegar a la siguiente pantalla
                         navigation.navigate('Register')
@@ -129,7 +107,8 @@ const ValidateCodeScreen = () => {
                 visible={modalAlertFailed}
                 message={message}
                 setVisible={() => {
-                    setModalAlertFailed(false)
+                    //setModalAlertFailed(false)
+                    dispatch(changeModal({prop:'modalFailed',val:false}))
                     setTimeout(() => {
                         //Volver a llamar a la funcion de verificar
                     },500)

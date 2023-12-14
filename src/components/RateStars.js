@@ -39,12 +39,12 @@ const RateStars = ({starRating,setStar}) => {
 
         return stars.map((star,index) => (
             <TouchableWithoutFeedback 
+                key={index}
                 onPressIn={handlePressIn}
                 onPressOut={handlePressOut}
                 onPress={() => setStar(index+1)}>
                     <Animated.View style={animatedScaleStyle}>
-                        <AntDesign 
-                            key={index} 
+                        <AntDesign  
                             name={index < starRating ? "star" : 'staro'} 
                             size={40} 
                             color={index < starRating ? Colors.yellow : Colors.grayStrong} 

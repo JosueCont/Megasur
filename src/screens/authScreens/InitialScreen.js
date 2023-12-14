@@ -7,7 +7,8 @@ import Animated,{ useAnimatedStyle,withSpring, withTiming,useSharedValue, Extrap
 import { useNavigation } from "@react-navigation/core";
 import LogoMega from "../../../assets/svg/LogoMega";
 import { useDispatch, useSelector } from "react-redux";
-import { changeInput } from "../../store/ducks/authDuck";
+import { changeInput, verifyPhoneNumber } from "../../store/ducks/authDuck";
+import { Spinner } from "native-base";
 
 const {height, width} = Dimensions.get('window');
 
@@ -19,6 +20,17 @@ const InitialScreen = () => {
     const [isPressed, setPressed] = useState(false)
     const [keyboardOpen, setKeyboardOpen] = useState(false);
     const phone = useSelector(state => state.authDuck.phone)
+    const isValidPhone = useSelector(state => state.authDuck.isValidPhoneNumber)
+    const loader = useSelector(state => state.authDuck.loading)
+
+
+    useEffect(() => {
+        if(isValidPhone){
+            setTimeout(() => {
+                navigation.navigate('ValidateCode')
+            },500)
+        }
+    },[isValidPhone])
 
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener('keyboardWillShow', () => {
@@ -70,12 +82,12 @@ const InitialScreen = () => {
         }
     })
 
-    const validatePhone = () => {
+    const validatePhone = async() => {
         if(phone.length <10){
             console.log('No es un numero telefonico')
         }else{
-    
-            navigation.navigate('ValidateCode')
+            await dispatch(verifyPhoneNumber(phone))
+            //navigation.navigate('ValidateCode')
         }
     }
 
@@ -112,7 +124,7 @@ const InitialScreen = () => {
                         disabled={(isPressed && phone === '') ? true : false}
                         style={[styles.btn,{backgroundColor: isPressed && phone === '' ? Colors.gray : Colors.blueGreen }]} 
                         onPress={() => isPressed ? validatePhone() : toggleAnimation()}>
-                        <Text style={styles.lblBtn}>{isPressed  ? 'Enviar' : 'Iniciar sesión'}</Text>
+                        {loader ? <Spinner size={'sm'} color={'white'} /> : <Text style={styles.lblBtn}>{isPressed  ? 'Enviar' : 'Iniciar sesión'}</Text>}
                     </TouchableOpacity>
                 </Animated.View>
             </KeyboardAvoidingView>

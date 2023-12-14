@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import { KeyboardAvoidingView, Keyboard, Platform, StyleSheet, TouchableWithoutFeedback, View } from "react-native";
 import { Colors } from "../utils/Colors";
 
-const KeyboardAvoidingCustom = ({children}) => {
+const KeyboardAvoidingCustom = ({children,iosOffset=0}) => {
     const [keyboardOpen, setKeyboardOpen] = useState(false);
 
     useEffect(() => {
@@ -25,7 +25,7 @@ const KeyboardAvoidingCustom = ({children}) => {
             enabled={keyboardOpen}
             style={styles.contKeyAvoiding}  
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-            keyboardVerticalOffset={Platform.select({ios: 150 }) }>
+            keyboardVerticalOffset={Platform.select({ios: iosOffset }) }>
                 <View onTouchStart={ Keyboard.dismiss}>
                     {children}
                 </View>

@@ -9,6 +9,7 @@ import Animated,{withSpring, useAnimatedStyle, useSharedValue} from "react-nativ
 import { useDispatch, useSelector } from "react-redux";
 import RateStars from "../RateStars";
 import { changeInputHome } from "../../store/ducks/homeDuck";
+import KeyboardAvoidingCustom from "../KeyboardAvoidingCustom";
 
 const {height, width} = Dimensions.get('window');
 
@@ -39,6 +40,7 @@ const ModalQuizz = ({visible, setVisible}) => {
                     style='light'
                     hidden={false}
                 />
+                <KeyboardAvoidingCustom>
                 <View style={styles.container}>
                     <Animated.View style={[styles.card, heightStyle]}>
                         <TouchableOpacity style={styles.contClose} onPress={setVisible}>
@@ -103,6 +105,7 @@ const ModalQuizz = ({visible, setVisible}) => {
                         )}
                     </Animated.View>
                 </View>
+                </KeyboardAvoidingCustom>
         </Modal>
     )
 }

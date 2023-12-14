@@ -43,8 +43,8 @@ const FlipCard = () => {
     })
 
     const opacitySelect = useAnimatedStyle(() => {
-        const inputRange = [0,50, 100,160]
-        const rotationOutputRange = [1,0,0,1]
+        const inputRange = [0,50,179,180]
+        const rotationOutputRange = [0,0,0,1]
         const opacityAnimate = interpolate(
             rotation.value,
             inputRange,
@@ -60,67 +60,70 @@ const FlipCard = () => {
             rotationOutputRangeBack,
             Extrapolate.CLAMP
         );
+        console.log('rotation',rotation.value, 'filp',isFlipped)
         return{
             opacity: !isFlipped ? withSpring(opacityAnimateBack) :  withSpring(opacityAnimate)
         }
     })
     return(
         <>
-            <GestureHandlerRootView>
-                <GestureDetector
-                    gesture={tap.onStart(() => toggleFilp())}
-                    >
-                        {isFlipped ? (
-                            <Animated.View style={[ backCardStyle ,styles.card]}>
-                                <ImageBackground 
-                                        source={require('../../../assets/CardBackGround.png')} 
-                                        resizeMode='contain'
-                                        style={styles.imgBack}>
-                                            <Animated.View style={opacitySelect}>
-                                                <TouchableOpacity>
-                                                    <AntDesign name="arrowleft" size={24} color={Colors.white} />
+            
+            {isFlipped ? (
+                <Animated.View style={[ backCardStyle ,styles.card]}>
+                    <ImageBackground 
+                            source={require('../../../assets/CardBackGround.png')} 
+                            resizeMode='contain'
+                            style={styles.imgBack}>
+                                <Animated.View style={opacitySelect}>
+                                        <GestureHandlerRootView>
+                                            <GestureDetector gesture={tap.onStart(() => toggleFilp())}>
+                                    <TouchableOpacity>
+                                                <AntDesign name="arrowleft" size={24} color={Colors.white} />
+                                    </TouchableOpacity>
+                                            </GestureDetector>
+                                        </GestureHandlerRootView>
+                                    <View style={styles.contQr}>
+                                        <AntDesign name="qrcode" size={130} color={Colors.white} />
+                                        <Text style={{color: Colors.white}}>Código valido</Text>
+                                        <Text style={{color: Colors.white}}>Durante: 00:00 min</Text>
+                                    </View>
+                                </Animated.View>
+                    </ImageBackground>
 
-                                                </TouchableOpacity>
-                                                <View style={styles.contQr}>
-                                                    <AntDesign name="qrcode" size={130} color={Colors.white} />
-                                                    <Text style={{color: Colors.white}}>Código valido</Text>
-                                                    <Text style={{color: Colors.white}}>Durante: 00:00 min</Text>
-                                                </View>
-                                            </Animated.View>
-                                </ImageBackground>
+                </Animated.View>
 
-                            </Animated.View>
+            ) : (
+                <Animated.View style={[frontCardStyle,styles.card,{ transform:[{scaleY:1}]}]}>
+                    <ImageBackground 
+                            source={require('../../../assets/CardBackGround.png')} 
+                            resizeMode='contain'
+                            style={styles.imgBack}>
+                                <Animated.View style={opacitySelect}>
+                                    <View style={{marginBottom:20}}>
+                                        <LogoMega />
+                                    </View>
+                                    <View style={styles.contDes}>
+                                        <View style={{width: width/1.5,}}>
+                                            <Text style={styles.lblname}>Josué Francisco Contreras Flores</Text>
+                                            <Text style={styles.lbl}>Cuentas con: <Text style={styles.lblPoints}>1200 pts</Text></Text>
+                                        </View>
+                                            <GestureHandlerRootView>
+                                                <GestureDetector gesture={tap.onStart(() => toggleFilp())}>
+                                        <TouchableOpacity onPress={() => console.log('pressed')}>
+                                                    <MaterialCommunityIcons name="qrcode-scan" size={50} color={Colors.white} />
+                                        </TouchableOpacity>
+                                                </GestureDetector>
+                                            </GestureHandlerRootView>
 
-                        ) : (
-                            <Animated.View style={[frontCardStyle,styles.card,{ transform:[{scaleY:1}]}]}>
-                                <ImageBackground 
-                                        source={require('../../../assets/CardBackGround.png')} 
-                                        resizeMode='contain'
-                                        style={styles.imgBack}>
-                                            <Animated.View style={opacitySelect}>
-                                                <View style={{marginBottom:20}}>
-                                                    <LogoMega />
-                                                </View>
-                                                <View style={styles.contDes}>
-                                                    <View style={{width: width/1.5,}}>
-                                                        <Text style={styles.lblname}>Josué Francisco Contreras Flores</Text>
-                                                        <Text style={styles.lbl}>Cuentas con: <Text style={styles.lblPoints}>1200 pts</Text></Text>
-                                                    </View>
-                                                    <TouchableOpacity onPress={() => console.log('pressed')}>
-                                                        <MaterialCommunityIcons name="qrcode-scan" size={50} color={Colors.white} />
+                                    </View>
 
-                                                    </TouchableOpacity>
-                                                </View>
+                                </Animated.View>
+                    </ImageBackground>
 
-                                            </Animated.View>
-                                </ImageBackground>
+                </Animated.View>
 
-                            </Animated.View>
-
-                        )}
-                </GestureDetector>
-                
-            </GestureHandlerRootView>
+            )}
+              
         
         </>
     )
