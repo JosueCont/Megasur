@@ -63,7 +63,7 @@ const InitialScreen = () => {
     const rStyle = useAnimatedStyle(() => {
         return{
             transform:[
-                {translateY: withSpring(isExpanded.value ? 40 : 0)},
+                {translateY: withSpring(isExpanded.value ? 40 : 0,{duration:2000})},
             ],
         }
     },[] )
@@ -77,7 +77,7 @@ const InitialScreen = () => {
             Extrapolate.CLAMP
         );
         return{
-            opacity: withTiming(opacityAnimate, {duration:1000}),
+            opacity: withTiming(opacityAnimate, {duration:2000}),
             //height: withSpring(150)
         }
     })

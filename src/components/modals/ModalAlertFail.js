@@ -5,7 +5,7 @@ import { getFontSize } from "../../utils/functions";
 
 const {height, width} = Dimensions.get('window');
 
-const ModalAlertFailed = ({visible, setVisible,  message}) => {
+const ModalAlertFailed = ({visible, setVisible,  message, titleBtn='Reintentar'}) => {
     return(
         <Modal visible={visible} animationType='slide' transparent>
             <View style={styles.container}>
@@ -13,7 +13,7 @@ const ModalAlertFailed = ({visible, setVisible,  message}) => {
                 <Image source={require('../../../assets/warning.png')} style={{width:80, height:76, resizeMode:'contain'}}/>
                 <Text style={styles.message}>{message}</Text>
                 <TouchableOpacity style={styles.btn} onPress={setVisible}>
-                    <Text style={styles.txtBtn}>Reintentar</Text>
+                    <Text style={styles.txtBtn}>{titleBtn}</Text>
                 </TouchableOpacity>
                 </View>
             </View>

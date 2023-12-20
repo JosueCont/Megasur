@@ -7,10 +7,11 @@ export const Colors = {
     gray:'#BBC7CE',
     lightGray:'#F0F3F5',
     grayStrong:'#787878',
-    red:'red',
+    red:'#C3423F',
     blackInit:'#1D1D1B',
     orange:'#F39836',
     darkWhite:'#FBF7F1',
     pink:'#DC2785',
-    purple:'#4D0992'
+    purple:'#4D0992',
+    greenStrong:'#166838'
 }

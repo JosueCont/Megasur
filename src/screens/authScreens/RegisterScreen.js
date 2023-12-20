@@ -1,5 +1,5 @@
 import React,{useEffect,useState, useRef} from "react";
-import { View, Text, TouchableOpacity, TextInput } from "react-native";
+import { View, Text, TouchableOpacity, TextInput, Platform } from "react-native";
 import { getFontSize } from "../../utils/functions";
 import ScreenBaseRegister from "../../components/ScreenBaseRegister";
 import NameComponent from "../../components/Register/NameComponent";
@@ -8,11 +8,16 @@ import BirthdayComponent from "../../components/Register/BirthdayComponent";
 import GenderComponent from "../../components/Register/GenderComponent";
 import ModalSubmit from "../../components/modals/ModalSubmitForm";
 import { useNavigation } from "@react-navigation/native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getExpoToken, getRandomPassword } from "../../utils/functions";
+import { onRegisterUser, changeModal } from "../../store/ducks/authDuck";
+import moment from "moment";
+import ModalAlertFailed from "../../components/modals/ModalAlertFail";
 
 
 const RegisterScreen = () => {
     const navigation = useNavigation()
+    const dispatch = useDispatch();
     const [componentType, setComponentType] = useState(1)
     const [modalSubmit, setModalSubmit] = useState(false)
     const [isDisableSection, setDisable] = useState(false)
@@ -21,6 +26,11 @@ const RegisterScreen = () => {
     const email = useSelector(state => state.authDuck.email)
     const birthdayDate = useSelector(state => state.authDuck.birthday)
     const gender = useSelector(state => state.authDuck.gender)
+    const phone = useSelector(state => state.authDuck.phone)
+    const isRegistered = useSelector(state => state.authDuck.isRegistered)
+    const modalActive = useSelector(state => state.authDuck.modalFailed)
+    const message = useSelector(state => state.authDuck.message)
+
     const scrollViewRef = useRef();
 
 
@@ -31,23 +41,18 @@ const RegisterScreen = () => {
             2: email !== '',
             3: birthdayDate !== '',
             4: gender !== ''
-          };
+        };
         
-          setDisable(!conditions[componentType]);
-        //if(componentType === 1){
-        //    if(name !='' && lastName != '') setDisable(false)
-        //    else setDisable(true)
-        //}else if(componentType === 2){
-        //    if(email != '') setDisable(false)
-        //    else setDisable(true)
-        //}else if(componentType === 3){
-        //    if(birthdayDate != '') setDisable(false)
-        //    else setDisable(true)
-        //}else if(componentType === 4){
-        //    if(gender != '') setDisable(false)
-        //    else setDisable(true)
-        //}
+        setDisable(!conditions[componentType]);
     },[componentType, name, lastName, email, birthdayDate,gender])
+
+    useEffect(() => {
+        if(isRegistered){
+            setTimeout(() => {
+                navigation.navigate('RegisterDone')
+            },500)
+        }
+    },[isRegistered])
 
     const onMoveScroll = () => {
         if (scrollViewRef.current) {
@@ -71,14 +76,25 @@ const RegisterScreen = () => {
         }
     }
 
-    const onChangeComponent = () => {
+
+    const onChangeComponent = async() => {
+        const expoToken = await getExpoToken();
+
         setComponentType((prevComponentType) => {
             if (prevComponentType < 4) {
                 onMoveScroll()
               return prevComponentType + 1;
             } else {
-                console.log('datos',name, lastName, email, birthdayDate,gender)
-                navigation.navigate('RegisterDone')
+                
+                const os = Platform.OS;
+                const password = getRandomPassword()
+               
+                dispatch(onRegisterUser({
+                    email, first_name:name, last_name: lastName, 
+                    birthday:moment(birthdayDate,'DD/MM/YYYY').format('YYYY-MM-DD'), 
+                    gender, expoToken, os, password, phone
+                }))
+                //navigation.navigate('RegisterDone')
               return prevComponentType;
             }
           });
@@ -97,11 +113,18 @@ const RegisterScreen = () => {
                 onSubmit={() => {
                     setModalSubmit(false)
                     setTimeout(() => {
+                        
                         //navegar a pantalla de gracias
-                        navigation.navigate('RegisterDone')
-                        console.log('Omitir respuestas')
+                        //navigation.navigate('RegisterDone')
+                        //console.log('Omitir respuestas')
                     },400)
                 }}
+            />
+            <ModalAlertFailed 
+                visible={modalActive}
+                titleBtn="Cerrar"
+                setVisible={() => dispatch(changeModal({prop:'modalFailed', val: false}))}
+                message={message}
             />
         </ScreenBaseRegister>
     )

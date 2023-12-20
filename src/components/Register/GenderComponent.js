@@ -22,8 +22,8 @@ const GenderComponent = () => {
                     borderWidth={0}
                     placeholder="Escoge tu genero"
                     style={{}}>
-                        <Select.Item value="1" label="Masculino"/>
-                        <Select.Item value="2" label="Femenino"/>
+                        <Select.Item value="MALE" label="Masculino"/>
+                        <Select.Item value="FEMALE" label="Femenino"/>
                     </Select>
 
             </View>
@@ -58,14 +58,16 @@ const styles = StyleSheet.create({
         height: 50,  
         borderRadius:8, 
         padding:7,
-        elevation:4,
-        shadowColor: '#000', // Color de la sombra
-        shadowOffset: {
-          width: 0,  
-          height: 4,
-        },
-        shadowOpacity: 0.25, 
-        shadowRadius: 4, 
+        borderColor:Colors.gray,
+        borderWidth:1
+        //elevation:4,
+        //shadowColor: '#000', // Color de la sombra
+        //shadowOffset: {
+        //  width: 0,  
+        //  height: 4,
+        //},
+        //shadowOpacity: 0.25, 
+        //shadowRadius: 4, 
     },
     lbl:{
         fontSize:getFontSize(14), 

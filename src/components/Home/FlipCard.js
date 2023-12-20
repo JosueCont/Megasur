@@ -6,6 +6,7 @@ import Animated, { useSharedValue, withTiming, Easing, useAnimatedStyle, runOnJS
 import { GestureHandlerRootView, GestureDetector, Gesture} from 'react-native-gesture-handler'
 import LogoMega from "../../../assets/svg/LogoMega";
 import { MaterialCommunityIcons, AntDesign } from '@expo/vector-icons'; 
+import { useDispatch, useSelector } from "react-redux";
 
 
 
@@ -18,6 +19,9 @@ const FlipCard = () => {
     
     const rotation = useSharedValue(0)
     const AnimatedImageBack = Animated.createAnimatedComponent(ImageBackground)
+
+    const user = useSelector(state => state.authDuck.dataUser)
+
 
     const toggleFilp = () => {
         rotation.value = withTiming(
@@ -77,9 +81,9 @@ const FlipCard = () => {
                                 <Animated.View style={opacitySelect}>
                                         <GestureHandlerRootView>
                                             <GestureDetector gesture={tap.onStart(() => toggleFilp())}>
-                                    <TouchableOpacity>
-                                                <AntDesign name="arrowleft" size={24} color={Colors.white} />
-                                    </TouchableOpacity>
+                                                <TouchableOpacity>
+                                                    <AntDesign name="arrowleft" size={24} color={Colors.white} />
+                                                </TouchableOpacity>
                                             </GestureDetector>
                                         </GestureHandlerRootView>
                                     <View style={styles.contQr}>
@@ -104,14 +108,14 @@ const FlipCard = () => {
                                     </View>
                                     <View style={styles.contDes}>
                                         <View style={{width: width/1.5,}}>
-                                            <Text style={styles.lblname}>Josué Francisco Contreras Flores</Text>
+                                            <Text style={styles.lblname}>{user?.first_name} {user?.last_name}</Text>
                                             <Text style={styles.lbl}>Cuentas con: <Text style={styles.lblPoints}>1200 pts</Text></Text>
                                         </View>
                                             <GestureHandlerRootView>
                                                 <GestureDetector gesture={tap.onStart(() => toggleFilp())}>
-                                        <TouchableOpacity onPress={() => console.log('pressed')}>
-                                                    <MaterialCommunityIcons name="qrcode-scan" size={50} color={Colors.white} />
-                                        </TouchableOpacity>
+                                                    <TouchableOpacity onPress={() => console.log('pressed')}>
+                                                        <MaterialCommunityIcons name="qrcode-scan" size={50} color={Colors.white} />
+                                                    </TouchableOpacity>
                                                 </GestureDetector>
                                             </GestureHandlerRootView>
 

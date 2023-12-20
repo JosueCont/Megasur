@@ -5,15 +5,19 @@ import LoggedStack from "./LoggedStack";
 import AuthStack from "./AuthStack";
 import SplashScreen from "../screens/SplashScreen";
 import { preventAutoHideAsync } from "expo-splash-screen";
+import { useSelector, useDispatch } from "react-redux";
+import { createSession } from "../store/ducks/authDuck";
 
 preventAutoHideAsync();
 
 const NavigationContainerConfig = () => {
+    const dispatch = useDispatch();
     const [loggedIn, setLoggedIn] = useState(null)
     const [loading, setLoading] = useState(true)
-    const status = false;
+    const status = useSelector(state => state.authDuck.isLogged);
 
     useEffect(() => {
+        getSession()
         if (status) {
             setLoggedIn(true)
         } else {
@@ -23,6 +27,8 @@ const NavigationContainerConfig = () => {
         //    setLoading(false)
         //}, 300)
     },[status])
+
+    const getSession = async() => dispatch(await createSession())
 
     return(
         <NavigationContainer>

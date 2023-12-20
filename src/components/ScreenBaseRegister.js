@@ -1,17 +1,19 @@
 import React,{useState, useEffect} from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions, ScrollView } from "react-native";
+import { Spinner } from "native-base";
 import HeaderGreen from "../../assets/svg/HeaderGreen";
 import { getFontSize } from "../utils/functions";
 import { Colors } from "../utils/Colors";
 import { StatusBar } from 'expo-status-bar';
 import FuelLoader from "./FuelLoader";
 import LogoMega from "../../assets/svg/LogoMega";
+import { useSelector } from "react-redux";
 
 const {height, width} = Dimensions.get('window');
 
 const ScreenBaseRegister = ({children, changeSection,componentType, onsubmit, isDisabled,scrollViewRef}) => {
     //MAndar una variable isDisable para que identifique en cada componente si esta desabilitado el boton
-
+    const loader = useSelector(state => state.authDuck.loading)
     return(
         <View style={styles.container}>
             <StatusBar
@@ -43,7 +45,7 @@ const ScreenBaseRegister = ({children, changeSection,componentType, onsubmit, is
             </View>
             <FuelLoader withBorder={true} flow={componentType} color={Colors.orange}/>
             <TouchableOpacity onPress={changeSection} style={[styles.btnContinue,{backgroundColor: isDisabled ? Colors.gray : Colors.blueGreen,}]} disabled={isDisabled}>
-                <Text style={styles.lblContinue}>Continuar</Text>
+            {loader ?  <Spinner size={'sm'} color={'white'} /> :<Text style={styles.lblContinue}>Continuar</Text>}
             </TouchableOpacity>
             {componentType === 3 || componentType === 4  ? (
                 <TouchableOpacity onPress={onsubmit} style={styles.btnSubmit}>

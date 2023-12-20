@@ -1,14 +1,22 @@
 import React,{useEffect,useState} from "react";
 import { View, Text, Image, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
+import { Spinner } from "native-base";
 import { Colors } from "../../utils/Colors";
 import { getFontSize } from "../../utils/functions";
 import { StatusBar } from 'expo-status-bar';
 import { Video } from "expo-av";
+import { useDispatch, useSelector } from "react-redux";
+import { loginAction } from "../../store/ducks/authDuck";
 
 
 const {height, width} = Dimensions.get('window');
 
 const RegisterDone = () => {
+    const dispatch = useDispatch();
+    const user = useSelector(state => state.authDuck.dataUser)
+    const loader = useSelector(state => state.authDuck.loading)
+
+
     return(
         <View style={styles.container}>
             <StatusBar
@@ -32,8 +40,8 @@ const RegisterDone = () => {
             <View style={styles.contLegend}>
                 <Text style={styles.legend}>Estás oficialmente listo para desbloquear un mundo de recompensas y ahorros. ¡Vamos a empezar!</Text>
             </View>
-            <TouchableOpacity style={styles.btn}>
-                <Text style={styles.lblBtn}>Continuar</Text>
+            <TouchableOpacity style={styles.btn} onPress={() => dispatch(loginAction(user))}>
+                {loader ? <Spinner size={'sm'} color={'white'} /> :<Text style={styles.lblBtn}>Continuar</Text>}
             </TouchableOpacity>
         </View>
     )

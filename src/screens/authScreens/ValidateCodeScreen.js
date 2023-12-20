@@ -1,7 +1,7 @@
 import React, {useEffect, useState, useRef} from "react";
 import { View, Text, TouchableOpacity, StatusBar, Image, TouchableHighlight, Dimensions, StyleSheet, TextInput, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback } from "react-native";
 import { getFontSize } from "../../utils/functions";
-import { Spinner } from "native-base";
+import { Spinner, useToast, Alert, VStack, HStack, } from "native-base";
 import { Colors } from "../../utils/Colors";
 import HeaderGreen from '../../../assets/svg/HeaderGreen';
 import { AntDesign } from '@expo/vector-icons'; 
@@ -25,12 +25,32 @@ const ValidateCodeScreen = () => {
     const modalAlertFailed = useSelector(state => state.authDuck.modalFailed)
     const message = useSelector(state => state.authDuck.message)
     const loader = useSelector(state => state.authDuck.loading)
-    //const [verificationCode, setVerificationCode] = useState('');
-    //const [modalAlertSuccess, setModalAlertSuccess] = useState(false)
-    //const [modalAlertFailed, setModalAlertFailed] = useState(false)
-    //const [message, setMesagge] = useState('');
+    const isLogged = useSelector(state => state.authDuck.isLogged)
+    const dataUser = useSelector(state => state.authDuck.dataUser)
+    const toast = useToast();
 
     const inputRefs = useRef([]);
+
+    useEffect(() => {
+        if(isLogged){
+            toast.show({
+                placement:'top',
+                render:({id}) =>(
+                    <Alert maxWidth="100%" alignSelf="center" flexDirection="row" status='success' variant='solid' backgroundColor={Colors.green}>
+                        <VStack space={1} flexShrink={1} w="100%" >
+                            <HStack flexShrink={1} alignItems="center" justifyContent="space-between" >
+                                <HStack space={2} flexShrink={1} alignItems="center">
+                                    <Alert.Icon/>
+                                    <Text style={{color: Colors.white, fontSize: getFontSize(17)}}>¡Bienvenido!</Text>
+                                </HStack>
+                            </HStack>
+                            <Text style={{marginLeft:20, color: Colors.white}}>{dataUser?.first_name} {dataUser?.last_name}</Text>
+                        </VStack>
+                    </Alert>
+                )
+            })
+        }
+    },[isLogged])
 
     const handleKeyPress = (index, key) => {
         if (key === 'Backspace' && index > 0 && !verificationCode[index]) {
