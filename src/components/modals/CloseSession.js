@@ -6,16 +6,22 @@ import { getFontSize } from "../../utils/functions";
 
 const {height, width} = Dimensions.get('window');
 
-const ModalAlertSuccess = ({visible, setVisible, message}) => {
+const ModalCloseSession = ({visible, setVisible, onSubmit}) => {
     return(
         <Modal visible={visible} animationType='slide' transparent>
             <View style={styles.container}>
                 <View style={styles.card}>
-                    <Check />
-                    <Text style={styles.message}>{message}</Text>
-                    <TouchableOpacity style={styles.btn} onPress={setVisible}>
-                        <Text style={styles.txtBtn}>Continuar</Text>
-                    </TouchableOpacity>
+                    <Image source={require('../../../assets/questionMark.png')} style={styles.img}/>
+                    <Text style={styles.message}>¿Quiere cerrar la sesión?</Text>
+                    <View style={styles.contBtns}>
+                        <TouchableOpacity style={[styles.btn,{backgroundColor:Colors.grayStrong,}]} onPress={setVisible}>
+                            <Text style={styles.txtBtn}>Cancelar</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={[styles.btn,{backgroundColor:Colors.blueGreen,}]} onPress={onSubmit}>
+                            <Text style={styles.txtBtn}>Adelante</Text>
+                        </TouchableOpacity>
+
+                    </View>
 
                 </View>
             </View>
@@ -31,36 +37,45 @@ const styles = StyleSheet.create({
         alignItems:'center'
     },
     card:{
-        width: width/1.3,
+        width: width/1.2,
         //height: height/4,
         backgroundColor: Colors.lightGray,
         borderRadius:20,
         alignItems:'center',
-        paddingVertical:20,
-        paddingHorizontal:10
+        paddingVertical:20
+    },
+    img:{
+        width:80, 
+        height:80, 
+        resizeMode:'contain'
     },
     message:{
         marginBottom:18, 
         marginTop:15, 
+        paddingHorizontal:10,
         fontSize: getFontSize(16), 
         fontWeight:'700', 
-        color: Colors.darkGray, 
+        color: Colors.blackInit, 
         textAlign:'center'
     },
+    contBtns:{
+        flexDirection:'row', 
+        justifyContent:'space-between' ,
+        width: width/1.7
+    },
     btn:{
-        width:120, 
-        height:40, 
-        backgroundColor:Colors.blueGreen, 
+        width: width/4, 
+        height:40,  
         borderRadius:8, 
         justifyContent:'center', 
         alignItems:'center'
     },
     txtBtn:{
         fontSize: getFontSize(16), 
-        fontWeight:'700', 
+        fontWeight:'400', 
         color:Colors.white
     }
 
 })
 
-export default ModalAlertSuccess;
+export default ModalCloseSession;

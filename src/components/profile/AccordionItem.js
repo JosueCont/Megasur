@@ -4,11 +4,14 @@ import { getFontSize } from "../../utils/functions";
 import { Colors } from "../../utils/Colors";
 import { MaterialIcons, AntDesign } from '@expo/vector-icons';
 import Animated,{useSharedValue, useAnimatedStyle, withSpring, useAnimatedRef, runOnUI, measure, interpolate, Extrapolate, withTiming, } from "react-native-reanimated";
+import { useDispatch } from "react-redux";
+import { onChangeModalProf } from "../../store/ducks/profileDuck";
 
 
 const {height, width} = Dimensions.get('window');
 
 const AccordionItem = ({item,index,}) => {
+    const dispatch = useDispatch();
     const isExpanded = useSharedValue(false)
     const listRef = useAnimatedRef();
     const heightValue = useSharedValue(0)
@@ -40,13 +43,22 @@ const AccordionItem = ({item,index,}) => {
         <Animated.View key={index} style={[ styles.item]}>
             <TouchableOpacity 
                 onPress={() => {
-                    if(heightValue.value === 0){
-                        runOnUI(() => {
-                            'worklet';
-                            heightValue.value = measure(listRef).height
-                        })()
+                    if(index === 9){
+                        dispatch(onChangeModalProf({prop:'modalActive', value: true}))
+                    }else if(index === 7) dispatch(onChangeModalProf({prop:'modalDelete',value:true}))
+                    else if(index === 4){
+                        dispatch(onChangeModalProf({prop:'modalTerms', value: true}))
+                    }else{
+                        
+                        if(heightValue.value === 0){
+                            runOnUI(() => {
+                                'worklet';
+                                heightValue.value = measure(listRef).height
+                            })()
+                        }
+                        isExpanded.value = !isExpanded.value
+
                     }
-                    isExpanded.value = !isExpanded.value
                 }} 
                 style={styles.btn}>
                 <Text style={styles.lbl}>{item.title}</Text>

@@ -1,5 +1,6 @@
 import React,{Children, useEffect,useState} from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions, ScrollView, RefreshControl } from "react-native";
+import { Spinner } from "native-base";
 import { StatusBar } from 'expo-status-bar';
 import { getFontSize } from "../../utils/functions";
 import { Colors } from "../../utils/Colors";
@@ -9,7 +10,7 @@ import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 const {height, width} = Dimensions.get('window');
 
 
-const HeaderLogged = ({children,isBack=false, title='Bienvenidos'}) => {
+const HeaderLogged = ({children,isBack=false, title='Bienvenidos', onRefresh, refresh=false}) => {
     return(
         <View style={styles.container}>
             <StatusBar
@@ -35,6 +36,8 @@ const HeaderLogged = ({children,isBack=false, title='Bienvenidos'}) => {
                 </TouchableOpacity>
             </View>
             <ScrollView
+                
+                refreshControl={<RefreshControl refreshing={refresh} onRefresh={onRefresh} tintColor={Colors.blueGreen} />}
                 keyboardShouldPersistTaps='handled'
                 automaticallyAdjustKeyboardInsets
                 nestedScrollEnabled={true}

@@ -5,15 +5,16 @@ import { Colors } from "../../utils/Colors";
 import LogoMega from "../../../assets/svg/LogoMega";
 import { MaterialIcons, AntDesign } from '@expo/vector-icons';
 import { useDispatch, useSelector } from "react-redux";
-import { onChangeModalProf } from "../../store/ducks/profileDuck";
+import { onChangeModalProf, onVerifyEmail, verifyCodeEmail } from "../../store/ducks/profileDuck";
 import ModalVerifyEmail from "../modals/ModalVerifyEmail";
 
 
 const VerifyEmail = () => {
     const dispatch = useDispatch();
     const modalVerify = useSelector(state => state.profileDuck.modalVerify)
-    const user = useSelector(state => state.authDuck.dataUser)
-    const isValid = useSelector(state => state.authDuck.isEmailVerified)
+    const user = useSelector(state => state.profileDuck.dataUser)
+    const isValid = useSelector(state => state.profileDuck.isEmailVerified)
+    const code = useSelector(state => state.profileDuck.code)
     
     return(
         <View style={styles.container}>
@@ -25,7 +26,10 @@ const VerifyEmail = () => {
                 </View>
                 {!isValid ? ( 
                     <TouchableOpacity 
-                        onPress={() => dispatch(onChangeModalProf({prop:'modalVerify', value:true}))}
+                        onPress={() => {
+                            dispatch(onVerifyEmail(user?.id));
+                            dispatch(onChangeModalProf({prop:'modalVerify', value:true}));
+                        }}
                         style={{flexDirection:'row'}}>
                         <AntDesign name="warning" size={15} color={Colors.red} />
                         <Text style={styles.lblWarinig}>Verifica aquí tu correo electrónico</Text>
@@ -33,7 +37,12 @@ const VerifyEmail = () => {
                 ):null}
             </View>
             <Image source={require('../../../assets/LogoMegaCard.png')} style={styles.img}/>
-            <ModalVerifyEmail visible={modalVerify} onClose={() => dispatch(onChangeModalProf({prop:'modalVerify', value:false}))}/>
+            <ModalVerifyEmail 
+                visible={modalVerify} 
+                onClose={() => dispatch(onChangeModalProf({prop:'modalVerify', value:false}))}
+                onVerify={() => {
+                    dispatch(verifyCodeEmail({userId:user?.id,code}))
+                }}/>
         </View>
     )
 }

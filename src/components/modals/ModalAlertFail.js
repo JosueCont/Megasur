@@ -34,7 +34,8 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.lightGray,
         borderRadius:20,
         alignItems:'center',
-        paddingVertical:20
+        paddingVertical:20,
+        paddingHorizontal:10
     },
     message:{
         marginBottom:18, 

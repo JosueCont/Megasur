@@ -4,13 +4,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateVerificationCode } from "../store/ducks/authDuck";
 import { Colors } from "../utils/Colors";
 import { getFontSize } from "../utils/functions";
+import { updateCodeEmail } from "../store/ducks/profileDuck";
 
 const {height, width} = Dimensions.get('window');
 
 
-const CodeInputs = () => {
+const CodeInputs = ({type = 'number-pad', validationType='auth'}) => {
     const dispatch = useDispatch();
-    const verificationCode = useSelector(state => state.authDuck.verificationCode);
+    const verificationCode = useSelector(state => validationType === 'auth' ? state.authDuck.verificationCode : state.profileDuck.code);
 
     const inputRefs = useRef([]);
 
@@ -30,11 +31,11 @@ const CodeInputs = () => {
                   ref={(ref) => (inputRefs.current[i] = ref)}
                   style={styles.input}
                   maxLength={1}
-                  keyboardType="number-pad"
+                  keyboardType={type}
                   returnKeyType='done'
                   returnKeyLabel="Hecho"
                   onChangeText={(value) => {
-                    dispatch(updateVerificationCode(i,value))
+                    validationType === 'auth' ? dispatch(updateVerificationCode(i,value)) : dispatch(updateCodeEmail(i,value))
                     if (value && inputRefs.current[i + 1]) {
                         inputRefs.current[i + 1].focus();
                     }

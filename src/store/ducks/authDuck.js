@@ -19,6 +19,7 @@ const REGISTER_FAILED = 'register_failed'
 
 const LOGIN_SUCCESS = 'login_success'
 const LOGIN_FAILED = 'login_failed'
+const LOGOUT = 'logout'
 
 const initialState = {
     phone:'',
@@ -75,6 +76,8 @@ const authDuck = (state = initialState, action) => {
             return{ ...state, ...initialState, isLogged: true, dataUser: action.payload}
         case LOGIN_FAILED:
             return{ ...state, loading: false, isLogged: false, modalFailed: true, message: action.message}
+        case LOGOUT:
+            return{ ...state, isLogged: false, dataUser: null}
         default:
             return state;
     }
@@ -125,6 +128,7 @@ export const validateCode = (data) => async(dispatch) => {
             phone: +data.phone,
             code: data.verificationCode
         }
+        console.log('dataSend', dataSend)
         const response = await postValidateCode(dataSend)
         if(response?.data?.id){
             //usuario encontrado, debe iniciar sesión
@@ -133,7 +137,7 @@ export const validateCode = (data) => async(dispatch) => {
         }
         //if(response?.data?.status === 'incorrect') dispatch({type: VALIDATE_CODE_FAILED, message:'Código incorrecto'})
         //else dispatch({type: VALIDATE_CODE_SUCCESS, message:'Verificación exitosa'})
-        console.log('dataSend',response?.data)
+        console.log('response validate',response?.data)
     } catch (e) {
         if(e?.response?.status === 404){
             dispatch({type: VALIDATE_CODE_SUCCESS_ONBOARDING, message:'Verificación exitosa'})
@@ -195,4 +199,18 @@ export const createSession = () => async(dispatch) => {
         console.log('error al obtner sesión',e)
     }
 }
+
+export const logoutAction = () => async(dispatch) => {
+    try {
+        await AsyncStorage.removeItem('accessToken')
+        //await AsyncStorage.removeItem('refreshToken')
+        await AsyncStorage.removeItem('user')
+
+        dispatch({type: LOGOUT})
+
+    } catch (e) {
+        console.log('error al cerrar session', e);
+    }
+}
+
 export default authDuck;

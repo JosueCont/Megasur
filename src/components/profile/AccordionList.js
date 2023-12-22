@@ -20,6 +20,7 @@ const AccordionList = () => {
         {id:'7', title:'Vincular tarjeta física', component:''},
         {id:'8', title:'Borrar cuenta', component:''},
         {id:'9', title:'Acerca de', component:''},
+        {id:'10', title:'Cerrar sesión', component:''}
 
     ]
     return(

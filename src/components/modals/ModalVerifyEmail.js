@@ -4,23 +4,28 @@ import { Colors } from "../../utils/Colors";
 import Check from '../../../assets/svg/Check'
 import { getFontSize } from "../../utils/functions";
 import CodeInputs from "../CodeInputs";
+import { useSelector } from "react-redux";
+import { Spinner } from "native-base";
 
 const {height, width} = Dimensions.get('window');
 
 const ModalVerifyEmail = ({visible, onClose, onVerify }) => {
+    const loader = useSelector(state => state.profileDuck.loading)
     return(
         <Modal visible={visible} animationType='slide' transparent>
             <View style={styles.container}>
                 <View style={styles.card}>
                     <Image source={require('../../../assets/questionMark.png')} style={styles.img}/>
                     <Text style={styles.lblDesc}>Ingresa el código de verificación que enviamos a tu correo.</Text>
-                    <CodeInputs />
+                    <CodeInputs type='default' validationType='profile'/>
                     <View style={styles.contBtn}>
                         <TouchableOpacity onPress={onClose}style={[styles.btn,{backgroundColor: Colors.grayStrong}]}>
                             <Text style={styles.lblBtn}>Cancelar</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={[styles.btn,{backgroundColor: Colors.blueGreen}]}>
-                            <Text style={styles.lblBtn}>Verificar</Text>
+                        <TouchableOpacity 
+                            onPress={onVerify}
+                            style={[styles.btn,{backgroundColor: Colors.blueGreen}]}>
+                            {loader ? <Spinner size={'sm'} color={'white'} /> : <Text style={styles.lblBtn}>Verificar</Text>} 
                         </TouchableOpacity>
                     </View>
                 </View>
