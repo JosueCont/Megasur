@@ -10,7 +10,7 @@ import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 const {height, width} = Dimensions.get('window');
 
 
-const HeaderLogged = ({children,isBack=false, title='Bienvenidos', onRefresh, refresh=false, goBack, noPadding=false}) => {
+const HeaderLocation = ({children,isBack=false, title='Bienvenidos', onRefresh, refresh=false, goBack, noPadding=false}) => {
     return(
         <View style={styles.container}>
             <StatusBar
@@ -35,23 +35,9 @@ const HeaderLogged = ({children,isBack=false, title='Bienvenidos', onRefresh, re
                     </>
                 </TouchableOpacity>
             </View>
-            <ScrollView
-                
-                refreshControl={<RefreshControl refreshing={refresh} onRefresh={onRefresh} tintColor={Colors.blueGreen} />}
-                keyboardShouldPersistTaps='handled'
-                automaticallyAdjustKeyboardInsets
-                nestedScrollEnabled={true}
-                overScrollMode="always"
-                showsVerticalScrollIndicator={false}
-                contentContainerStyle={{
-                    flexGrow: 1,
-                    paddingBottom: 20
-                    
-                }}>
-                    <View style={{marginVertical:noPadding ? 0 : 20}}>
-                        {children}
-                    </View>
-                </ScrollView>
+                <View style={{marginVertical:noPadding ? 0 : 20, }}>
+                    {children}
+                </View>
         </View>
     )
 }
@@ -109,4 +95,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default HeaderLogged;
+export default HeaderLocation;

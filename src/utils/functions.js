@@ -3,6 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Device from 'expo-device'
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
+import * as Location from "expo-location";
 
 const fontScale = PixelRatio.getFontScale();
 export const getFontSize = size => size/fontScale;
@@ -62,5 +63,20 @@ export const saveTokens = async(access, user) => {
 
     } catch (e) {
         console.log('Error al almacenar los tokens',e)   
+    }
+}
+
+export const getPermissionLocation = async() => {
+    try {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+
+      if (status !== "granted") {
+        //setLocationError("Location permission denied");
+        return;
+      }
+      let location = await Location.getCurrentPositionAsync({});
+      return location
+    } catch (e) {
+        console.error("Error requesting location permission:", error);
     }
 }

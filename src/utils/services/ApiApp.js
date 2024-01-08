@@ -20,3 +20,6 @@ export const postDeleteAccount = async(data) => await axiosPost(axiosTypes.DELET
 /*Home */
 
 export const getSiteConfig = async() => await axiosGet(axiosTypes.SITE_CONFIG)
+
+//stations
+export const getStations = async(lat, long) => await axiosGet(`${axiosTypes.CLOSE_STATIONS}?lat=${lat}&long=${long}`)

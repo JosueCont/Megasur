@@ -8,24 +8,11 @@ import AccordionItem from "./AccordionItem";
 import PersonalInfoForm from "./PersonalInfo";
 import { useSharedValue } from "react-native-reanimated";
 
-const AccordionList = () => {
+const AccordionList = ({data, isLocation=false}) => {
 
-    const data = [
-        {id:'1', title:'Información personal', component: <PersonalInfoForm />},
-        {id:'2', title:'Datos de tu vehículo', component:''},
-        {id:'3', title:'Facturación', component:''},
-        {id:'4', title:'Encuestas contestadas', component:''},
-        {id:'5', title:'Terminos de uso', component:''},
-        {id:'6', title:'Privacidad de datos', component:''},
-        {id:'7', title:'Vincular tarjeta física', component:''},
-        {id:'8', title:'Borrar cuenta', component:''},
-        {id:'9', title:'Acerca de', component:''},
-        {id:'10', title:'Cerrar sesión', component:''}
-
-    ]
     return(
         <View>
-            {data.map((item,index) => <AccordionItem item={item} index={index} />)}
+            {data?.map((item,index) => <AccordionItem item={item} index={index} isLocation={isLocation}/>)}
         </View>
     )
 }

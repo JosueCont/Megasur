@@ -60,6 +60,7 @@ const profileDuck = (state = initialState, action) => {
                 gender: action.payload.gender, 
                 phone: action.payload.phone,
                 dataUser: action.payload,
+                loading:false,
                 refresh:false }
         case CHANGE_IMAGE:
             return{ ...state, [action.payload.prop]: action.payload.image}

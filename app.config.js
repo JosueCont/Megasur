@@ -25,7 +25,13 @@ const commonConfig = {
           {
             "microphonePermission": "Allow megasur to access your microphone."
           }
-        ]
+        ],
+        [
+            "expo-location",
+            {
+              "locationAlwaysAndWhenInUsePermission": "Allow megasur to use your location."
+            }
+          ]
     ],
     "updates": {
         "url": "https://u.expo.dev/117d988c-e564-452d-bf28-f4a60e61cf8e"

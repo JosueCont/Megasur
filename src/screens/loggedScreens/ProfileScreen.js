@@ -15,6 +15,7 @@ import ModalAlertSuccess from "../../components/modals/AlertModalSucces";
 import ModalAlertFailed from "../../components/modals/ModalAlertFail";
 import ModalDeleteAccount from "../../components/modals/DeleteAccount";
 import ModalTerms from "../../components/modals/ModalTerms";
+import PersonalInfoForm from "../../components/profile/PersonalInfo";
 
 const ProfileScreen = () => {
     const dispatch = useDispatch();
@@ -38,6 +39,20 @@ const ProfileScreen = () => {
     const getDataUser = async() => {
          dispatch(await getProfileData())
     }
+
+    const data = [
+        {id:'1', title:'Información personal', component: <PersonalInfoForm />},
+        {id:'2', title:'Datos de tu vehículo', component:''},
+        {id:'3', title:'Facturación', component:''},
+        {id:'4', title:'Encuestas contestadas', component:''},
+        {id:'5', title:'Terminos de uso', component:''},
+        {id:'6', title:'Privacidad de datos', component:''},
+        {id:'7', title:'Vincular tarjeta física', component:''},
+        {id:'8', title:'Borrar cuenta', component:''},
+        {id:'9', title:'Acerca de', component:''},
+        {id:'10', title:'Cerrar sesión', component:''}
+
+    ]
     return(
         <>
             <HeaderLogged 
@@ -52,7 +67,7 @@ const ProfileScreen = () => {
                 <View style={{marginHorizontal:10,}}>
                     <VerifyEmail />
                     <SwitchNotification />
-                    <AccordionList />
+                    <AccordionList data={data}/>
                 </View>
                 <ModalCloseSession 
                     visible={modalSession}

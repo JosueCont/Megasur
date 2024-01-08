@@ -13,5 +13,6 @@ export const Colors = {
     darkWhite:'#FBF7F1',
     pink:'#DC2785',
     purple:'#4D0992',
-    greenStrong:'#166838'
+    greenStrong:'#166838',
+    grayV2:'#F0F3F5'
 }

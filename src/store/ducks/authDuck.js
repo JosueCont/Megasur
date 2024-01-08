@@ -137,7 +137,7 @@ export const validateCode = (data) => async(dispatch) => {
         }
         //if(response?.data?.status === 'incorrect') dispatch({type: VALIDATE_CODE_FAILED, message:'Código incorrecto'})
         //else dispatch({type: VALIDATE_CODE_SUCCESS, message:'Verificación exitosa'})
-        console.log('response validate',response?.data)
+        console.log('response validate',response)
     } catch (e) {
         if(e?.response?.status === 404){
             dispatch({type: VALIDATE_CODE_SUCCESS_ONBOARDING, message:'Verificación exitosa'})

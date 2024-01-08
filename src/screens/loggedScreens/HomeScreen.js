@@ -1,7 +1,7 @@
 import React,{useEffect,useState} from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions, ScrollView, ImageBackground } from "react-native";
 import { StatusBar } from 'expo-status-bar';
-import { getFontSize } from "../../utils/functions";
+import { getFontSize, getPermissionLocation } from "../../utils/functions";
 import { Colors } from "../../utils/Colors";
 import Animated, { useSharedValue, withTiming, } from "react-native-reanimated";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,6 +15,7 @@ import ListDiscount from "../../components/Home/ListDiscount";
 import CloseStations from "../../components/Home/CloseStations";
 import ModalQuizz from "../../components/modals/ModalQuizz";
 import { changeModalHome, getDataConfi } from "../../store/ducks/homeDuck";
+import { getCloseStations } from "../../store/ducks/locationsDuck";
 
 const {height, width} = Dimensions.get('window');
 
@@ -23,10 +24,16 @@ const HomeScreen = () => {
     const dispatch = useDispatch();
 
     const modalQuizz = useSelector(state => state.homeDuck.modalQuizz)
+    const stations = useSelector(state => state.locationDuck.nearBranches)
 
     useEffect(() => {
         (async() => {
+            const location = await getPermissionLocation()
             await dispatch(getDataConfi())
+            
+            await dispatch(getCloseStations(location?.coords))
+            console.log('location', Platform.OS, location)
+                
         })()
     },[])
     const dataDisconunt = [
@@ -43,11 +50,11 @@ const HomeScreen = () => {
 
     ]
 
-    const stations = [
-        {id:'1',name:'Sucursal Itzáes', location:'Adolfo Prieto #802 Colonia Del Valle, CDMX', schedule:'Horario: L-V 07:00 a 22:00 I S-D: 08:00 a 22:00',isOpen:true, meters:300 },
-        {id:'2',name:'Sucursal Itzáes', location:'Adolfo Prieto #802 Colonia Del Valle, CDMX', schedule:'Horario: L-V 07:00 a 22:00 I S-D: 08:00 a 22:00', isOpen:false, meters:1500}
-
-    ]
+    //const stations = [
+    //    {id:'1',name:'Sucursal Itzáes', location:'Adolfo Prieto #802 Colonia Del Valle, CDMX', schedule:'Horario: L-V 07:00 a 22:00 I S-D: 08:00 a 22:00',isOpen:true, meters:300 },
+    //    {id:'2',name:'Sucursal Itzáes', location:'Adolfo Prieto #802 Colonia Del Valle, CDMX', schedule:'Horario: L-V 07:00 a 22:00 I S-D: 08:00 a 22:00', isOpen:false, meters:1500}
+//
+    //]
     return(
         <HeaderLogged onRefresh={() => console.log('refreshPAge')}>
             <FlipCard />

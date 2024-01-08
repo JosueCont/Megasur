@@ -6,5 +6,6 @@ export const axiosTypes = {
     REFRESH_TOKEN: '/security/users/refresh-token/',
     SECURITY_USER:'/security/users/',
     DELETE_ACCOUNT: 'security/deletion-request/',
-    SITE_CONFIG:'/setup/site-config/'
+    SITE_CONFIG:'/setup/site-config/',
+    CLOSE_STATIONS:'/business/branches/distance/'
 }

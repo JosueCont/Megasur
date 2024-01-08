@@ -3,35 +3,18 @@ import { View, Text, StyleSheet, TouchableOpacity, Dimensions} from "react-nativ
 import { getFontSize } from "../../utils/functions";
 import { Colors } from "../../utils/Colors";
 import CurveArrow from "../../../assets/svg/CurveArrow";
+import { useNavigation } from "@react-navigation/native";
+import StationList from "../StationsList";
 
 const {height, width} = Dimensions.get('window');
 
 const CloseStations = ({stations}) => {
+    const navigation = useNavigation();
+
     return(
         <View style={{}}>
             <Text style={styles.title}>Estaciones cerca de ti</Text>
-            <View style={{alignItems:'center'}}>
-                {stations?.map((station, index) => (
-                    <View style={styles.card} key={index}>
-                        <View style={styles.contHeader}>
-                            <Text style={styles.name}>{station.name}</Text>
-                            <TouchableOpacity>
-                                <CurveArrow />
-                            </TouchableOpacity>
-                        </View>
-                        <Text style={styles.lbl}>{station.location}</Text>
-                        <Text style={styles.lbl}>{station.schedule}</Text>
-                        <View style={styles.contIndicators}>
-                            <View style={[styles.contStatus,{backgroundColor: station.isOpen ? Colors.green : Colors.pink}]}>
-                                <Text style={styles.lblStatus}>{station.isOpen ? 'Abierto' : 'Cerrado'}</Text>
-                            </View>
-                            <View style={styles.contDistance}>
-                                <Text style={styles.lblDistance}>{(station.meters/1000).toString()} km</Text>
-                            </View>
-                        </View>
-                    </View>
-                ))}
-            </View>
+            <StationList stations={stations}/>
         </View>
     )
 }
@@ -46,7 +29,7 @@ const styles = StyleSheet.create({
     },
     card:{
         width: width/1.1, 
-        height:118, 
+        height:110, 
         backgroundColor: Colors.white, 
         borderRadius:8, 
         marginBottom:16,

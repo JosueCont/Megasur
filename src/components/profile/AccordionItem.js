@@ -6,15 +6,32 @@ import { MaterialIcons, AntDesign } from '@expo/vector-icons';
 import Animated,{useSharedValue, useAnimatedStyle, withSpring, useAnimatedRef, runOnUI, measure, interpolate, Extrapolate, withTiming, } from "react-native-reanimated";
 import { useDispatch } from "react-redux";
 import { onChangeModalProf } from "../../store/ducks/profileDuck";
+import { useIsFocused } from "@react-navigation/native";
 
 
 const {height, width} = Dimensions.get('window');
 
-const AccordionItem = ({item,index,}) => {
+const AccordionItem = ({item,index,isLocation}) => {
     const dispatch = useDispatch();
+    const isFocused = useIsFocused()
     const isExpanded = useSharedValue(false)
     const listRef = useAnimatedRef();
     const heightValue = useSharedValue(0)
+
+    useEffect(() => {
+        if(isLocation && index === 0){
+            setTimeout(() => {
+                if(heightValue.value === 0){
+                    runOnUI(() => {
+                        'worklet';
+                        heightValue.value = measure(listRef).height
+                    })()
+                }
+            },300)
+            isExpanded.value = true
+            
+        }
+    },[isFocused])
 
 
     const rotateRow =useAnimatedStyle(() => {
@@ -40,13 +57,13 @@ const AccordionItem = ({item,index,}) => {
         }
     })
     return(
-        <Animated.View key={index} style={[ styles.item]}>
+        <Animated.View key={index} style={[ isLocation ? styles.itemLocation : styles.item]}>
             <TouchableOpacity 
                 onPress={() => {
-                    if(index === 9){
+                    if(index === 9 && !isLocation){
                         dispatch(onChangeModalProf({prop:'modalActive', value: true}))
-                    }else if(index === 7) dispatch(onChangeModalProf({prop:'modalDelete',value:true}))
-                    else if(index === 4){
+                    }else if(index === 7 && !isLocation) dispatch(onChangeModalProf({prop:'modalDelete',value:true}))
+                    else if(index === 4 && !isLocation){
                         dispatch(onChangeModalProf({prop:'modalTerms', value: true}))
                     }else{
                         
@@ -61,7 +78,7 @@ const AccordionItem = ({item,index,}) => {
                     }
                 }} 
                 style={styles.btn}>
-                <Text style={styles.lbl}>{item.title}</Text>
+                <Text style={isLocation ? styles.lblLocation : styles.lbl}>{item.title}</Text>
                 <Animated.View style={rotateRow}>
                     <MaterialIcons name="keyboard-arrow-right" size={24} color={Colors.blueGreen} />            
 
@@ -86,6 +103,12 @@ const styles = StyleSheet.create({
         //flexDirection:'row', 
         justifyContent:'space-between'
     },
+    itemLocation:{
+        paddingVertical:16, 
+        paddingHorizontal:10,
+        //flexDirection:'row', 
+        justifyContent:'space-between'
+    },
     btn:{
         flexDirection:'row', 
         justifyContent:'space-between'
@@ -94,6 +117,11 @@ const styles = StyleSheet.create({
         color: Colors.darkGray, 
         fontSize: getFontSize(16), 
         fontWeight:'400'
+    },
+    lblLocation:{
+        color: Colors.grayStrong, 
+        fontSize: getFontSize(20), 
+        fontWeight:'700'
     }
 
 })

@@ -18,10 +18,10 @@ const HomeNavigator = () => {
             backBehavior={'history'}
             initialRouteName="House"
             screenOptions={({navigation, route}) =>({
-
+                headerShown: false
             })}
         >
-            <Stack.Screen name="House" component={HomeScreen} options={{headerShown: false}}/>
+            <Stack.Screen name="House" component={HomeScreen}/>
         </Stack.Navigator>
 
     )
