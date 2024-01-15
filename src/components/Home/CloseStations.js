@@ -12,9 +12,9 @@ const CloseStations = ({stations}) => {
     const navigation = useNavigation();
 
     return(
-        <View style={{}}>
+        <View >
             <Text style={styles.title}>Estaciones cerca de ti</Text>
-            <StationList stations={stations}/>
+            {stations.length > 0 && <StationList stations={stations}/>}
         </View>
     )
 }

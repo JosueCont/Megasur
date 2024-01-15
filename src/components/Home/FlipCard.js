@@ -1,5 +1,6 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useRef} from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions, ImageBackground} from "react-native";
+import { Spinner } from "native-base";
 import { getFontSize } from "../../utils/functions";
 import { Colors } from "../../utils/Colors";
 import Animated, { useSharedValue, withTiming, Easing, useAnimatedStyle, runOnJS,  interpolate, Extrapolate, withSpring } from "react-native-reanimated";
@@ -7,20 +8,35 @@ import { GestureHandlerRootView, GestureDetector, Gesture} from 'react-native-ge
 import LogoMega from "../../../assets/svg/LogoMega";
 import { MaterialCommunityIcons, AntDesign } from '@expo/vector-icons'; 
 import { useDispatch, useSelector } from "react-redux";
-
+import { getQrCode, autoGenerateQr } from "../../store/ducks/homeDuck";
+import QRCode from "react-native-qrcode-svg";
 
 
 const {height, width} = Dimensions.get('window');
 
-const FlipCard = () => {
+const FlipCard = ({cards}) => {
+    const dispatch = useDispatch();
     const [isFlipped, setFlip] = useState(false)
     const [showInfo, setShowInfo] = useState(false)
     const tap = Gesture.Tap()
+
+    const isRunning = useSelector(state => state.homeDuck.isRunning)
+    const minutes = useSelector(state => state.homeDuck.minutes)
+    const seconds = useSelector(state => state.homeDuck.seconds)
+    const code = useSelector(state => state.homeDuck.code)
+    const loader = useSelector(state => state.homeDuck.loading)
+    const timer = useSelector(state => state.homeDuck.setupData?.expire_time_qr)
     
     const rotation = useSharedValue(0)
     const AnimatedImageBack = Animated.createAnimatedComponent(ImageBackground)
 
     const user = useSelector(state => state.authDuck.dataUser)
+
+    useEffect(() => {
+        if(!isRunning && seconds === 0 && minutes === 0 && isFlipped){
+            dispatch(getQrCode({isRunning, user, cards, timer}))
+        }
+    },[seconds, isRunning, isFlipped, minutes])
 
 
     const toggleFilp = () => {
@@ -64,7 +80,7 @@ const FlipCard = () => {
             rotationOutputRangeBack,
             Extrapolate.CLAMP
         );
-        console.log('rotation',rotation.value, 'filp',isFlipped)
+        //console.log('rotation',rotation.value, 'filp',isFlipped)
         return{
             opacity: !isFlipped ? withSpring(opacityAnimateBack) :  withSpring(opacityAnimate)
         }
@@ -87,9 +103,25 @@ const FlipCard = () => {
                                             </GestureDetector>
                                         </GestureHandlerRootView>
                                     <View style={styles.contQr}>
-                                        <AntDesign name="qrcode" size={130} color={Colors.white} />
-                                        <Text style={{color: Colors.white}}>Código valido</Text>
-                                        <Text style={{color: Colors.white}}>Durante: 00:00 min</Text>
+                                        {code != '' && !loader ? (
+                                            <>
+                                                <QRCode
+                                                    value={code}
+                                                    color={Colors.white}
+                                                    size={130}
+                                                    backgroundColor="transparent"
+                                                />
+                                                <Text style={{color: Colors.white, marginTop:5}}>Código valido</Text>
+                                                <Text style={{color: Colors.white}}>Durante: {minutes < 10 ? `0${minutes}` : minutes}:{seconds < 10 ? `0${seconds}` : seconds} {minutes <= 0 ? 'sec' : 'min'}</Text>
+                                            
+                                            </>
+
+                                        ): (
+                                            <View style={{flex:1,justifyContent:'center', alignItems:'center'}}>
+                                                <Spinner size={'sm'} color={Colors.white} />
+                                            </View>
+
+                                        )}
                                     </View>
                                 </Animated.View>
                     </ImageBackground>
@@ -113,7 +145,7 @@ const FlipCard = () => {
                                         </View>
                                             <GestureHandlerRootView>
                                                 <GestureDetector gesture={tap.onStart(() => toggleFilp())}>
-                                                    <TouchableOpacity onPress={() => console.log('pressed')}>
+                                                    <TouchableOpacity onPress={() => dispatch(autoGenerateQr())}>
                                                         <MaterialCommunityIcons name="qrcode-scan" size={50} color={Colors.white} />
                                                     </TouchableOpacity>
                                                 </GestureDetector>

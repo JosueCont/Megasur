@@ -16,9 +16,11 @@ import ModalAlertFailed from "../../components/modals/ModalAlertFail";
 import ModalDeleteAccount from "../../components/modals/DeleteAccount";
 import ModalTerms from "../../components/modals/ModalTerms";
 import PersonalInfoForm from "../../components/profile/PersonalInfo";
+import { useIsFocused } from "@react-navigation/native";
 
 const ProfileScreen = () => {
     const dispatch = useDispatch();
+    const isFocused = useIsFocused();
     const userId = useSelector(state => state.authDuck.dataUser?.id)
     const modalSession = useSelector(state => state.profileDuck.modalActive)
     const modalSuccess = useSelector(state => state.profileDuck.modalSuccess)
@@ -34,7 +36,7 @@ const ProfileScreen = () => {
     useEffect(() => {
         //if(userId && userId != undefined) 
         getDataUser()
-    },[isValid,isUpdateAccount])
+    },[isValid,isUpdateAccount, isFocused])
 
     const getDataUser = async() => {
          dispatch(await getProfileData())

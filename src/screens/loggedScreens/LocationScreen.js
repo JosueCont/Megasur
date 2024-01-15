@@ -173,7 +173,7 @@ const LocationScreen = () => {
             title="Ubicaciones" 
             noPadding={true}
             goBack={() => navigation.goBack() }>
-                <Animated.View style={[sizeMap,{width: width,}]}>
+                <Animated.View style={[sizeMap,{width: width, }]}>
                     {initialRegion != null &&
                      <MapView 
                         style={{flex:1}}
@@ -236,6 +236,7 @@ const LocationScreen = () => {
                         </TouchableOpacity>
                     )}
                 </Animated.View>
+                
                 <GestureHandlerRootView>
                     <GestureDetector
                         gesture={pan.onStart((event) => onGestureEvent(event)).onUpdate(event => onGestureUpdate(event)).onEnd((event) => onGestureEnd(event))}
@@ -248,7 +249,7 @@ const LocationScreen = () => {
                                     setIsOpen(!isOpen);
                                     //translateY.value = isOpen ? 0 : height/3;
                                 }}>
-                                <View style={{width:154, height:8, backgroundColor: Colors.gray, borderRadius:8, marginTop:7}}/>
+                                <View style={{width:154, height:8, backgroundColor: Colors.gray, borderRadius:8, marginTop:3}}/>
                             </TouchableOpacity>
                             <ScrollView
                                 keyboardShouldPersistTaps='handled'
@@ -260,7 +261,7 @@ const LocationScreen = () => {
                                 //style={{flex:1}}
                                 contentContainerStyle={{
                                     flexGrow: 1,
-                                    paddingBottom: 10,
+                                    paddingBottom: 30,
 
                                 }}>
                                     <Animated.View style={opacity}>
