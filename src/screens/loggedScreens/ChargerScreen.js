@@ -1,13 +1,117 @@
 import React,{useState,useEffect} from "react";
 import { View, Text, TouchableOpacity } from "react-native";
+import { useToast, Alert, VStack, HStack,  } from "native-base";
 import { getFontSize } from "../../utils/functions";
 import { Colors } from "../../utils/Colors";
+import HeaderLogged from "../../components/Headers/HeaderLogged";
+import { Feather } from '@expo/vector-icons';
+import Filters from "../../components/Charges/Filters";
+import Help from "../../components/profile/Help";
+import moment from "moment";
+import ChargesList from "../../components/Charges/ListCharges";
+import { updateInfoCharge, changeModalCharges, onRateCharge, refreshAction } from "../../store/ducks/chargesDuck";
+import { useDispatch, useSelector } from "react-redux";
+import ModalRateCharge from "../../components/modals/ModalRateCharge";
+import { getCharges } from "../../store/ducks/chargesDuck";
 
 const ChargerScreen = () => {
+    const dispatch = useDispatch();
+    const modalRate = useSelector(state => state.chargesDuck.modalActive)
+    const charges = useSelector(state => state.chargesDuck.fuelCharges)
+    const typeFuel = useSelector(state => state.chargesDuck.type)
+    const branchName = useSelector(state => state.chargesDuck.branchName)
+    const branchesOptions = useSelector(state => state.chargesDuck.branches)
+    const comment = useSelector(state => state.chargesDuck.comment)
+    const isRate = useSelector(state => state.chargesDuck.isRate)
+    const toasUpdate = useSelector(state => state.chargesDuck.modalSuccess)
+    const message = useSelector(state => state.chargesDuck.message)
+    const refresh = useSelector(state => state.chargesDuck.refresh)
+    const toast = useToast();
+
+    useEffect(() => {
+        (async() => {
+            dispatch(await getCharges())
+        })();
+        if(toasUpdate){
+            toast.show({
+                placement:'top',
+                render:({id}) =>(
+                    <Alert maxWidth="100%" alignSelf="center" flexDirection="row" status='success' variant='solid' backgroundColor={Colors.green}>
+                        <VStack space={1} flexShrink={1} w="100%" >
+                            <HStack flexShrink={1} alignItems="center" justifyContent="space-between" >
+                                <HStack space={2} flexShrink={1} alignItems="center">
+                                    <Alert.Icon/>
+                                    <Text style={{color: Colors.white, fontSize: getFontSize(17)}}>{message}</Text>
+                                </HStack>
+                            </HStack>
+                        </VStack>
+                    </Alert>
+                )
+            })
+        }
+    },[isRate])
+
+    const onFilter = async() => {
+        const filters = buildUrlPath(typeFuel,branchName)
+        await dispatch(getCharges(filters, branchesOptions))
+    }
+
+    const buildUrlPath = (type, branchName) => {
+        let filter = ''
+        if (type) {
+            filter += `?product_code=${encodeURIComponent(type)}`;
+        }
+        if (branchName) {
+            filter += filter.includes('?') ? `&branch_id=${encodeURIComponent(branchName)}` : `?branch_id=${encodeURIComponent(branchName)}`;
+        }
+        return filter
+    }
+
+    const onSendRate = async(charge, stars) => {
+        console.log('comment',comment)
+        await dispatch(onRateCharge({charge,stars, comment, isRate}))
+    }
+
+    const onRefresh = async() => {
+        dispatch(refreshAction())
+        setTimeout(() => {
+            dispatch(getCharges())
+
+        },1000)
+    }
+
     return(
-        <View>
-            <Text>ChargerScreen</Text>
-        </View>
+        <>
+            <HeaderLogged 
+                onRefresh={() => onRefresh()}
+                refresh={refresh}
+                title="Cargas de combustible">
+                <View style={{marginHorizontal:10}}>
+                    <Filters onFilter={() => onFilter()}/>
+                    <ChargesList 
+                        charges={charges}
+                        setVisible={(val) => {
+                            dispatch(updateInfoCharge(val))
+                            dispatch(changeModalCharges({prop:'modalActive', value: true}))
+                        }}/>
+                </View>
+
+                <ModalRateCharge 
+                    visible={modalRate}
+                    setVisible={() => dispatch(changeModalCharges({prop:'modalActive', value: false}))}
+                    onRate={(charge, stars) => {
+                        console.log('calificando', charge )
+                        dispatch(changeModalCharges({prop:'modalActive', value:false}))
+                        setTimeout(() => {
+                            onSendRate(charge,stars)
+
+                        },500)
+                    }}
+                />
+            </HeaderLogged>
+            <Help />
+
+        </>
     )
 }
 

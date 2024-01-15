@@ -14,8 +14,9 @@ import ListPromotions from "../../components/Home/ListPromotions";
 import ListDiscount from "../../components/Home/ListDiscount";
 import CloseStations from "../../components/Home/CloseStations";
 import ModalQuizz from "../../components/modals/ModalQuizz";
-import { changeModalHome, getDataConfi } from "../../store/ducks/homeDuck";
+import { changeModalHome, getDataConfi, getAllCards } from "../../store/ducks/homeDuck";
 import { getCloseStations } from "../../store/ducks/locationsDuck";
+import { getProfileData } from "../../store/ducks/profileDuck";
 
 const {height, width} = Dimensions.get('window');
 
@@ -25,17 +26,22 @@ const HomeScreen = () => {
 
     const modalQuizz = useSelector(state => state.homeDuck.modalQuizz)
     const stations = useSelector(state => state.locationDuck.nearBranches)
+    const userId = useSelector(state => state.authDuck.dataUser?.id)
+    const userCard = useSelector(state => state.profileDuck.dataUser)
 
     useEffect(() => {
         (async() => {
-            const location = await getPermissionLocation()
             await dispatch(getDataConfi())
-            
-            await dispatch(getCloseStations(location?.coords))
-            console.log('location', Platform.OS, location)
+            if(userId && userId != undefined){
+                const location = await getPermissionLocation()
+                await dispatch(getCloseStations(location?.coords))
+                //await dispatch(getAllCards(userId))
+                await dispatch(getProfileData())
+
+            }
                 
         })()
-    },[])
+    },[userId])
     const dataDisconunt = [
         {id:'1', discount:20, valityStart:'06/07/2023', valityEnd:'01/05/2024', image: require('../../../assets/promotion.png')},
         {id:'2', discount:15, valityStart:'06/07/2023', valityEnd:'01/05/2024', image: require('../../../assets/promotion.png')},
@@ -57,7 +63,7 @@ const HomeScreen = () => {
     //]
     return(
         <HeaderLogged onRefresh={() => console.log('refreshPAge')}>
-            <FlipCard />
+            <FlipCard cards={userCard?.cards}/>
             <Question />
             <ProvitionalPoints openModal={() => dispatch(changeModalHome({prop:'modalQuizz',val:true}))}/>
             <ExchangeCenter />

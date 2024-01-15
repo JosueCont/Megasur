@@ -5,9 +5,11 @@ import { store } from './src/store/store';
 import { theme } from './src/utils/theme';
 import { NativeBaseProvider } from 'native-base';
 import NavigationContainerConfig from './src/stacks/NavigationContainerConfig';
+import { Buffer } from 'buffer';
 
 export default function App() {
   LogBox.ignoreAllLogs();
+  global.Buffer = Buffer;
 
   return (
     <Provider store={store}>

@@ -7,5 +7,9 @@ export const axiosTypes = {
     SECURITY_USER:'/security/users/',
     DELETE_ACCOUNT: 'security/deletion-request/',
     SITE_CONFIG:'/setup/site-config/',
-    CLOSE_STATIONS:'/business/branches/distance/'
+    CLOSE_STATIONS:'/business/branches/distance/',
+    CARDS:'/security/users/',
+    GET_TRANSACTIONS: '/membership/fuel-transaction/',
+    GET_INFO_BRANCH: '/business/branches/',
+    VALIDATE_OTP: '/membership/otp-validation/',
 }

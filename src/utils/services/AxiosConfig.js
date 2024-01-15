@@ -7,7 +7,8 @@ export const baseURL = 'https://api.megasur.hiumanlab.mx';
 let config = {
     baseURL:baseURL,
     headers: {
-        Accept: "application/json",
+        "Content-Type": "application/json",
+        "Accept": "application/json"
     },
 };
 const timeOut = 120000;
@@ -27,26 +28,30 @@ APIKit.interceptors.request.use(async(config) => {
 
     }
     return config;
+},async (error) => {
+    console.log('reject',error)
+    return Promise.reject(error)
 });
 
 APIKit.interceptors.response.use((config)  => config,
     async(error) => {
-        const originalRequest = error.config;
-        if (error.response.status === 401 && !originalRequest._retry){
-            const dataUser = await AsyncStorage.getItem('user');
-            let user = JSON.parse(dataUser)
-            if(user){
-                const newToken = await postRefreshToken({});
-                console.log('newToken',newToken)
-                if (newToken?.data && !originalRequest._retry){
-                    originalRequest._retry = true;
-                    await AsyncStorage.setItem('user',JSON.stringify(newToken?.data));
-                    return APIKit(originalRequest);
-                }
-            }else{
-                return Promise.reject(error);
-            }
-        }
+        //const originalRequest = error.config;
+        //if (error.response.status === 401 && !originalRequest._retry){
+        //    const dataUser = await AsyncStorage.getItem('user');
+        //    let user = JSON.parse(dataUser)
+        //    if(user){
+        //        const newToken = await postRefreshToken({});
+        //        console.log('newToken',newToken)
+        //        if (newToken?.data && !originalRequest._retry){
+        //            originalRequest._retry = true;
+        //            await AsyncStorage.setItem('user',JSON.stringify(newToken?.data));
+        //            return APIKit(originalRequest);
+        //        }
+        //    }else{
+        //        return Promise.reject(error)
+        //    }
+        //}
+        return Promise.reject(error);
     }
 )
 

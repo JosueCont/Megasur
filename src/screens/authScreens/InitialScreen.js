@@ -7,8 +7,9 @@ import Animated,{ useAnimatedStyle,withSpring, withTiming,useSharedValue, Extrap
 import { useNavigation } from "@react-navigation/core";
 import LogoMega from "../../../assets/svg/LogoMega";
 import { useDispatch, useSelector } from "react-redux";
-import { changeInput, verifyPhoneNumber } from "../../store/ducks/authDuck";
+import { changeInput, changeModal, verifyPhoneNumber } from "../../store/ducks/authDuck";
 import { Spinner } from "native-base";
+import ModalAlertFailed from "../../components/modals/ModalAlertFail";
 
 const {height, width} = Dimensions.get('window');
 
@@ -22,7 +23,8 @@ const InitialScreen = () => {
     const phone = useSelector(state => state.authDuck.phone)
     const isValidPhone = useSelector(state => state.authDuck.isValidPhoneNumber)
     const loader = useSelector(state => state.authDuck.loading)
-
+    const isActiveModal = useSelector(state => state.authDuck.modalFailed)
+    const message = useSelector(state => state.authDuck.message)
 
     useEffect(() => {
         if(isValidPhone){
@@ -83,12 +85,8 @@ const InitialScreen = () => {
     })
 
     const validatePhone = async() => {
-        if(phone.length <10){
-            console.log('No es un numero telefonico')
-        }else{
-            await dispatch(verifyPhoneNumber(phone))
+        await dispatch(verifyPhoneNumber(phone))
             //navigation.navigate('ValidateCode')
-        }
     }
 
     return(
@@ -128,6 +126,13 @@ const InitialScreen = () => {
                     </TouchableOpacity>
                 </Animated.View>
             </KeyboardAvoidingView>
+
+            <ModalAlertFailed 
+                visible={isActiveModal} 
+                setVisible={() => dispatch(changeModal({prop:'modalFailed', val:false}))}
+                message={message}
+                titleBtn="Entendido"
+            />
 
             {/*<ImageBackground source={require('../../../assets/loginBkGnd.jpg')} style={styles.container}>
                <View style={styles.overlay}/>

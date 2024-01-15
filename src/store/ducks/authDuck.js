@@ -8,6 +8,7 @@ const CHANGE_MODAL = 'change_modal';
 const LOADING = 'loading';
 const CANCEL_LOADING = 'cancel_loading'
 
+const NO_PHONE_NUMBER = 'no_phone_number'
 const VERIFY_PHONE_SUCCESS = 'verify_phone_sucess'
 const VERIFY_PHONE_FAILED = 'verify_phone_failed'
 const VALIDATE_CODE_SUCCESS_ONBOARDING = 'validate_code_succes_onboarding'
@@ -60,8 +61,12 @@ const authDuck = (state = initialState, action) => {
             return { ...state,verificationCode: updatedCode };
         case CHANGE_MODAL:
             return{ ...state, [action.payload.prop]:action.payload.val}
+        case NO_PHONE_NUMBER:
+            return{ ...state, modalFailed: true, message: action.payload, phone:''}
         case VERIFY_PHONE_SUCCESS:
             return{ ...state, isValidPhoneNumber: true, loading: false}
+        case VERIFY_PHONE_FAILED:
+            return{ ...state, modalFailed: true, message: action.payload, loading:false, phone:''}
         case VALIDATE_CODE_SUCCESS_ONBOARDING:
             return{ ...state, loading:false, modalSucces: true, message: action.message }
         case VALIDATE_CODE_FAILED:
@@ -107,17 +112,22 @@ export const changeModal = ({prop,val}) => {
 
 export const verifyPhoneNumber = (data) => async(dispatch) => {
     try {
-        dispatch({type: LOADING})
-        let dataSend = {
-            phone: +data
+        if(data.length <10){
+            dispatch({type: NO_PHONE_NUMBER, payload:'No es un número de teléfono'})
+        }else{
+
+            dispatch({type: LOADING})
+            let dataSend = {
+                phone: +data
+            }
+            console.log('dataSend',dataSend)
+            const response = await postVerifyPhone(dataSend)
+            console.log('response', response?.data)
+            if(response?.data.sent_to === dataSend.phone) dispatch({type: VERIFY_PHONE_SUCCESS, })
         }
-        console.log('dataSend',dataSend)
-        const response = await postVerifyPhone(dataSend)
-        console.log('response', response?.data)
-        if(response?.data.sent_to === dataSend.phone) dispatch({type: VERIFY_PHONE_SUCCESS, })
     } catch (e) {
         console.log('error verificar numero',e)
-        dispatch({type: CANCEL_LOADING})
+        dispatch({type: VERIFY_PHONE_FAILED, payload:'Ocurrio un problema al mandar sms, intetalo de nuevo'})
     }
 }
 

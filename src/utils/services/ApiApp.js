@@ -20,6 +20,13 @@ export const postDeleteAccount = async(data) => await axiosPost(axiosTypes.DELET
 /*Home */
 
 export const getSiteConfig = async() => await axiosGet(axiosTypes.SITE_CONFIG)
+export const getCards = async(userId) => await axiosGet(`${axiosTypes.CARDS}${userId}`)
+export const postValidateOTP = async(data) => await axiosPost(axiosTypes.VALIDATE_OTP, data)
 
 //stations
 export const getStations = async(lat, long) => await axiosGet(`${axiosTypes.CLOSE_STATIONS}?lat=${lat}&long=${long}`)
+
+//charges
+export const getTransactions = async(filters) => await axiosGet(`${axiosTypes.GET_TRANSACTIONS}${filters}`)
+export const getInfoBranch = async(id) => await axiosGet(`${axiosTypes.GET_INFO_BRANCH}${id}`)
+export const putRateCharge = async(data,id) => await axiosPut(`${axiosTypes.GET_TRANSACTIONS}${id}/`, data)

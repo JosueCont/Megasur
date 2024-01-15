@@ -103,7 +103,7 @@ const ValidateCodeScreen = () => {
                 <TouchableOpacity 
                     disabled={verificationCode.length < 5 }
                     style={[styles.btnValidate,{backgroundColor: verificationCode.length < 5 ? Colors.gray :Colors.blueGreen, }]} 
-                    onPress={() => dispatch(validateCode({verificationCode, phone}))}>
+                    onPress={async() => await dispatch(validateCode({verificationCode, phone}))}>
                     {loader ? <Spinner size={'sm'} color={'white'} /> : <Text style={styles.txtValidate}>Verificar</Text>}
                 </TouchableOpacity>
                 <TouchableOpacity>

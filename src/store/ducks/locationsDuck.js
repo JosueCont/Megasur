@@ -1,6 +1,6 @@
 import { getStations } from "../../utils/services/ApiApp";
 
-const LOADING = 'loading'
+const LOADING = 'loading_loc'
 const GET_STATIONS_SUCCESS = 'get_stations_success'
 const GET_STATIONS_FAILED = 'get_stations_failed'
 const CHANGE_MODAL = 'change_modal'
