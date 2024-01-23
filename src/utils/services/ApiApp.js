@@ -23,6 +23,10 @@ export const getSiteConfig = async() => await axiosGet(axiosTypes.SITE_CONFIG)
 export const getCards = async(userId) => await axiosGet(`${axiosTypes.CARDS}${userId}`)
 export const postValidateOTP = async(data) => await axiosPost(axiosTypes.VALIDATE_OTP, data)
 
+//exchange center
+export const getListProducts = async() => await axiosGet(axiosTypes.LIST_PRODUCTS)
+export const getListCategories = async() => await axiosGet(axiosTypes.LIST_CATEGORIES)
+
 //stations
 export const getStations = async(lat, long) => await axiosGet(`${axiosTypes.CLOSE_STATIONS}?lat=${lat}&long=${long}`)
 

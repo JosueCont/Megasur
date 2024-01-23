@@ -12,4 +12,6 @@ export const axiosTypes = {
     GET_TRANSACTIONS: '/membership/fuel-transaction/',
     GET_INFO_BRANCH: '/business/branches/',
     VALIDATE_OTP: '/membership/otp-validation/',
+    LIST_PRODUCTS:'/store/products/',
+    LIST_CATEGORIES:'/store/product-categories/'
 }
