@@ -87,6 +87,8 @@ const PersonalInfoForm = () => {
             <Input 
                 //autoComplete={false}
                 autoCorrect={false}
+                autoCapitalize="none"
+                autoComplete="off"
                 //editable={false}
                 isLogged={true} 
                 value={email} 
@@ -137,13 +139,14 @@ const PersonalInfoForm = () => {
                 <Text style={styles.lbl}>Género</Text>
                 <View style={styles.input}>
                     <Select
-                        value={gender}
+                        selectedValue={gender}
                         onValueChange={(value) => dispatch(onChangeInputProf({prop:'gender', value}))}
                         borderWidth={0}
                         placeholder="Escoge tu genero"
                         style={{}}>
                             <Select.Item value="MALE" label="Masculino"/>
                             <Select.Item value="FEMALE" label="Femenino"/>
+                            <Select.Item value="OTHER" label="Otro"/>
                         </Select>
 
                 </View>

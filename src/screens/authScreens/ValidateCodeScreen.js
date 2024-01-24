@@ -12,7 +12,7 @@ import ScreenBaseValidateCode from "../../components/ScreenBaseValidateCode";
 import ModalAlertSuccess from "../../components/modals/AlertModalSucces";
 import ModalAlertFailed from "../../components/modals/ModalAlertFail";
 import { useDispatch, useSelector } from "react-redux";
-import { updateVerificationCode, validateCode, changeModal } from "../../store/ducks/authDuck";
+import { updateVerificationCode, validateCode, changeModal, resetValidateCode, verifyPhoneNumber } from "../../store/ducks/authDuck";
 
 const {height, width} = Dimensions.get('window');
 
@@ -95,7 +95,11 @@ const ValidateCodeScreen = () => {
     //    } 
     //}
     return(
-        <ScreenBaseValidateCode goBack={() => navigation.goBack()}>
+        <ScreenBaseValidateCode 
+            goBack={() => {
+                dispatch(resetValidateCode())
+                navigation.goBack()
+            }}>
 
             <Text style={styles.subtitle}>Ingresa el código de verificación que enviamos.</Text>
             <View style={styles.validateCont}>{renderCodeInputs()}</View>
@@ -106,7 +110,7 @@ const ValidateCodeScreen = () => {
                     onPress={async() => await dispatch(validateCode({verificationCode, phone}))}>
                     {loader ? <Spinner size={'sm'} color={'white'} /> : <Text style={styles.txtValidate}>Verificar</Text>}
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => dispatch(verifyPhoneNumber(phone))}>
                     <Text style={styles.resend}>Reenviar código</Text>
                 </TouchableOpacity>
             </View>

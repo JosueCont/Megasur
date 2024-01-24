@@ -24,6 +24,7 @@ const GenderComponent = () => {
                     style={{}}>
                         <Select.Item value="MALE" label="Masculino"/>
                         <Select.Item value="FEMALE" label="Femenino"/>
+                        <Select.Item value="OTHER" label="Otro"/>
                     </Select>
 
             </View>

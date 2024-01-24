@@ -16,7 +16,11 @@ const MailComponent = () => {
         <View style={styles.container}>
             <Text style={styles.title}>Genial, ¿cuál es tu correo electrónico?</Text>
             <Text style={styles.lbl}>Correo electrónico</Text>
-            <Input value={email} onChangeText={(value) => dispatch(changeInput({prop:'email',value}))} />
+            <Input 
+                value={email} 
+                onChangeText={(value) => dispatch(changeInput({prop:'email',value}))} 
+                autoCapitalize="none"
+                autoComplete="off"/>
             {email != '' && !isValid && <Text style={{color: Colors.red, marginTop:10, fontSize: getFontSize(16), }}>El email es invalido</Text>}
             <View style={{ width: width/1.4}}>
                 <Text style={styles.legend}>¡Gracias por confiar en nosotros!Te prometemos no enviarte spam.</Text>

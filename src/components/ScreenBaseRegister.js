@@ -30,7 +30,7 @@ const ScreenBaseRegister = ({children, changeSection,componentType, onsubmit, is
             <Text style={{fontSize: getFontSize(40), color: Colors.blackInit, textAlign:'center', fontWeight:'800', marginBottom:10}}>¡Bienvenido!</Text>
             <ScrollView
                 ref={scrollViewRef}
-                keyboardShouldPersistTaps='handled'
+                keyboardShouldPersistTaps='always'
                 automaticallyAdjustKeyboardInsets
                 nestedScrollEnabled={true}
                 overScrollMode="always"

@@ -21,6 +21,7 @@ const REGISTER_FAILED = 'register_failed'
 const LOGIN_SUCCESS = 'login_success'
 const LOGIN_FAILED = 'login_failed'
 const LOGOUT = 'logout'
+const RESET_VALIDATE = 'reset_validate_code'
 
 const initialState = {
     phone:'',
@@ -83,6 +84,8 @@ const authDuck = (state = initialState, action) => {
             return{ ...state, loading: false, isLogged: false, modalFailed: true, message: action.message}
         case LOGOUT:
             return{ ...state, isLogged: false, dataUser: null}
+        case RESET_VALIDATE:
+            return{ ...state, isValidPhoneNumber: false}
         default:
             return state;
     }
@@ -220,6 +223,12 @@ export const logoutAction = () => async(dispatch) => {
 
     } catch (e) {
         console.log('error al cerrar session', e);
+    }
+}
+
+export const resetValidateCode = () => {
+    return{
+        type: RESET_VALIDATE
     }
 }
 
