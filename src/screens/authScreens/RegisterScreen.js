@@ -99,6 +99,18 @@ const RegisterScreen = () => {
             }
           });
     }
+
+    const onSubmitForm = async() => {
+        const expoToken = await getExpoToken();
+        const os = Platform.OS;
+        const password = getRandomPassword()
+        await dispatch(onRegisterUser({
+            email, first_name:name, last_name: lastName, 
+            birthday:birthdayDate != '' ? moment(birthdayDate,'DD/MM/YYYY').format('YYYY-MM-DD') : '', 
+            gender, expoToken, os, password, phone
+        }))
+
+    }
     return(
         <ScreenBaseRegister 
             scrollViewRef={scrollViewRef}
@@ -117,6 +129,7 @@ const RegisterScreen = () => {
                         //navegar a pantalla de gracias
                         //navigation.navigate('RegisterDone')
                         //console.log('Omitir respuestas')
+                        onSubmitForm()
                     },400)
                 }}
             />

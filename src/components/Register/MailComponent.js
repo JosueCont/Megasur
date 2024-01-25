@@ -19,6 +19,7 @@ const MailComponent = () => {
             <Input 
                 value={email} 
                 onChangeText={(value) => dispatch(changeInput({prop:'email',value}))} 
+                autoCorrect={false}
                 autoCapitalize="none"
                 autoComplete="off"/>
             {email != '' && !isValid && <Text style={{color: Colors.red, marginTop:10, fontSize: getFontSize(16), }}>El email es invalido</Text>}

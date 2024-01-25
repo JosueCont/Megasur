@@ -2,7 +2,7 @@ import axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { postRefreshToken } from './ApiApp';
 
-export const baseURL = 'https://f735-2806-10a6-15-1192-5c2f-4a30-4998-e845.ngrok-free.app'//'https://api.megasur.hiumanlab.mx';
+export const baseURL = 'https://api.megasur.hiumanlab.mx';
 
 let config = {
     baseURL:baseURL,
