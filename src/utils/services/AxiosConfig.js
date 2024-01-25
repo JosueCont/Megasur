@@ -64,6 +64,6 @@ export const axiosGet = async (url, params = '') => {
     return await APIKit.get(`${url}${params}`);
 }
 
-export const axiosPut = async(url, data) => {
-    return await APIKit.put(`${url}`, data)
+export const axiosPut = async(url, data, config={}) => {
+    return await APIKit.put(`${url}`, data, config)
 }

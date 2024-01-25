@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, View, TouchableOpacity, StyleSheet, Animated } from "react-native";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { Colors } from "../utils/Colors";
 import { getFontSize } from "../utils/functions";
@@ -27,23 +27,23 @@ const CustomBottomTabBar = ({state, navigation}) => {
                 let label;
                 switch (route.name) {
                     case "Home":
-                        iconName = "home-outline";
+                        iconName = focused ? 'home-sharp': "home-outline";
                         label = 'Inicio'
                         break;
                     case "Charges":
-                        iconName = "local-gas-station";
+                        iconName = focused ? "gas-station" : 'gas-station-outline';
                         label = 'Cargas'
                         break;
                     case "Scan":
-                        iconName = 'scan';
+                        iconName = 'qrcode-scan';
                         label = 'Escanea'
                         break;
                     case 'Stations':
-                        iconName = 'location-outline';
+                        iconName = focused ? 'location-sharp' : 'location-outline';
                         label = 'Estaciones'
                         break;
                     default:
-                        iconName = 'person-outline';
+                        iconName = focused ? 'person' : 'person-outline';
                         label = 'Perfíl'
                         break;
                 }
@@ -79,12 +79,12 @@ const CustomBottomTabBar = ({state, navigation}) => {
                                 <View style={{ alignItems: "center"}}>
                                     {route.name === 'Scan' ? (
                                         <View style={styles.scanItem}>
-                                            <Ionicons name={iconName} size={20} color={itemColor} style={{ marginBottom: 2}}/>
+                                            <MaterialCommunityIcons name={iconName} size={20} color={itemColor} style={{ marginBottom: 2}}/>
                                             <Text style={[{color: itemColor }, styles.tabBarText]}>{label}</Text>
                                         </View>
                                     ):(
                                         <>
-                                            {route.name === 'Charges' ? <MaterialIcons name={iconName} size={21} color={itemColor} style={{ marginBottom: 2}}/>
+                                            {route.name === 'Charges' ? <MaterialCommunityIcons name={iconName} size={21} color={itemColor} style={{ marginBottom: 2}}/>
                                               : <Ionicons  name={iconName} size={20} color={itemColor} style={{ marginBottom: 2}}/>}
                                             <Text style={[{color: itemColor }, styles.tabBarText]}>{label}</Text>
                                         </>
