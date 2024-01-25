@@ -24,7 +24,7 @@ export const getCards = async(userId) => await axiosGet(`${axiosTypes.CARDS}${us
 export const postValidateOTP = async(data) => await axiosPost(axiosTypes.VALIDATE_OTP, data)
 
 //exchange center
-export const getListProducts = async() => await axiosGet(axiosTypes.LIST_PRODUCTS)
+export const getListProducts = async(filters) => await axiosGet(`${axiosTypes.LIST_PRODUCTS}${filters}`)
 export const getListCategories = async() => await axiosGet(axiosTypes.LIST_CATEGORIES)
 
 //stations

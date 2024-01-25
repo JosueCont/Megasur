@@ -43,8 +43,8 @@ export const theme = extendTheme({
         initialColorMode: 'light',
     },
     fonts: {
-        heading: 'Roboto',
-        body: 'Roboto',
-        mono: 'Roboto',
+        //heading: 'Roboto',
+        //body: 'Roboto',
+        //mono: 'Roboto',
     },
 });

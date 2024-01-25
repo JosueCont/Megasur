@@ -8,28 +8,41 @@ import { useNavigation } from "@react-navigation/native";
 import TypeExchange from "../../../components/Exchanges/TypeExchange";
 import Filters from "../../../components/Exchanges/Filters";
 import ExchangeList from "../../../components/Exchanges/ExchangesList";
-import { getCategories, getProducts, onChangeType } from "../../../store/ducks/exchangeDuck";
+import { changeModalEx, getCategories, getProducts, onChangeType } from "../../../store/ducks/exchangeDuck";
 import Cart from "../../../components/Exchanges/Cart";
+import ModalShoppingCart from "../../../components/modals/ShoppingCart";
 
 const ProductsScreen = () => {
     const dispatch = useDispatch();
     const navigation = useNavigation();
     //const [selectedType, setSelected] = useState(0)
-    const [selectedFilter, setFilter] = useState(0)
+    const [selectedFilter, setFilter] = useState(null)
     const categories = useSelector(state => state.exchangeDuck.categories)
     const products = useSelector(state => state.exchangeDuck.products)
     const userId = useSelector(state => state.authDuck.dataUser)
     const selectedType = useSelector(state => state.exchangeDuck.selectedType)
     const shoppingCart = useSelector(state => state.exchangeDuck.cart)
-
+    const modalshopping = useSelector(state => state.exchangeDuck.modalShoppingCart)
 
     useEffect(() => {
         (async() => {
-            await dispatch(getProducts())
             await dispatch(getCategories())              
         })()
-        console.log('user',userId)
     },[])
+    useEffect(() => {
+        (async() => {
+            const filters = await buildUrlPath(selectedFilter)
+            await dispatch(getProducts(filters))
+        })()
+    },[selectedFilter])
+
+    const buildUrlPath = (filters) => {
+        let path = ''
+        if (filters !=null) {
+            path += `?category_id=${encodeURIComponent(filters?.id)}`;
+        }
+        return path
+    }
 
     const filters = [
         {id:'1', title:'Gasolina'},
@@ -89,8 +102,12 @@ const ProductsScreen = () => {
                         <Text>Articulos canjeados</Text>
                     )}
                 </View>
+                <ModalShoppingCart 
+                    visible={modalshopping} 
+                    setVisible={() => dispatch(changeModalEx({prop:'modalShoppingCart', val:false}))}
+                />
             </HeaderLogged>
-            {selectedType ===1 && <Cart products={shoppingCart.length}/>}
+            {selectedType ===1 && <Cart products={shoppingCart.length} pressed={() => dispatch(changeModalEx({prop:'modalShoppingCart', val:true}))}/>}
         </>
     )
 }

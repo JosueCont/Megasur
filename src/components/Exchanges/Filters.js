@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 const {height, width} = Dimensions.get('window');
 
-const Filters = ({filters, selected=0, setSelected}) => {
+const Filters = ({filters, selected=null, setSelected}) => {
     return(
         <View>
             <View style={styles.container}>
@@ -21,12 +21,12 @@ const Filters = ({filters, selected=0, setSelected}) => {
                     snapToAlignment="center"
                     renderItem={({item,index}) => (
                         <TouchableOpacity 
-                            onPress={() => setSelected(index)}
+                            onPress={() => setSelected(item)}
                             key={index} style={[styles.item,{
-                            borderWidth: selected === index ? 1 : 0,
-                            borderColor: selected === index ? Colors.blueGreen : Colors.white
+                            borderWidth: selected?.id === item?.id ? 1 : 0,
+                            borderColor: selected?.id === item?.id ? Colors.blueGreen : Colors.white
                             }]}>
-                            <Text style={[styles.title,{ color: selected === index ? Colors.blueGreen : Colors.grayStrong}]}>{item?.name}</Text>
+                            <Text style={[styles.title,{ color: selected?.id === item?.id ? Colors.blueGreen : Colors.grayStrong}]}>{item?.name}</Text>
                         </TouchableOpacity>
                     )}
                 />

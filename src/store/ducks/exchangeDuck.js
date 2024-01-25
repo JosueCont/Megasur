@@ -7,6 +7,7 @@ const CHANGE_TYPE = 'change_type'
 const CHANGE_COUNT_PRODUCT = 'change_count_product'
 const RESET_COUNT = 'reset_count'
 const ADD_CART_ITEM = 'add_cart_item'
+const CHANGE_MODAL = 'change_modal_exchan'
 
 const initialState = {
     loading:false,
@@ -14,7 +15,8 @@ const initialState = {
     products:[],
     selectedType:0,
     countProduct:0,
-    cart:[]
+    cart:[],
+    modalShoppingCart:false
 }
 
 const exchangeDuck = (state = initialState, action) => {
@@ -33,6 +35,8 @@ const exchangeDuck = (state = initialState, action) => {
             return{ ...state, countProduct:0}
         case ADD_CART_ITEM:
             return{ ...state, cart: [...state.cart, action.payload]}
+        case CHANGE_MODAL:
+            return{ ...state, [action.payload.prop]: action.payload.val}
         default:
             return state;
     }
@@ -56,9 +60,9 @@ export const onChangeType = (type) => {
     }
 }
 
-export const getProducts = () => async(dispatch) => {
+export const getProducts = (filters) => async(dispatch) => {
     try {
-        const response = await getListProducts();
+        const response = await getListProducts(filters);
         console.log('productos',response?.data)
         dispatch({type: GET_PRODUCTS, payload: response?.data?.items})
     } catch (e) {
@@ -86,6 +90,13 @@ export const addCartItem = (item) => {
     return{
         type: ADD_CART_ITEM,
         payload: item
+    }
+}
+
+export const changeModalEx = ({prop, val}) => {
+    return{
+        type: CHANGE_MODAL,
+        payload: {prop,val}
     }
 }
 
