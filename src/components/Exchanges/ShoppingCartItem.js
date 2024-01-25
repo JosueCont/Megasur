@@ -2,8 +2,12 @@ import React,{ useState, useEffect} from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { getFontSize } from "../../utils/functions";
 import { Colors } from "../../utils/Colors";
+import { FontAwesome } from '@expo/vector-icons';
+import { useDispatch } from "react-redux";
+import { deleteCarItem } from "../../store/ducks/exchangeDuck";
 
-const ShoppingItem = ({item, index}) => {
+const ShoppingItem = ({item, index,onDeleteItem}) => {
+    const dispatch = useDispatch();
     return(
         <View style={{flexDirection:'row', marginBottom:12, }}>
             <View style={{width: 75, height: 75, borderRadius: 13, borderWidth: 0.5, borderColor: Colors.grayStrong, marginRight:10}}>
@@ -22,6 +26,10 @@ const ShoppingItem = ({item, index}) => {
 
                 </View>
             </View>
+            <TouchableOpacity style={{alignSelf:'center', marginLeft:40}} onPress={() => dispatch(deleteCarItem(item?.id))}>
+
+                <FontAwesome name="trash-o" size={24} color={Colors.pink} />
+            </TouchableOpacity>
         </View>
     )
 }

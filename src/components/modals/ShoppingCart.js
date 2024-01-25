@@ -11,18 +11,17 @@ import Animated, {
   } from 'react-native-reanimated';
   
   import { GestureDetector, GestureHandlerRootView, PanGestureHandler, Gesture } from 'react-native-gesture-handler';
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import ShoppingItem from "../Exchanges/ShoppingCartItem";
 
 const {height, width} = Dimensions.get('window');
 
 const ModalShoppingCart = ({visible, setVisible, message}) => {
 
+
     const translateY = useSharedValue(0);
     const pan = Gesture.Pan()
     const shoppingCart = useSelector(state => state.exchangeDuck.cart)
-
-    console.log('cart', shoppingCart)
     
     const  onStart = (event) => {
     console.log('event',event)
@@ -34,7 +33,6 @@ const ModalShoppingCart = ({visible, setVisible, message}) => {
     }
     const onEnd = _ => {
         //if (setVisible) {
-            // replace `onClose` with your close function
             runOnJS(setVisible)();
             translateY.value= 0
         //}
@@ -57,37 +55,46 @@ const ModalShoppingCart = ({visible, setVisible, message}) => {
                 <GestureHandlerRootView>
                     <GestureDetector gesture={pan.onStart((event) => onStart(event)).onUpdate((event,ctx) => onActive(event,ctx)).onEnd((event) => onEnd(event))}>
                         <Animated.View style={[styles.card, animatedStyle]}>
-                            <ScrollView 
-                                showsVerticalScrollIndicator={false}
-                                contentContainerStyle={{ flexGrow:1, paddingBottom: 10}}
-                                style={styles.contentItems}>
-                                {shoppingCart?.map((item,index) => <ShoppingItem item={item} index={index}/>)}
-                            </ScrollView>
-                            <View style={styles.contInfo}>
-                                <Text style={{flex:1}}>Enviar a:</Text>
-                                <View style={styles.contDelivery}>
-                                    <View style={styles.input}>
-                                        <Select
-                                            value={''}
-                                            //onValueChange={(value) => dispatch(onChangeInputProf({prop:'gender', value}))}
-                                            borderWidth={0}
-                                            placeholder="Sucursal"
-                                            style={{}}>
-                                                <Select.Item value="MALE" label="Masculino"/>
-                                                <Select.Item value="FEMALE" label="Femenino"/>
-                                            </Select>
+                            {shoppingCart.length > 0 ? (
+                                <>
+                                <ScrollView 
+                                    showsVerticalScrollIndicator={false}
+                                    contentContainerStyle={{ flexGrow:1, paddingBottom: 10}}
+                                    style={styles.contentItems}>
+                                    {shoppingCart?.map((item,index) => <ShoppingItem item={item} index={index} />)}
+                                </ScrollView>
+                                <View style={styles.contInfo}>
+                                    <Text style={{flex:1}}>Enviar a:</Text>
+                                    <View style={styles.contDelivery}>
+                                        <View style={styles.input}>
+                                            <Select
+                                                value={''}
+                                                //onValueChange={(value) => dispatch(onChangeInputProf({prop:'gender', value}))}
+                                                borderWidth={0}
+                                                placeholder="Sucursal"
+                                                style={{}}>
+                                                    <Select.Item value="MALE" label="Masculino"/>
+                                                    <Select.Item value="FEMALE" label="Femenino"/>
+                                                </Select>
 
+                                        </View>
+                                        <Text style={styles.lblDelivery}>Fecha estimada de entrega : <Text style={{fontWeight:'700'}}>14 sept 2023</Text></Text>
                                     </View>
-                                    <Text style={styles.lblDelivery}>Fecha estimada de entrega : <Text style={{fontWeight:'700'}}>14 sept 2023</Text></Text>
                                 </View>
-                            </View>
-                            <View style={styles.contTotal}>
-                                <Text>Total:</Text>
-                                <Text style={styles.lblPoints}>570pts</Text>
-                            </View>
-                            <TouchableOpacity style={styles.btn}>
-                                <Text style={styles.lblBtn}>Realizar pedido</Text>
-                            </TouchableOpacity>
+                                <View style={styles.contTotal}>
+                                    <Text>Total:</Text>
+                                    <Text style={styles.lblPoints}>570pts</Text>
+                                </View>
+                                <TouchableOpacity style={styles.btn}>
+                                    <Text style={styles.lblBtn}>Realizar pedido</Text>
+                                </TouchableOpacity>
+                                </>
+
+                            ):(
+                                <View>
+                                    <Text>No hay articulos en el carrito de canjes</Text>
+                                </View>
+                            )}
                         </Animated.View>
                     </GestureDetector>
                 </GestureHandlerRootView>
