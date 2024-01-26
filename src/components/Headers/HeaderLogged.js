@@ -21,8 +21,8 @@ const HeaderLogged = ({children,isBack=false, title='Bienvenidos', onRefresh, re
                 hidden={false}
             />
             <View style={styles.header}>
-                <View style={{flexDirection:'row', }}>
-                     {isBack && <TouchableOpacity onPress={goBack}><AntDesign name="arrowleft" size={24} color={Colors.white} /></TouchableOpacity>}
+                <View style={{flexDirection:'row', alignItems:'center' }}>
+                     {isBack && <TouchableOpacity style={{marginRight:5}} onPress={goBack}><AntDesign name="arrowleft" size={24} color={Colors.white} /></TouchableOpacity>}
                      <Text style={styles.title}>{title}</Text>
                 </View>
                 <TouchableOpacity style={styles.btnNotify}>

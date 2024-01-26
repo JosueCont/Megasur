@@ -1,13 +1,18 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useDebugValue} from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions} from "react-native";
 import { getFontSize } from "../../utils/functions";
 import { Colors } from "../../utils/Colors";
 import FuelLoader from "../FuelLoader";
 import { Feather } from '@expo/vector-icons'; 
+import { useNavigation } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import { onChangeType } from "../../store/ducks/exchangeDuck";
 
 const {height, width} = Dimensions.get('window');
 
 const ExchangeCenter = () => {
+    const navigation = useNavigation()
+    const dispatch = useDispatch();
     return(
         <View style={styles.card}>
             <View style={styles.contHeader}>
@@ -19,8 +24,21 @@ const ExchangeCenter = () => {
             </View>
             <FuelLoader withBorder={false} flow={1} color={Colors.green} isBig={true}/>
             <View style={styles.contBtn}>
-                <TouchableOpacity style={styles.btn}><Text style={styles.lbl}>Canjear combustible</Text></TouchableOpacity>
-                <TouchableOpacity style={styles.btn}><Text style={styles.lbl}>Canjear artículos</Text></TouchableOpacity>
+                <TouchableOpacity 
+                    onPress={() => {
+                        dispatch(onChangeType(0));
+                        navigation.navigate('Exchange')
+                    }}
+                    style={styles.btn}>
+                    <Text style={styles.lbl}>Canjear combustible</Text>
+                </TouchableOpacity>
+                <TouchableOpacity 
+                    onPress={() => {
+                        dispatch(onChangeType(1))
+                        navigation.navigate('Exchange')}}
+                    style={styles.btn}>
+                    <Text style={styles.lbl} >Canjear artículos</Text>
+                </TouchableOpacity>
             </View>
         </View>
     )

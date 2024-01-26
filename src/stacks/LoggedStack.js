@@ -7,6 +7,9 @@ import ChargerScreen from "../screens/loggedScreens/ChargerScreen";
 import ScanScreen from "../screens/loggedScreens/ScanScreen";
 import LocationScreen from "../screens/loggedScreens/LocationScreen";
 import ProfileScreen from "../screens/loggedScreens/ProfileScreen";
+import ProductsScreen from "../screens/loggedScreens/Home/ProductsScreen";
+import DetailProduct from "../screens/loggedScreens/Home/DetailProduct";
+import ConfirmExchange from "../screens/loggedScreens/Home/ConfirmExchange";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -22,6 +25,9 @@ const HomeNavigator = () => {
             })}
         >
             <Stack.Screen name="House" component={HomeScreen}/>
+            <Stack.Screen name="Exchange" component={ProductsScreen}/>
+            <Stack.Screen name="DetailProduct" component={DetailProduct}/>
+            <Stack.Screen name="Confirm" component={ConfirmExchange} />
         </Stack.Navigator>
 
     )

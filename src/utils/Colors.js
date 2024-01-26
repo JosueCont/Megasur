@@ -15,5 +15,6 @@ export const Colors = {
     purple:'#4D0992',
     greenStrong:'#166838',
     grayV2:'#F0F3F5',
-    borders:'#BFBFBF'
+    borders:'#BFBFBF',
+    yellowStrong:'#FAB711'
 }
