@@ -8,6 +8,7 @@ import { StatusBar } from 'expo-status-bar';
 import FuelLoader from "./FuelLoader";
 import LogoMega from "../../assets/svg/LogoMega";
 import { useSelector } from "react-redux";
+import KeyboardAvoidingCustom from "./KeyboardAvoidingCustom";
 
 const {height, width} = Dimensions.get('window');
 
@@ -15,6 +16,7 @@ const ScreenBaseRegister = ({children, changeSection,componentType, onsubmit, is
     //MAndar una variable isDisable para que identifique en cada componente si esta desabilitado el boton
     const loader = useSelector(state => state.authDuck.loading)
     return(
+        <KeyboardAvoidingCustom>
         <View style={styles.container}>
             <StatusBar
                 animated={true}
@@ -31,9 +33,10 @@ const ScreenBaseRegister = ({children, changeSection,componentType, onsubmit, is
             <ScrollView
                 ref={scrollViewRef}
                 keyboardShouldPersistTaps='handled'
-                automaticallyAdjustKeyboardInsets
+                contentInsetAdjustmentBehavior='scrollableAxes'
                 nestedScrollEnabled={true}
-                overScrollMode="always"
+                overScrollMode='always'
+                //automaticallyAdjustKeyboardInsets
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{
                     flexGrow: 1,
@@ -53,6 +56,7 @@ const ScreenBaseRegister = ({children, changeSection,componentType, onsubmit, is
                 </TouchableOpacity> ):null}
             </ScrollView>
         </View>
+        </KeyboardAvoidingCustom>
     )
 }
 

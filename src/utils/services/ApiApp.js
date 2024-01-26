@@ -14,7 +14,7 @@ export const postRefreshToken = async(data) => await axiosPost(axiosTypes.REFRES
 export const getDataUser = async() => await axiosGet(axiosTypes.SECURITY_USER_DATA)
 export const postverifyEmail = async(data) => await axiosPost(`${axiosTypes.SECURITY_USER}${data}/verify-email/`)
 export const postVerifyCodeMail = async(id,code) => await axiosPost(`${axiosTypes.SECURITY_USER}${id}/confirm-verify-email/${code}/`)
-export const putUserData = async(data) => await axiosPut(axiosTypes.SECURITY_USER_DATA, data)
+export const putUserData = async(data) => await axiosPut(axiosTypes.SECURITY_USER_DATA, data,{headers: {'Content-Type': 'multipart/form-data',}})
 export const postDeleteAccount = async(data) => await axiosPost(axiosTypes.DELETE_ACCOUNT, data)
 
 /*Home */

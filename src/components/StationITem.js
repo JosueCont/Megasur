@@ -11,8 +11,8 @@ const StationItem = ({station, index, isLocation, changeRegion, openMaps}) => {
 
     const navigation = useNavigation();
     return(
-        <View 
-            onTouchEnd={() => isLocation ? changeRegion(station?.location_as_lat_long) : console.log('NAda') }
+        <TouchableOpacity 
+            onPress={() => isLocation ? changeRegion(station?.location_as_lat_long) : console.log('NAda') }
             style={[styles.card, {marginTop: isLocation ? 10 : 0, width: isLocation ? width/1.06 : width/1.1, }]} 
             key={index}>
             <View style={styles.contHeader}>
@@ -43,7 +43,7 @@ const StationItem = ({station, index, isLocation, changeRegion, openMaps}) => {
                     })} km</Text>
                 </View>
             </View>
-        </View>
+        </TouchableOpacity>
     )
 }
 

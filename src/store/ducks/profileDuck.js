@@ -158,12 +158,12 @@ export const onUpdateDataUser = (data) => async(dispatch) => {
 
         dispatch({type: LOADING})
         let dataSend = {...data}
-        for (let key in dataSend) {
+        for (let key in data) {
             formData.append(key, data[key]);
           }
         console.log('dataSend',formData)
         const response = await putUserData(formData)
-        console.log('response actualizar',response?.data)
+        console.log('response actualizar',response)
         dispatch({type: UPDATE_DATA_USER_SUCCESS, message:'Se ha actualizado la información del usuario'})
     } catch (e) {
         console.log('error actualizar',e)

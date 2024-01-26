@@ -17,6 +17,8 @@ const BirthdayComponent = () => {
     //const [birthdayDate, setBirthdayDate] = useState('')
     const [showDatePicker, setShowDatePicker] = useState(false);
     const birthdayDate = useSelector(state => state.authDuck.birthday)
+    const maximumDate = new Date(); // Fecha actual
+    maximumDate.setFullYear(maximumDate.getFullYear() - 18)
 
     const onShowDatepicker = () => {
         setShowDatePicker(!showDatePicker);
@@ -25,16 +27,18 @@ const BirthdayComponent = () => {
     const handleDateChange = ({type}, selectedDate) => {
         console.log('event',type)
         if(type === 'set'){
+            Platform.OS === 'android' && setShowDatePicker(false)
             const currentDate = selectedDate || date;
             setDate(currentDate);
             if(Platform.OS === 'android'){
                 dispatch(changeInput({prop:'birthday',value: moment(currentDate.toDateString()).format('DD/MM/YYYY')}))
                 //setBirthdayDate(moment(currentDate.toDateString()).format('DD/MM/YYYY'))
-                setShowDatePicker(false)
+                Platform.OS === 'ios' && setShowDatePicker(false)
             }
             //setShowDatePicker(false);
 
         }else{
+            setShowDatePicker(false)
             console.log('entro aqui')
         }
     };
@@ -56,6 +60,7 @@ const BirthdayComponent = () => {
                     mode="date"
                     display="spinner"
                     onChange={handleDateChange}
+                    maximumDate={maximumDate}
                 />
             )}
             {showDatePicker && Platform.OS === 'ios' && (
