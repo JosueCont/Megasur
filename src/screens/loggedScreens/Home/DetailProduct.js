@@ -42,8 +42,8 @@ const DetailProduct = () => {
                         gallery={product?.gallery}
                     />
                 ):(
-                    <View style={{justifyContent:'center', alignItems:'center', flex:1}}>
-                        <Text>No hay imagenes para mostrar</Text>
+                    <View style={{justifyContent:'center', alignItems:'center', flex:1,}}>
+                        <Image source={{uri: product?.image}} style={{resizeMode:'contain', width: width, height:200}}/>
                     </View>
                 )}
             </View>

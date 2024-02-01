@@ -13,5 +13,7 @@ export const axiosTypes = {
     GET_INFO_BRANCH: '/business/branches/',
     VALIDATE_OTP: '/membership/otp-validation/',
     LIST_PRODUCTS:'/store/products/',
-    LIST_CATEGORIES:'/store/product-categories/'
+    LIST_CATEGORIES:'/store/product-categories/',
+    CLOSE_BRANCHES: '/business/branches/distance/',
+    GET_ORDERS: '/store/orders/'
 }

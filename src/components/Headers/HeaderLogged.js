@@ -48,7 +48,7 @@ const HeaderLogged = ({children,isBack=false, title='Bienvenidos', onRefresh, re
                     paddingBottom: 20
                     
                 }}>
-                    <View style={{marginVertical:noPadding ? 0 : 20,}}>
+                    <View style={{marginVertical:noPadding ? 0 : 20, flex:1}}>
                         {children}
                     </View>
                 </ScrollView>

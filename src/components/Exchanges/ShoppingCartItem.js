@@ -2,8 +2,14 @@ import React,{ useState, useEffect} from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { getFontSize } from "../../utils/functions";
 import { Colors } from "../../utils/Colors";
+import { FontAwesome } from '@expo/vector-icons';
+import { useDispatch } from "react-redux";
+import { deleteCarItem } from "../../store/ducks/exchangeDuck";
+import { Entypo } from '@expo/vector-icons';
 
-const ShoppingItem = ({item, index}) => {
+
+const ShoppingItem = ({item, index,onDeleteItem}) => {
+    const dispatch = useDispatch();
     return(
         <View style={{flexDirection:'row', marginBottom:12, }}>
             <View style={{width: 75, height: 75, borderRadius: 13, borderWidth: 0.5, borderColor: Colors.grayStrong, marginRight:10}}>
@@ -13,15 +19,19 @@ const ShoppingItem = ({item, index}) => {
                 <Text style={{color: Colors.blueGreen, fontSize: getFontSize(16), fontWeight:'400'}}>{item?.name}</Text>
                 <View style={styles.contCounter}>
                     <TouchableOpacity >
-                        <Text style={[styles.lbl,{fontSize: getFontSize(20),}]}>-</Text>
+                        <Entypo name="minus" size={18} color={Colors.blueGreen} />
                     </TouchableOpacity>
                     <Text style={styles.lblCount}>0</Text>
                     <TouchableOpacity >
-                        <Text style={[styles.lbl,{ fontSize: getFontSize(20)}]}>+</Text>
+                        <Entypo name="plus" size={18} color={Colors.blueGreen} />
                     </TouchableOpacity>
 
                 </View>
             </View>
+            <TouchableOpacity style={{alignSelf:'center', marginLeft:40}} onPress={() => dispatch(deleteCarItem(item?.id))}>
+
+                <FontAwesome name="trash-o" size={24} color={Colors.pink} />
+            </TouchableOpacity>
         </View>
     )
 }

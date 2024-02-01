@@ -16,5 +16,8 @@ export const Colors = {
     greenStrong:'#166838',
     grayV2:'#F0F3F5',
     borders:'#BFBFBF',
-    yellowStrong:'#FAB711'
+    yellowStrong:'#FAB711',
+    grayBorders:'#E0E0E0',
+    lightGreen:'#49AA1C',
+    grayV3: '#8A9EA8'
 }

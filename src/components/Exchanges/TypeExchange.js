@@ -19,7 +19,7 @@ const TypeExchange = ({selected, setSelected}) => {
                 <TouchableOpacity 
                     key={index} 
                     onPress={() => setSelected(index)}
-                    style={[styles.item,{backgroundColor: selected === index ? Colors.orange : Colors.white}]}>
+                    style={[styles.item,{backgroundColor: selected === index ? Colors.yellowStrong : Colors.white}]}>
                 <Text style={[styles.lbl, { color: selected === index ? Colors.darkGray : Colors.grayStrong }]}>{item.title}</Text>
             </TouchableOpacity>
             ))}
@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
         //paddingHorizontal:10,
         justifyContent:'space-between',
         alignItems:'center',
+        paddingHorizontal:5,
         borderRadius:24,
         elevation:4,
         shadowColor: '#000', // Color de la sombra

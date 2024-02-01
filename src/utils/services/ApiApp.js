@@ -26,6 +26,8 @@ export const postValidateOTP = async(data) => await axiosPost(axiosTypes.VALIDAT
 //exchange center
 export const getListProducts = async(filters) => await axiosGet(`${axiosTypes.LIST_PRODUCTS}${filters}`)
 export const getListCategories = async() => await axiosGet(axiosTypes.LIST_CATEGORIES)
+export const getCloseBranches = async(coords) => await axiosGet(`${axiosTypes.CLOSE_BRANCHES}${coords}`)
+export const getOrders = async(filters) => await axiosGet(`${axiosTypes.GET_ORDERS}${filters}`) 
 
 //stations
 export const getStations = async(lat, long) => await axiosGet(`${axiosTypes.CLOSE_STATIONS}?lat=${lat}&long=${long}`)

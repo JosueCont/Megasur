@@ -1,5 +1,6 @@
 import React,{ useEffect, useState} from "react";
 import { View, Text, TouchableOpacity, Dimensions, StyleSheet } from "react-native";
+import { Skeleton } from "native-base";
 import { getFontSize } from "../../utils/functions";
 import { Colors } from "../../utils/Colors";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,16 +9,24 @@ import ExchangeItem from "./ExchangeItem";
 const {height, width} = Dimensions.get('window');
 
 
-const ExchangeList = ({data}) => {
+const ExchangeList = ({data, showTitle=true, showActions=true}) => {
+    const loader = useSelector(state => state.exchangeDuck.loading)
 
     return(
         <View>
-            <Text style={styles.title}>Especiales</Text>
+            {showTitle && <Text style={styles.title}>Especiales</Text>}
             <View style={styles.container}>
-                {data.map((item,index) => (
+                {loader ? (
+                    <View style={{flex:1,flexDirection:'row', justifyContent:'space-between'}}>
+                        <Skeleton lines={1} width={width/2.5} height={260} mt={4} borderRadius={13}/>
+                        <Skeleton lines={1} width={width/2.5} height={260} mt={4} borderRadius={13}/>
+
+                    </View>
+                ) : data.map((item,index) => (
                     <ExchangeItem 
                         index={index}
                         item={item}
+                        showActions={showActions}
                     />
                 ))}
             </View>
