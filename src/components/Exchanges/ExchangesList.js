@@ -9,12 +9,12 @@ import ExchangeItem from "./ExchangeItem";
 const {height, width} = Dimensions.get('window');
 
 
-const ExchangeList = ({data}) => {
+const ExchangeList = ({data, showTitle=true, showActions=true}) => {
     const loader = useSelector(state => state.exchangeDuck.loading)
 
     return(
         <View>
-            <Text style={styles.title}>Especiales</Text>
+            {showTitle && <Text style={styles.title}>Especiales</Text>}
             <View style={styles.container}>
                 {loader ? (
                     <View style={{flex:1,flexDirection:'row', justifyContent:'space-between'}}>
@@ -26,6 +26,7 @@ const ExchangeList = ({data}) => {
                     <ExchangeItem 
                         index={index}
                         item={item}
+                        showActions={showActions}
                     />
                 ))}
             </View>

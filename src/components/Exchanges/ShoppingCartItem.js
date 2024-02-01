@@ -5,6 +5,8 @@ import { Colors } from "../../utils/Colors";
 import { FontAwesome } from '@expo/vector-icons';
 import { useDispatch } from "react-redux";
 import { deleteCarItem } from "../../store/ducks/exchangeDuck";
+import { Entypo } from '@expo/vector-icons';
+
 
 const ShoppingItem = ({item, index,onDeleteItem}) => {
     const dispatch = useDispatch();
@@ -17,11 +19,11 @@ const ShoppingItem = ({item, index,onDeleteItem}) => {
                 <Text style={{color: Colors.blueGreen, fontSize: getFontSize(16), fontWeight:'400'}}>{item?.name}</Text>
                 <View style={styles.contCounter}>
                     <TouchableOpacity >
-                        <Text style={[styles.lbl,{fontSize: getFontSize(20),}]}>-</Text>
+                        <Entypo name="minus" size={18} color={Colors.blueGreen} />
                     </TouchableOpacity>
                     <Text style={styles.lblCount}>0</Text>
                     <TouchableOpacity >
-                        <Text style={[styles.lbl,{ fontSize: getFontSize(20)}]}>+</Text>
+                        <Entypo name="plus" size={18} color={Colors.blueGreen} />
                     </TouchableOpacity>
 
                 </View>

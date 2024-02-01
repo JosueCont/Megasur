@@ -1,27 +1,52 @@
 import React,{useEffect,useState} from "react";
 import {  Text, View, TouchableOpacity, StyleSheet, Dimensions, Image, ScrollView } from "react-native";
-import { Select, Modal } from "native-base";
+import { Select, Modal, useToast, Alert, VStack, HStack } from "native-base";
 import { Colors } from "../../utils/Colors";
 import { getFontSize } from "../../utils/functions";
 import Animated, {
     runOnJS,
-    useAnimatedGestureHandler,
     useAnimatedStyle,
     useSharedValue,
   } from 'react-native-reanimated';
   
-  import { GestureDetector, GestureHandlerRootView, PanGestureHandler, Gesture } from 'react-native-gesture-handler';
+  import { GestureDetector, GestureHandlerRootView, Gesture } from 'react-native-gesture-handler';
 import { useSelector, useDispatch } from "react-redux";
 import ShoppingItem from "../Exchanges/ShoppingCartItem";
 
 const {height, width} = Dimensions.get('window');
 
-const ModalShoppingCart = ({visible, setVisible, message}) => {
-
-
+const ModalShoppingCart = ({visible, setVisible, branches, points, onSubmit}) => {
     const translateY = useSharedValue(0);
     const pan = Gesture.Pan()
     const shoppingCart = useSelector(state => state.exchangeDuck.cart)
+    const total = 2000
+    const isVerifyMail = useSelector(state => state.profileDuck.isEmailVerified)
+    const [showToast, setShowToast] = useState(false)
+    const toast = useToast();
+
+    useEffect(() => {
+        if(showToast){
+            toast.show({
+                placement:'top',
+                render:({id}) =>(
+                    <Alert maxWidth="100%" alignSelf="center" flexDirection="row" status='error' variant='solid' backgroundColor={Colors.pink} zIndex={10}>
+                        <VStack space={1} flexShrink={1} w="100%" >
+                            <HStack flexShrink={1} alignItems="center" justifyContent="space-between" >
+                                <HStack space={2} flexShrink={1} alignItems="center">
+                                    <Alert.Icon/>
+                                    <Text style={{color: Colors.white, fontSize: getFontSize(15)}}>El correo no está verificado, realiza la acción en perfil para poder continuar</Text>
+                                </HStack>
+                            </HStack>
+                        </VStack>
+                    </Alert>
+                )
+            })
+            setTimeout(() => {
+                setShowToast(false)
+            },500)
+        }
+    },[showToast])
+
     
     const  onStart = (event) => {
     console.log('event',event)
@@ -29,13 +54,16 @@ const ModalShoppingCart = ({visible, setVisible, message}) => {
     };
     const onActive = (event, ctx) => {
         //console.log('update',event, ctx)
-        translateY.value = event.translationY;
+        if(event.translationY > 0) translateY.value = event.translationY;
     }
-    const onEnd = _ => {
-        //if (setVisible) {
+    const onEnd = event => {
+        console.log('end',event)
+        if (event.translationY > 0) {
             runOnJS(setVisible)();
-            translateY.value= 0
-        //}
+            setTimeout(() => {
+                translateY.value= 0
+            },1000)
+        }
     }
     
      
@@ -48,6 +76,14 @@ const ModalShoppingCart = ({visible, setVisible, message}) => {
         ],
         };
     });
+
+    const validateCar = () => {
+        if(isVerifyMail){
+            onSubmit()
+        }else{
+            setShowToast(true)
+        }
+    }
 
     return(
         <Modal isOpen={visible} animationPreset='slide' transparent>
@@ -64,7 +100,7 @@ const ModalShoppingCart = ({visible, setVisible, message}) => {
                                     {shoppingCart?.map((item,index) => <ShoppingItem item={item} index={index} />)}
                                 </ScrollView>
                                 <View style={styles.contInfo}>
-                                    <Text style={{flex:1}}>Enviar a:</Text>
+                                    <Text style={{flex:1, alignSelf:'flex-start', paddingTop:15}}>Enviar a:</Text>
                                     <View style={styles.contDelivery}>
                                         <View style={styles.input}>
                                             <Select
@@ -73,8 +109,10 @@ const ModalShoppingCart = ({visible, setVisible, message}) => {
                                                 borderWidth={0}
                                                 placeholder="Sucursal"
                                                 style={{}}>
-                                                    <Select.Item value="MALE" label="Masculino"/>
-                                                    <Select.Item value="FEMALE" label="Femenino"/>
+                                                    {branches.map(item => (
+                                                        <Select.Item value={item.id.toString()} label={item.label}/>
+
+                                                    ))}
                                                 </Select>
 
                                         </View>
@@ -83,9 +121,9 @@ const ModalShoppingCart = ({visible, setVisible, message}) => {
                                 </View>
                                 <View style={styles.contTotal}>
                                     <Text>Total:</Text>
-                                    <Text style={styles.lblPoints}>570pts</Text>
+                                    <Text style={styles.lblPoints}>{total.toString()}pts</Text>
                                 </View>
-                                <TouchableOpacity style={styles.btn}>
+                                <TouchableOpacity style={styles.btn} onPress={() => validateCar()}>
                                     <Text style={styles.lblBtn}>Realizar pedido</Text>
                                 </TouchableOpacity>
                                 </>

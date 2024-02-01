@@ -5,11 +5,13 @@ import { Colors } from "../../utils/Colors";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { addCartItem } from "../../store/ducks/exchangeDuck";
+import { Entypo } from '@expo/vector-icons';
+
 
 const {height, width} = Dimensions.get('window');
 
 
-const ExchangeItem = ({item, index}) => {
+const ExchangeItem = ({item, index, showActions=true}) => {
     const navigation = useNavigation()
     const dispatch = useDispatch()
     const shoppingCart = useSelector(state => state.exchangeDuck.cart)
@@ -19,40 +21,51 @@ const ExchangeItem = ({item, index}) => {
     }
 
     return(
-        <View style={styles.card}>
-            <TouchableOpacity style={styles.btnImage} onPress={() => navigation.navigate('DetailProduct',{product:item})}>
+        <View style={[styles.card, {height: showActions ? 260 : 180,}]}>
+            <TouchableOpacity 
+                disabled={!showActions} 
+                style={[styles.btnImage,{borderBottomColor: showActions ? Colors.grayStrong : Colors.white}]} 
+                onPress={() => navigation.navigate('DetailProduct',{product:item})}>
                 <Image source={{uri: item.image}} style={styles.img}/>
             </TouchableOpacity>
-            <View style={styles.content}>
-                <TouchableOpacity style={styles.btnName} onPress={() => navigation.navigate('DetailProduct',{product:item})}>
+            <View style={[styles.content, {justifyContent: showActions ?'flex-start' : 'flex-end'}]}>
+                <TouchableOpacity 
+                    disabled={!showActions} 
+                    style={[styles.btnName,{height: showActions ? 40 : 20,}]} 
+                    onPress={() => navigation.navigate('DetailProduct',{product:item})}>
                     <Text style={[styles.lbl,{fontSize: getFontSize(15)}]}>{item?.name}</Text>
                 </TouchableOpacity>
-                <View style={[styles.contNew,{backgroundColor: item?.isNewProduct ? Colors.yellowStrong : Colors.white}]}>
-                    {item?.isNewProduct && <Text style={[styles.lbl,{fontSize: getFontSize(10),}]}>Nuevo</Text>}
-                </View>
-                <Text style={[styles.lbl, {fontSize: getFontSize(16), marginBottom:13}]}>{item?.price_in_points?.toString()}pts</Text>
-                {item?.is_active ? findShoppingCart(item) ? (
-                    <View style={styles.contCounter}>
-                        <TouchableOpacity >
-                            <Text style={[styles.lbl,{fontSize: getFontSize(20),}]}>-</Text>
-                        </TouchableOpacity>
-                        <Text style={styles.lblCount}>0</Text>
-                        <TouchableOpacity >
-                            <Text style={[styles.lbl,{ fontSize: getFontSize(20)}]}>+</Text>
-                        </TouchableOpacity>
-
-                    </View>
-                ) : (
-                    <TouchableOpacity 
-                        onPress={() => dispatch(addCartItem(item))}
-                        style={[styles.contFooter,{borderColor: Colors.green,}]}>
-                        <Text style={styles.lblAdd}>Agregar al carrito</Text>
-                    </TouchableOpacity>
-                ): (
-                    <View style={[styles.contFooter,{borderColor: Colors.gray,}]}>
-                        <Text style={styles.lblNoProduc}>Agotado</Text>
+               {showActions && (
+                    <View style={[styles.contNew,{backgroundColor: item?.isNewProduct ? Colors.yellowStrong : Colors.white}]}>
+                        {item?.isNewProduct && <Text style={[styles.lbl,{fontSize: getFontSize(10),}]}>Nuevo</Text>}
                     </View>
                 )}
+                <Text style={[styles.lbl, {fontSize: getFontSize(16), marginBottom:13}]}>{item?.price_in_points?.toString()}pts</Text>
+                {showActions ? (
+                    item?.is_active ? findShoppingCart(item) ? (
+                        <View style={styles.contCounter}>
+                            <TouchableOpacity style={{ justifyContent:'center', alignItems:'flex-start', flex:1}}>
+                                <Entypo name="minus" size={18} color={Colors.blueGreen} />
+                            </TouchableOpacity>
+                            <Text style={styles.lblCount}>0</Text>
+                            <TouchableOpacity style={{ flex:1, justifyContent:'center', alignItems:'flex-end'}}>
+                                <Entypo name="plus" size={18} color={Colors.blueGreen} />
+                            </TouchableOpacity>
+    
+                        </View>
+                    ) : (
+                        <TouchableOpacity 
+                            onPress={() => dispatch(addCartItem(item))}
+                            style={[styles.contFooter,{borderColor: Colors.green,}]}>
+                            <Text style={styles.lblAdd}>Agregar al carrito</Text>
+                        </TouchableOpacity>
+                    ): (
+                        <View style={[styles.contFooter,{borderColor: Colors.gray,}]}>
+                            <Text style={styles.lblNoProduc}>Agotado</Text>
+                        </View>
+                    )
+
+                ):null }
             </View>
         </View>
     )
@@ -61,25 +74,24 @@ const ExchangeItem = ({item, index}) => {
 const styles = StyleSheet.create({
     card:{
         width: width/2.36, 
-        height:260,
         backgroundColor: Colors.white, 
         marginBottom:15, 
         borderRadius:13,
-        paddingBottom:5
+        paddingBottom:5,
+        borderColor: Colors.grayBorders,
+        borderWidth:1
     },
     btnImage:{
-        flex:1, 
-        borderBottomColor: Colors.grayStrong, 
+        flex:1,  
         borderBottomWidth:0.5
     },
     content:{
         flex:1, 
-        paddingHorizontal:10
+        paddingHorizontal:10,
     },
     btnName:{
         marginTop:10, 
         width:140, 
-        height:40,
         marginBottom:4
     },
     lbl:{
@@ -126,12 +138,14 @@ const styles = StyleSheet.create({
         borderRadius:8,
         alignItems:'center',
         justifyContent:'space-between',
-        paddingHorizontal:5
+        paddingHorizontal:5,
     },
     lblCount:{
         color: Colors.blueGreen,
         fontSize: getFontSize(13),
-        fontWeight:'400'
+        fontWeight:'400',
+        flex:2,
+        textAlign:'center'
     }
 })
 

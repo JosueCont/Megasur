@@ -5,7 +5,7 @@ import { Colors } from "../../utils/Colors";
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useDispatch, useSelector } from "react-redux";
 
-const Cart = ({pressed, products=0}) => {
+const Cart = ({pressed, products=0,}) => {
     return(
         <TouchableOpacity style={styles.container} onPress={pressed}>
             <Image source={require('../../../assets/cart.png')} style={styles.img}/>
