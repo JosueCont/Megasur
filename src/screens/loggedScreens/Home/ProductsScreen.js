@@ -18,6 +18,7 @@ import OrderSelected from "../../../components/Exchanges/OrderSelected";
 import DeliveredList from "../../../components/Exchanges/ReceivedList";
 import DeliveredSelected from "../../../components/Exchanges/DeliveredSelected";
 import EmptyList from "../../../components/Exchanges/EmptyList";
+import ExchangeFuel from "../../../components/Exchanges/ExchangeFuel";
 
 const ProductsScreen = () => {
     const dispatch = useDispatch();
@@ -93,7 +94,7 @@ const ProductsScreen = () => {
                 </View>
                 <View style={styles.content}>
                     {selectedType === 0 ? (
-                        <Text>Canjear conbustible</Text>
+                        <ExchangeFuel />
                     ) : selectedType === 1 ? (
                         <ExchangeList data={products}/>
 
