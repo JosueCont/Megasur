@@ -5,12 +5,13 @@ import { StatusBar } from 'expo-status-bar';
 import { getFontSize } from "../../utils/functions";
 import { Colors } from "../../utils/Colors";
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons'; 
-
+import { useNavigation } from "@react-navigation/native";
 
 const {height, width} = Dimensions.get('window');
 
 
-const HeaderLogged = ({children,isBack=false, title='Bienvenidos', onRefresh, refresh=false, goBack, noPadding=false}) => {
+const HeaderLogged = ({children,isBack=false, title='Bienvenidos', onRefresh, refresh=false, goBack, noPadding=false, showSubtitle=false}) => {
+    const navigation = useNavigation()
     return(
         <View style={styles.container}>
             <StatusBar
@@ -23,9 +24,12 @@ const HeaderLogged = ({children,isBack=false, title='Bienvenidos', onRefresh, re
             <View style={styles.header}>
                 <View style={{flexDirection:'row', alignItems:'center' }}>
                      {isBack && <TouchableOpacity style={{marginRight:5}} onPress={goBack}><AntDesign name="arrowleft" size={24} color={Colors.white} /></TouchableOpacity>}
-                     <Text style={styles.title}>{title}</Text>
+                     <View>
+                        <Text style={styles.title}>{title}</Text>
+                        {showSubtitle && <Text style={styles.lblSubtitle}>Para eliminar un mensaje deslicelo a la izquierda</Text>}
+                     </View>
                 </View>
-                <TouchableOpacity style={styles.btnNotify}>
+                {!showSubtitle && <TouchableOpacity style={styles.btnNotify} onPress={() => navigation.navigate('Notification') }>
                     <>
                         <MaterialCommunityIcons name="bell" size={24} color="black" />
                         <View style={styles.counterNotify}>
@@ -33,7 +37,7 @@ const HeaderLogged = ({children,isBack=false, title='Bienvenidos', onRefresh, re
                         </View>
                     
                     </>
-                </TouchableOpacity>
+                </TouchableOpacity>}
             </View>
             <ScrollView
                 
@@ -105,6 +109,11 @@ const styles = StyleSheet.create({
         color: Colors.white,
         fontSize: getFontSize(13), 
         fontWeight:'700', 
+    },
+    lblSubtitle:{
+        color: Colors.white,
+        fontSize: getFontSize(11),
+        fontWeight:'500'
     }
 
 })
