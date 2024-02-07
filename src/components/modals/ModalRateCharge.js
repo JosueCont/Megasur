@@ -50,10 +50,10 @@ const ModalRateCharge = ({visible, setVisible, onRate}) => {
                                 </View>
                                 <RateStars starRating={starRating} setStar={(val) => setStarRating(val)}/>
                                 <Text style={[styles.lblDesc,{fontSize: getFontSize(15), textAlign:'center', marginTop:10}]}>Muchas gracias, tu opinion nos importa.</Text>
-                                {starRating != null && <Text style={[styles.lblDesc,{fontSize: getFontSize(12), textAlign:'center'}]}>¡Tus puntos han sido agregados a tu cuenta!</Text> }
+                                {/*starRating != null && <Text style={[styles.lblDesc,{fontSize: getFontSize(12), textAlign:'center'}]}>¡Tus puntos han sido agregados a tu cuenta!</Text> */}
                                 {starRating != null ? (
                                     <View style={styles.contSectionPoints}>
-                                        <Text style={styles.lblPoints}>+100<Text style={{fontWeight:'400'}}>pts</Text></Text>
+                                        {/*<Text style={styles.lblPoints}>+100<Text style={{fontWeight:'400'}}>pts</Text></Text>*/}
                                     </View>
                                 ) : null}
                             

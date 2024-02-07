@@ -13,6 +13,8 @@ const SET_CODE = 'set_code'
 const SET_TIME = 'set_time'
 const UPDATE_AUTO_RUNNING = 'update_auto_running'
 
+const SAVE_LOCAL_STORAGE = 'save_localStorage'
+
 
 const initialState = {
     modalQuizz: false,
@@ -22,7 +24,9 @@ const initialState = {
     code:'',
     minutes:0,
     seconds:0,
-    loading:false
+    loading:false,
+    cardsStorage:[],
+    userStorage:null
 }
 
 const homeDuck = (state = initialState, action) => {
@@ -41,6 +45,8 @@ const homeDuck = (state = initialState, action) => {
             return{ ...state, minutes: action.minutes, seconds: action.seconds}
         case UPDATE_AUTO_RUNNING:
             return{ ...state, isRunning: false}
+        case SAVE_LOCAL_STORAGE:
+            return{ ...state, cardsStorage: action.payload.cards}
         default:
             return state;
     }
@@ -73,7 +79,7 @@ export const getDataConfi = () => async(dispatch) => {
 export const getQrCode = ({isRunning, user, cards, timer}) => async(dispatch) => {
     try {
         dispatch({type: LOADING})
-        let counter = timer * 60;
+        let counter = 30//timer * 60;
         let card_code = cards[0]?.code
         if(!isRunning){
             const secret = convertBase32(`${user.id.toString()}${user.user_code}${card_code}`);
@@ -88,8 +94,8 @@ export const getQrCode = ({isRunning, user, cards, timer}) => async(dispatch) =>
                 user_card: cards[0]?.user_card_id,
                 otp: totp
             }
-            const response = await postValidateOTP(dataSend)
-            //console.log('response otp validtion', response?.data)
+            //const response = await postValidateOTP(dataSend)
+            console.log('response otp validtion', totp)
             dispatch({type: SET_CODE, payload: totp})
             if(totp != ''){
                 dispatch(getCounter(counter))
@@ -141,6 +147,17 @@ export const getAllCards = (userId) => async(dispatch) => {
         //console.log('cards',response?.data)
     } catch (e) {
         console.log('error obtener cardId',e)
+    }
+}
+
+export const saveDataLocalStorage = (cards) => async(dispatch) => {
+    try {
+        dispatch({
+            type: SAVE_LOCAL_STORAGE, 
+            payload: cards
+        })
+    } catch (e) {
+        
     }
 }
 export default homeDuck;
