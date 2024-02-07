@@ -23,7 +23,7 @@ const ChargesItem = ({charge, index, lastItem, openModal}) => {
         )
     }
     return(
-        <View key={index} style={[styles.container,{borderBottomWidth: lastItem != index ? 0.5 : 0,}]}>
+        <View key={charge?.id.toString()} style={[styles.container,{borderBottomWidth: lastItem != index ? 0.5 : 0,}]}>
             <View style={{flexDirection:'row'}}>
                 <View style={styles.card}>
                     <Text style={styles.lblNum}>{charge?.fuel_quantity}</Text>
@@ -49,7 +49,7 @@ const ChargesItem = ({charge, index, lastItem, openModal}) => {
                     <TouchableOpacity style={styles.btnRate} onPress={() => openModal(charge)}>
                         <Text style={styles.lblBtn}>Calificar</Text>
                     </TouchableOpacity>)}
-                <Text style={styles.lblPoints}>+{charge?.points || 10}</Text>
+                {/*<Text style={styles.lblPoints}>+{charge?.points || 10}</Text>*/}
 
             </View>
         </View>

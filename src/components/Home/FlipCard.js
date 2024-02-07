@@ -40,14 +40,17 @@ const FlipCard = ({cards}) => {
 
 
     const toggleFilp = () => {
-        rotation.value = withTiming(
-            isFlipped ? 0 : 180,
-            {duration: 500, easing: Easing.ease},
-            () => {
-                //Despues de la animación se actualiza el estado
-                runOnJS(setFlip)(!isFlipped);
-            }
-        )
+        if(user?.id && cards != null){
+            rotation.value = withTiming(
+                isFlipped ? 0 : 180,
+                {duration: 500, easing: Easing.ease},
+                () => {
+                    //Despues de la animación se actualiza el estado
+                    runOnJS(setFlip)(!isFlipped);
+                }
+            )
+
+        }else console.log('no se puede girar')
     }
 
     const frontCardStyle = useAnimatedStyle(() => {
@@ -145,7 +148,7 @@ const FlipCard = ({cards}) => {
                                         </View>
                                             <GestureHandlerRootView>
                                                 <GestureDetector gesture={tap.onStart(() => toggleFilp())}>
-                                                    <TouchableOpacity onPress={() => dispatch(autoGenerateQr())}>
+                                                    <TouchableOpacity disabled={user?.id && cards != null ? false : true} onPress={() => dispatch(autoGenerateQr())}>
                                                         <MaterialCommunityIcons name="qrcode-scan" size={50} color={Colors.white} />
                                                     </TouchableOpacity>
                                                 </GestureDetector>
