@@ -12,6 +12,7 @@ import DetailProduct from "../screens/loggedScreens/Home/DetailProduct";
 import ConfirmExchange from "../screens/loggedScreens/Home/ConfirmExchange";
 import LocationBranchScreen from "../screens/loggedScreens/Home/LocationBranch";
 import NotificationScreen from "../screens/loggedScreens/NotificationScreen";
+import ConfirmFuelExchange from "../screens/loggedScreens/Home/ConfirmFuelExchange";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -31,6 +32,7 @@ const HomeNavigator = () => {
             <Stack.Screen name="DetailProduct" component={DetailProduct}/>
             <Stack.Screen name="Confirm" component={ConfirmExchange} />
             <Stack.Screen name="LocationBranch" component={LocationBranchScreen} />
+            <Stack.Screen name="ConfirmFuel" component={ConfirmFuelExchange}/>
         </Stack.Navigator>
 
     )

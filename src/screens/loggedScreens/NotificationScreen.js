@@ -73,7 +73,7 @@ const NotificationScreen = () => {
                             onDeleted={(item) => {
                                 setTimeout(() => {
                                     onDeleteItem(item.id)
-                                },500)
+                                },400)
                             }}/>
                     ))}
 

@@ -10,10 +10,10 @@ import { useNavigation } from "@react-navigation/native";
 const {height, width} = Dimensions.get('window');
 
 
-const HeaderLogged = ({children,isBack=false, title='Bienvenidos', onRefresh, refresh=false, goBack, noPadding=false, showSubtitle=false}) => {
+const HeaderLogged = ({children,isBack=false, title='Bienvenidos', onRefresh, refresh=false, goBack, noPadding=false, showSubtitle=false, bgColor=Colors.lightGray}) => {
     const navigation = useNavigation()
     return(
-        <View style={styles.container}>
+        <View style={[styles.container,{backgroundColor: bgColor}]}>
             <StatusBar
                 animated={true}
                 backgroundColor="transparent"
@@ -63,7 +63,6 @@ const HeaderLogged = ({children,isBack=false, title='Bienvenidos', onRefresh, re
 const styles = StyleSheet.create({
     container:{
         flex:1,
-        backgroundColor: Colors.lightGray
     },
     header:{
         width: width,

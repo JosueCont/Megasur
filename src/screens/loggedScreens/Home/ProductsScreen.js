@@ -38,6 +38,7 @@ const ProductsScreen = () => {
     const delivered = useSelector(state => state.exchangeDuck.receivedList)
     const deliveredData = useSelector(state => state.exchangeDuck.deliveredData)
 
+
     useEffect(() => {
         (async() => {
             await dispatch(getCategories())  

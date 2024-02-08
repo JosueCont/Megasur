@@ -21,6 +21,7 @@ const AccordionNotifications = ({item, index, onDeleted}) => {
     const swipeRight = useSharedValue(0)
     const isSwipped = useSharedValue(0)
     const opacity = useSharedValue(1);
+    const isDeleted = useSharedValue(false)
 
 
     const TRANSLATE_X_THRESHOLD = -width * 0.3;
@@ -75,7 +76,7 @@ const AccordionNotifications = ({item, index, onDeleted}) => {
             });
 
         }else{
-
+            isDeleted.value = false
             swipeRight.value = withSpring(0)
         }
     }
@@ -109,7 +110,7 @@ const AccordionNotifications = ({item, index, onDeleted}) => {
 
     const opacityLabel = useAnimatedStyle(() => {
         return{
-            opacity: swipeRight.value < TRANSLATE_X_THRESHOLD ? 1 : 0
+            opacity: isDeleted.value ? 0 : 1
         }
     })
     return(
@@ -136,7 +137,7 @@ const AccordionNotifications = ({item, index, onDeleted}) => {
                             </Animated.View>
                         </TouchableOpacity>
                         <Animated.View style={[heightExpanded,{ marginLeft:20}]}>
-                            <Animated.Text ref={listRef} style={styles.lblDesc}>{item?.description}</Animated.Text>
+                            <Animated.Text ref={listRef} style={[styles.lblDesc]}>{item?.description}</Animated.Text>
 
                         </Animated.View>
                     </Animated.View>
