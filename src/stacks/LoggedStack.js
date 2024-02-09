@@ -11,6 +11,8 @@ import ProductsScreen from "../screens/loggedScreens/Home/ProductsScreen";
 import DetailProduct from "../screens/loggedScreens/Home/DetailProduct";
 import ConfirmExchange from "../screens/loggedScreens/Home/ConfirmExchange";
 import LocationBranchScreen from "../screens/loggedScreens/Home/LocationBranch";
+import NotificationScreen from "../screens/loggedScreens/NotificationScreen";
+import ConfirmFuelExchange from "../screens/loggedScreens/Home/ConfirmFuelExchange";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -30,11 +32,13 @@ const HomeNavigator = () => {
             <Stack.Screen name="DetailProduct" component={DetailProduct}/>
             <Stack.Screen name="Confirm" component={ConfirmExchange} />
             <Stack.Screen name="LocationBranch" component={LocationBranchScreen} />
+            <Stack.Screen name="ConfirmFuel" component={ConfirmFuelExchange}/>
         </Stack.Navigator>
 
     )
 }
-const LoggedStack = () => {
+
+const TabNavigator = () => {
     return(
         <Tab.Navigator 
             tabBar={(props) => <CustomBottomTabBar {...props}/>} 
@@ -47,6 +51,21 @@ const LoggedStack = () => {
             <Tab.Screen name="Stations" component={LocationScreen}/>
             <Tab.Screen name="Profile" component={ProfileScreen}/>
         </Tab.Navigator>
+
+    )
+}
+const LoggedStack = () => {
+    return(
+        <Stack.Navigator 
+            initialRouteName="TabNavigator"
+            
+            screenOptions={({navigation, route}) =>({
+                headerShown: false,
+            })}
+        >
+            <Stack.Screen name="TabNavigator" component={TabNavigator} />
+            <Stack.Screen name='Notification' component={NotificationScreen} />
+        </Stack.Navigator>
     )
 }
 

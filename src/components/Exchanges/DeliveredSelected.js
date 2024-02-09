@@ -12,7 +12,7 @@ const DeliveredSelected = ({products, delivered}) => {
     return(
         <View>
             <Text style={styles.lblTitle}>Número de pedido: {delivered?.id}</Text>
-            <Text style={styles.lblDate}>Fecha estimada de entrega: <Text style={{fontWeight:'700'}}>{moment(delivered?.timestamp,).format('DD MMM YYYY')}</Text></Text>
+            <Text style={styles.lblDate}>Fecha de recibido: <Text style={{fontWeight:'700'}}>{moment(delivered?.timestamp,).format('DD MMM YYYY')}</Text></Text>
             <ExchangeList data={products} showTitle={false} showActions={false}/>
         </View>
     )

@@ -233,6 +233,7 @@ export const logoutAction = () => async(dispatch) => {
         await AsyncStorage.removeItem('accessToken')
         //await AsyncStorage.removeItem('refreshToken')
         await AsyncStorage.removeItem('user')
+        await AsyncStorage.removeItem('cards')
 
         dispatch({type: LOGOUT})
 

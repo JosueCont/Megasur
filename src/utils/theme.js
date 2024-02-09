@@ -14,7 +14,8 @@ export const theme = extendTheme({
         },
         Switch:{
             
-        }
+        },
+        
     },
     fontConfig: {
        
@@ -47,4 +48,5 @@ export const theme = extendTheme({
         //body: 'Roboto',
         //mono: 'Roboto',
     },
+
 });

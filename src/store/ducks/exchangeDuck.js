@@ -1,4 +1,8 @@
 import { getCloseBranches, getListCategories, getListProducts, getOrders } from "../../utils/services/ApiApp";
+import { createDigest, createRandomBytes } from "@otplib/plugin-crypto-js"
+import { keyDecoder, keyEncoder } from "@otplib/plugin-base32-enc-dec"
+import { totpToken, totpOptions, KeyEncodings } from "@otplib/core" 
+import base32Encode from 'base32-encode'
 
 const LOADING = 'loading_exchange'
 const GET_CATEGORIES = 'get_categories'
@@ -17,6 +21,10 @@ const RESET_DELIVERED_DATA = 'reset_delivered_data'
 const ORDERS_SUCCESS = 'get_orders_success'
 const ORDERS_FAILED = 'get_orders_failed'
 
+const SET_CODE = 'set_code_exchange'
+const SET_TIME = 'set_time_exchange'
+const UPDATE_AUTO_RUNNING = 'update_auto_running_exchange'
+
 const initialState = {
     loading:false,
     categories:[],
@@ -29,7 +37,12 @@ const initialState = {
     orderData:null,
     pendingList:[],
     receivedList:[],
-    deliveredData:null
+    deliveredData:null,
+    modalFuel:false,
+    minutes:0,
+    seconds:0,
+    code:'',
+    isRunning:false
 }
 
 const exchangeDuck = (state = initialState, action) => {
@@ -64,6 +77,12 @@ const exchangeDuck = (state = initialState, action) => {
             return{ ...state, deliveredData: null}
         case ORDERS_SUCCESS:
             return{ ...state, receivedList: action.payload.received, pendingList: action.payload.pending}
+        case SET_CODE:
+            return{ ...state, code: action.payload, loading: false, isRunning: true}
+        case SET_TIME:
+            return{ ...state, minutes: action.minutes, seconds: action.seconds}
+        case UPDATE_AUTO_RUNNING:
+            return{ ...state, isRunning: false}
         default:
             return state;
     }
@@ -201,5 +220,56 @@ export const getOrdersList = (filter) => async(dispatch) => {
         console.log('error orders',e)
         dispatch({type: ORDERS_FAILED})
     }
+}
+
+export const getQrCodeFuel = ({isRunning, user}) => async(dispatch) => {
+    try {
+        dispatch({type: LOADING})
+        let counter = 30;
+        if(!isRunning){
+            const secret = convertBase32(`Josue`);
+            const totp = totpToken(
+                keyDecoder(secret, KeyEncodings.UTF8),
+                totpOptions({
+                  createDigest,
+                  encoding: KeyEncodings.ASCII
+                })
+            );
+            
+            dispatch({type: SET_CODE, payload: totp})
+            if(totp != ''){
+                dispatch(getCounter(counter))
+            }
+
+        }
+    } catch (e) {
+        console.log('eror al crear codigo qr',e)
+    }
+}
+
+const convertBase32 = (hexString) => {
+    const hexBytes = Buffer.from(hexString, 'ascii');
+    const base32String = base32Encode(hexBytes, 'RFC4648');
+
+    return base32String;
+}
+
+const getCounter = (counter) => dispatch => {
+    const countdownInterval = setInterval(() => {
+        if (counter >= 0) {
+          const minutes = Math.floor(counter / 60); // Obtener minutos
+          const seconds = counter % 60; // Obtener segundos
+          dispatch({type: SET_TIME, minutes:  minutes, seconds: seconds})
+          //console.log(`${minutes} minutos ${seconds} segundos`); // Mostrar tiempo
+      
+          counter--; // Decrementar el contador en segundos
+        } else {
+          clearInterval(countdownInterval); // Detener el contador cuando llegue a cero
+          console.log('Tiempo terminado');
+          setTimeout(() => {
+              dispatch({type: UPDATE_AUTO_RUNNING })
+          },500)
+        }
+    }, 1000);
 }
 export default exchangeDuck;

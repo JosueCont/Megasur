@@ -11,7 +11,7 @@ const AuthStack = () => {
         <Stack.Navigator
             mode={'card'}
             backBehavior={'history'}
-            initialRouteName="Login"
+            initialRouteName="InitialScreen"
             screenOptions={({navigation, route}) =>({
                 headerShown:false
             })}
