@@ -57,7 +57,7 @@ const AccordionItem = ({item,index,isLocation}) => {
         }
     })
     return(
-        <Animated.View key={index} style={[ isLocation ? styles.itemLocation : styles.item]}>
+        <Animated.View key={index.toString()} style={[ isLocation ? styles.itemLocation : styles.item]}>
             <TouchableOpacity 
                 onPress={() => {
                     if(index === 9 && !isLocation){

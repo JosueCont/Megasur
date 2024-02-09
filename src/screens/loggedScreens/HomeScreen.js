@@ -14,9 +14,10 @@ import ListPromotions from "../../components/Home/ListPromotions";
 import ListDiscount from "../../components/Home/ListDiscount";
 import CloseStations from "../../components/Home/CloseStations";
 import ModalQuizz from "../../components/modals/ModalQuizz";
-import { changeModalHome, getDataConfi, getAllCards } from "../../store/ducks/homeDuck";
+import { changeModalHome, getDataConfi, getAllCards, saveDataLocalStorage } from "../../store/ducks/homeDuck";
 import { getCloseStations } from "../../store/ducks/locationsDuck";
 import { getProfileData } from "../../store/ducks/profileDuck";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const {height, width} = Dimensions.get('window');
 
@@ -27,10 +28,13 @@ const HomeScreen = () => {
     const modalQuizz = useSelector(state => state.homeDuck.modalQuizz)
     const stations = useSelector(state => state.locationDuck.nearBranches)
     const userId = useSelector(state => state.authDuck.dataUser?.id)
-    const userCard = useSelector(state => state.profileDuck.dataUser)
+    const userCard = useSelector(state => state.homeDuck.cardsStorage)
+
 
     useEffect(() => {
         (async() => {
+            const cards = await AsyncStorage.getItem('cards')
+            await dispatch(saveDataLocalStorage(JSON.parse(cards)))
             await dispatch(getDataConfi())
             if(userId && userId != undefined){
                 const location = await getPermissionLocation()
@@ -63,7 +67,7 @@ const HomeScreen = () => {
     //]
     return(
         <HeaderLogged onRefresh={() => console.log('refreshPAge')}>
-            <FlipCard cards={userCard?.cards}/>
+            <FlipCard cards={userCard}/>
             <Question />
             <ProvitionalPoints openModal={() => dispatch(changeModalHome({prop:'modalQuizz',val:true}))}/>
             <ExchangeCenter />

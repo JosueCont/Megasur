@@ -12,7 +12,7 @@ const RateComponent = ({rate}) => {
         }
 
         return stars.map((_,index) => (
-            <FontAwesome name="star" size={15} color={index < rate ? Colors.yellow : Colors.gray} />
+            <FontAwesome name="star" size={15} color={index < rate ? Colors.yellow : Colors.gray} key={index.toString()}/>
         ))
     }
     return(

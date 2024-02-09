@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { postValidateCode, postVerifyPhone, postRegisterUser } from "../../utils/services/ApiApp";
+import { postValidateCode, postVerifyPhone, postRegisterUser, getDataUser } from "../../utils/services/ApiApp";
 import { saveTokens } from "../../utils/functions";
 
 const CHANGE_INPUT = 'change_input';
@@ -147,6 +147,7 @@ export const validateCode = (data) => async(dispatch) => {
             //usuario encontrado, debe iniciar sesión
             await saveTokens(response?.data?.access_token, response?.data)
             dispatch({type: LOGIN_SUCCESS, payload: response?.data})
+            dispatch(getCardUser())
         }
         //if(response?.data?.status === 'incorrect') dispatch({type: VALIDATE_CODE_FAILED, message:'Código incorrecto'})
         //else dispatch({type: VALIDATE_CODE_SUCCESS, message:'Verificación exitosa'})
@@ -183,12 +184,26 @@ export const onRegisterUser = (data) => async(dispatch) => {
         delete dataSend.os
         console.log('dataSend',dataSend)
         const response = await postRegisterUser(dataSend)
-        if(response?.data?.id) dispatch({type: REGISTER_SUCCESS, payload: response?.data})
-            else dispatch({type: REGISTER_FAILED, message: 'Ocurrio un error al registrar usuario'})
+        if(response?.data?.id){
+            dispatch({type: REGISTER_SUCCESS, payload: response?.data})
+            dispatch(getCardUser())
+        }else dispatch({type: REGISTER_FAILED, message: 'Ocurrio un error al registrar usuario'})
         console.log('dataRegister', response?.data)
     } catch (e) {
         console.log('error registrr usuario',e)
         dispatch({type: REGISTER_FAILED, message: 'Ocurrio un error al registrar usuario'})
+    }
+}
+
+const getCardUser = (id) => async() =>  {
+    try {
+        const response = await getDataUser()
+        if(response?.data?.id){
+            await AsyncStorage.setItem('cards',JSON.stringify(response?.data))
+        }
+        console.log('usuario a guardar', response?.data)
+    } catch (e) {
+        console.log('error usu',e)
     }
 }
 

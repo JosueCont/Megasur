@@ -197,11 +197,12 @@ const styles = StyleSheet.create({
         textAlign:'center', 
         fontSize:getFontSize(20), 
         color: Colors.blackInit, 
+        width: width * .72,
         marginBottom:20,
         marginHorizontal:15
     },
     btn:{
-        width: width/1.8, 
+        width: width/1.6, 
         height:56, 
         borderRadius:8, 
         justifyContent:'center',
@@ -211,7 +212,7 @@ const styles = StyleSheet.create({
         fontSize: getFontSize(16), color: Colors.white, fontWeight:'700'
     },
     input:{
-        width: width/2, 
+        width: width/1.6, 
         height:56, 
         backgroundColor:Colors.white, 
         borderRadius:8, 
