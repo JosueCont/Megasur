@@ -264,7 +264,7 @@ const LocationScreen = () => {
                                     paddingBottom: 30,
 
                                 }}>
-                                    <Animated.View style={opacity}>
+                                    <Animated.View style={[opacity,{flex:1}]}>
                                         <AccordionList data={getByZone()} isLocation={true}/>
                                     </Animated.View>
                                     

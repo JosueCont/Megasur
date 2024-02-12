@@ -80,6 +80,8 @@ const ValidateCodeScreen = () => {
             codeInputs.push(
                 <TextInput
                   key={i}
+                  textContentType='oneTimeCode'
+                  autoComplete='sms-otp'
                   ref={(ref) => (inputRefs.current[i] = ref)}
                   style={styles.input}
                   maxLength={1}

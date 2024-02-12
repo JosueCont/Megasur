@@ -104,9 +104,18 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         height: 60,
         borderColor: 'white',
-        borderTopColor: Colors.border,
+        backgroundColor: Colors.white,
+        //borderTopColor: Colors.grayBorders,
         borderWidth: 1,
         justifyContent: 'space-evenly',
+        elevation:4,
+        shadowColor: '#000', // Color de la sombra
+        shadowOffset: {
+          width: 0,  
+          height: -2
+        },
+        shadowOpacity: 0.25, 
+        shadowRadius: 4, 
     },
     tabItem: {
         width: 60,
