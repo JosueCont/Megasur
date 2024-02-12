@@ -14,7 +14,7 @@ const NavigationContainerConfig = () => {
     const dispatch = useDispatch();
     const [loggedIn, setLoggedIn] = useState(null)
     const [loading, setLoading] = useState(true)
-    const status = useSelector(state => state.authDuck.isLogged);
+    const status = true//useSelector(state => state.authDuck.isLogged);
 
     useEffect(() => {
         getSession()

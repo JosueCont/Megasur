@@ -23,6 +23,7 @@ const ModalRateCharge = ({visible, setVisible, onRate}) => {
     useEffect(() => {
         setStarRating(null)
         setComment(false)
+        dispatch(changeInputCharges({prop:'comment', value:''}))
         console.log('info',info)
     },[visible])
 
@@ -38,10 +39,10 @@ const ModalRateCharge = ({visible, setVisible, onRate}) => {
                     hidden={false}
                 />
                 <View style={styles.container}>
-                <KeyboardAvoidingCustom>
+                <KeyboardAvoidingCustom isModal={true}>
                     <View style={[styles.card,]}>
                         <TouchableOpacity style={styles.contClose} onPress={setVisible}>
-                            <AntDesign name="close" size={24} color="black" />
+                            <AntDesign name="close" size={24} color={Colors.grayStrong} />
                         </TouchableOpacity>
                         {!isComment ? (
                             <>
@@ -49,18 +50,19 @@ const ModalRateCharge = ({visible, setVisible, onRate}) => {
                                     <Text style={styles.question}>¿Cómo deseas calificar el servicio?</Text>
                                 </View>
                                 <RateStars starRating={starRating} setStar={(val) => setStarRating(val)}/>
-                                <Text style={[styles.lblDesc,{fontSize: getFontSize(15), textAlign:'center', marginTop:10}]}>Muchas gracias, tu opinion nos importa.</Text>
-                                {/*starRating != null && <Text style={[styles.lblDesc,{fontSize: getFontSize(12), textAlign:'center'}]}>¡Tus puntos han sido agregados a tu cuenta!</Text> */}
                                 {starRating != null ? (
                                     <View style={styles.contSectionPoints}>
                                         {/*<Text style={styles.lblPoints}>+100<Text style={{fontWeight:'400'}}>pts</Text></Text>*/}
                                     </View>
                                 ) : null}
+                                <Text style={[styles.lblDesc,{fontSize: getFontSize(15), textAlign:'center', marginTop:40, marginBottom:20}]}>Muchas gracias, tu opinion nos importa.</Text>
+                                {/*starRating != null && <Text style={[styles.lblDesc,{fontSize: getFontSize(12), textAlign:'center'}]}>¡Tus puntos han sido agregados a tu cuenta!</Text> */}
                             
                                 <View style={styles.contBtn}>
                                     <TouchableOpacity 
                                         onPress={() => setComment(true)}
-                                        style={[styles.btn,{marginRight:15,}]}>
+                                        disabled={starRating != null ? false : true}
+                                        style={[styles.btn,{marginRight:15, backgroundColor: starRating != null ? Colors.blueGreen : Colors.gray}]}>
                                         <Text style={styles.lblBtn}>Añadir comentario</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity 
@@ -93,10 +95,14 @@ const ModalRateCharge = ({visible, setVisible, onRate}) => {
                                         shadowOpacity: 0.25, 
                                         shadowRadius: 4, 
                                     }}
-                                    
+                                    multiline={true}
+                                    returnKeyType='default'
                                     value={comment}
                                     onChangeText={(value) => dispatch(changeInputCharges({prop:'comment', value}))}
                                 />
+                                <TouchableOpacity style={[styles.btnSend,{ marginBottom:10}]} onPress={() => setComment(false)}>
+                                    <Text style={styles.lblSend}>Regresar</Text>
+                                </TouchableOpacity>
                                 <TouchableOpacity style={styles.btnSend} onPress={() => onRate(info, starRating)}>
                                     <Text style={styles.lblSend}>Enviar</Text>
                                 </TouchableOpacity>
@@ -120,12 +126,13 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.white,
         borderRadius:15,
         width: width/1.1,
-        height: 320,
+        paddingBottom:20,
+        //height: 320,
         marginHorizontal:10
     },
     contClose:{
         alignSelf:'flex-end', 
-        backgroundColor: Colors.gray, 
+        backgroundColor: Colors.grayBorders, 
         borderTopEndRadius:15,  
         padding:4, marginBottom:5
     },
@@ -154,7 +161,7 @@ const styles = StyleSheet.create({
         fontSize: getFontSize(18), 
         color: Colors.blueGreen, 
         fontWeight:'800', 
-        marginBottom:8
+        //marginBottom:8
     },
     lblDesc:{
         color: Colors.grayStrong, 
