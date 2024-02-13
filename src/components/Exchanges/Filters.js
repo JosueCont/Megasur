@@ -33,7 +33,7 @@ const Filters = ({filters, selected=null, setSelected}) => {
 
             </View>
         
-            <View style={{borderColor: Colors.grayStrong, borderWidth:0.8,}}/>
+            <View style={{borderBottomColor: Colors.grayStrong, borderBottomWidth:0.6,}}/>
         </View>
     )
 }

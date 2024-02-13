@@ -4,20 +4,42 @@ import { getFontSize } from "../../utils/functions";
 import { Colors } from "../../utils/Colors";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
-import { addCartItem } from "../../store/ducks/exchangeDuck";
+import { addCartItem, updateProductQuantity } from "../../store/ducks/exchangeDuck";
 import { Entypo } from '@expo/vector-icons';
 
 
 const {height, width} = Dimensions.get('window');
 
 
-const ExchangeItem = ({item, index, showActions=true}) => {
+const ExchangeItem = ({item, index, showActions=true, setMinus, setPlus}) => {
     const navigation = useNavigation()
     const dispatch = useDispatch()
     const shoppingCart = useSelector(state => state.exchangeDuck.cart)
+    const [quantity, setQuantity] = useState(shoppingCart.find(product =>  product?.id === item?.id)?.quantity || 1)
+    const points = 600
 
     const findShoppingCart = (item) => {
         return shoppingCart.find(product => product?.id == item?.id )
+    }
+
+    const onMinusAction = (id) => {
+        setQuantity(quantity - 1)
+        setTimeout(() => {
+            setMinus(id, quantity - 1)
+
+        },500)
+    }
+
+    const onPlusAction = (id) => {
+        setQuantity(quantity + 1)
+        setTimeout(() => {
+            setPlus(id, quantity +1 )
+
+        },500)
+    }
+
+    const getQuantity = (id) => {
+        return shoppingCart.find(product =>  product?.id === id)?.quantity || 1
     }
 
     return(
@@ -33,22 +55,32 @@ const ExchangeItem = ({item, index, showActions=true}) => {
                     disabled={!showActions} 
                     style={[styles.btnName,{height: showActions ? 40 : 20,}]} 
                     onPress={() => navigation.navigate('DetailProduct',{product:item})}>
-                    <Text style={[styles.lbl,{fontSize: getFontSize(15)}]}>{item?.name}</Text>
+                    <Text style={[styles.lbl,{fontSize: getFontSize(18),}]}>{item?.name}</Text>
                 </TouchableOpacity>
                {showActions && (
                     <View style={[styles.contNew,{backgroundColor: item?.isNewProduct ? Colors.yellowStrong : Colors.white}]}>
                         {item?.isNewProduct && <Text style={[styles.lbl,{fontSize: getFontSize(10),}]}>Nuevo</Text>}
                     </View>
                 )}
-                <Text style={[styles.lbl, {fontSize: getFontSize(16), marginBottom:13}]}>{item?.price_in_points?.toString()}pts</Text>
+                {item?.quantity && <Text style={[styles.lbl, {fontSize: getFontSize(13), marginBottom:13}]}>Cantidad: {item.quantity.toString()}</Text>}
+                <Text style={[styles.lbl, {fontSize: getFontSize(16), marginBottom:item?.quantity ? 0 : 13}]}>{item?.price_in_points?.toString()}pts</Text>
                 {showActions ? (
-                    item?.is_active ? findShoppingCart(item) ? (
+                    item?.price_in_points > points ? (
+                        <View style={[styles.contFooter, {backgroundColor: Colors.grayBorders, borderColor: Colors.grayBorders}]}>
+                            <Text style={{color: Colors.grayStrong, fontSize: getFontSize(12), fontWeight:'500'}}>Sin puntos suficientes</Text>
+                        </View>
+                    ): item?.is_active ? findShoppingCart(item) ? (
                         <View style={styles.contCounter}>
-                            <TouchableOpacity style={{ justifyContent:'center', alignItems:'flex-start', flex:1}}>
+                            <TouchableOpacity 
+                                disabled={quantity === 1}
+                                onPress={() => onMinusAction(item?.id,)}
+                                style={{ justifyContent:'center', alignItems:'flex-start', flex:1}}>
                                 <Entypo name="minus" size={18} color={Colors.blueGreen} />
                             </TouchableOpacity>
-                            <Text style={styles.lblCount}>0</Text>
-                            <TouchableOpacity style={{ flex:1, justifyContent:'center', alignItems:'flex-end'}}>
+                            <Text style={styles.lblCount}>{getQuantity(item?.id)}</Text>
+                            <TouchableOpacity 
+                                onPress={() => onPlusAction(item?.id, )}
+                                style={{ flex:1, justifyContent:'center', alignItems:'flex-end'}}>
                                 <Entypo name="plus" size={18} color={Colors.blueGreen} />
                             </TouchableOpacity>
     

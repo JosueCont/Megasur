@@ -33,31 +33,32 @@ const LocationBranchScreen = () => {
     },[])
     return(
         <HeaderLogged title="Ubicación" goBack={() => navigation.goBack()} isBack={true} noPadding={true}>
-            <View style={{flex:4, backgroundColor:'red'}}>
-                <MapView 
-                    style={{flex:1}}
-                    region={{...region, longitudeDelta:  0.009, latitudeDelta: 0.04}}
-                    initialRegion={{
-                        longitude: initialRegion?.longitude,
-                        latitude: initialRegion?.latitude,
-                        longitudeDelta: 0.09,
-                        latitudeDelta: 0.04
-                    }}
+            <View style={{flex:4, }}>
+                {initialRegion != null && 
+                    <MapView 
+                        style={{flex:1}}
+                        region={{...region, longitudeDelta:  0.009, latitudeDelta: 0.04}}
+                        initialRegion={{
+                            longitude: initialRegion?.longitude,
+                            latitude: initialRegion?.latitude,
+                            longitudeDelta: 0.09,
+                            latitudeDelta: 0.04
+                        }}
                     //onRegionChangeComplete={(coords) => setNewRegion({latitude: coords.latitude, longitude: coords.longitude})}
-                >
-                    <Marker 
-                        coordinate={{
-                            longitude: orderData?.branch?.location_as_lat_long?.lng,
-                            latitude: orderData?.branch?.location_as_lat_long?.lat
-                        }} 
-                        
-                        //onPress={() => onPressMarker(marker) }
                     >
-                        <View style={styles.contImage}>
-                            <Image source={{uri: orderData?.branch?.franchise?.logo}} style={styles.imgFranchise}/>
-                        </View>
-                    </Marker>
-                </MapView>
+                        <Marker 
+                            coordinate={{
+                                longitude: orderData?.branch?.location_as_lat_long?.lng,
+                                latitude: orderData?.branch?.location_as_lat_long?.lat
+                            }} 
+
+                            //onPress={() => onPressMarker(marker) }
+                        >
+                            <View style={styles.contImage}>
+                                <Image source={{uri: orderData?.branch?.franchise?.logo}} style={styles.imgFranchise}/>
+                            </View>
+                        </Marker>
+                    </MapView>}
             </View>
             <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
                 <Text style={styles.lblTitle}>{orderData?.branch?.name}</Text>

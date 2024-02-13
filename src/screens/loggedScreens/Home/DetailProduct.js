@@ -6,7 +6,7 @@ import HeaderLogged from "../../../components/Headers/HeaderLogged";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import SliderGallery from "../../../components/SliderGalleryCustom";
 import { useDispatch, useSelector } from "react-redux";
-import { onActionCount, resetCount } from "../../../store/ducks/exchangeDuck";
+import { addCartItem, onActionCount, onUpdateCart, resetCount } from "../../../store/ducks/exchangeDuck";
 
 const {height, width} = Dimensions.get('window');
 
@@ -15,6 +15,7 @@ const DetailProduct = () => {
     const route = useRoute();
     const dispatch = useDispatch()
     const count = useSelector(state => state.exchangeDuck.countProduct)
+    const shoppingCart = useSelector(state => state.exchangeDuck.cart)
 
     useEffect(() => {
         console.log('route',route)
@@ -70,14 +71,35 @@ const DetailProduct = () => {
                 <Text style={styles.lblTitleDesc}>Detalle del producto</Text>
                 <Text style={styles.lblDesc}>{product?.description}</Text>
             </View>
-            <View style={styles.contDesc}>
+            {/*<View style={styles.contDesc}>
                 <Text style={styles.lblTitleDesc}>Restricciones</Text>
                 <Text style={styles.lblDesc}>Lorem ipsum dolor sit amet. Ut dolorem rerum quo molestias praesentium sit soluta fugiat ut maxime necessitatibus sed.
 Lorem ipsum dolor sit amet. Ut dolorem rerum quo molestias praesentium sit soluta fugiat ut maxime necessitatibus sed.</Text>
-            </View>
+                        </View>*/}
             <TouchableOpacity 
                 disabled={count === 0}
-                style={[styles.btnOk,{backgroundColor: count === 0 ? Colors.grayStrong : Colors.blueGreen,}]} onPress={() => navigation.navigate('Confirm')}>
+                style={[styles.btnOk,{backgroundColor: count === 0 ? Colors.grayStrong : Colors.blueGreen,}]} 
+                onPress={() =>{
+                    if(shoppingCart.find(item => item?.id === product.id)){
+                        
+                        const updatedCart = shoppingCart.map(item => {
+                            if (item.id === product.id) {
+                                return {
+                                    ...item,
+                                    quantity: count
+                                };
+                            }
+                            return item;
+                        });
+                        dispatch(onUpdateCart(updatedCart));
+                    }else{
+                        dispatch(addCartItem(product))
+                    }
+                    setTimeout(() => {
+                        navigation.goBack()
+                    }, 500)
+                    /*navigation.navigate('Confirm')*/
+                }}>
                 <Text style={styles.lblBtn}>Canjear por {product?.price_in_points}ptos. C/U</Text>
             </TouchableOpacity>
         </HeaderLogged>
