@@ -1,14 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, Dimensions, StyleSheet } from "react-native";
+import { useToast, Alert, VStack, HStack } from "native-base";
 import { getFontSize, getPermissionLocation } from "../../../utils/functions";
 import { Colors } from "../../../utils/Colors";
 import HeaderLogged from "../../../components/Headers/HeaderLogged";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
 import TypeExchange from "../../../components/Exchanges/TypeExchange";
 import Filters from "../../../components/Exchanges/Filters";
 import ExchangeList from "../../../components/Exchanges/ExchangesList";
-import { changeModalEx, getCategories, getListCloseBranches, getOrdersList, getProducts, onChangeType, resetDeliveredData, resetOrderData, setOrderData } from "../../../store/ducks/exchangeDuck";
+import { 
+    changeModalEx, getCategories, getListCloseBranches, getOrdersList, 
+    getProducts, onChangeType, onExchangeProducts, resetDeliveredData, 
+    resetExchangeOrder, 
+    resetOrderData, setOrderData, updateProductQuantity 
+} from "../../../store/ducks/exchangeDuck";
 import Cart from "../../../components/Exchanges/Cart";
 import ModalShoppingCart from "../../../components/modals/ShoppingCart";
 import FilterExchanged from "../../../components/Exchanges/FilterExchanged";
@@ -23,6 +30,8 @@ import ExchangeFuel from "../../../components/Exchanges/ExchangeFuel";
 const ProductsScreen = () => {
     const dispatch = useDispatch();
     const navigation = useNavigation();
+    const toast = useToast();
+    const isfocused = useIsFocused()
     //const [selectedType, setSelected] = useState(0)
     const [selectedFilter, setFilter] = useState(null)
     const [exchangedFilter, setExchanged] = useState(true)
@@ -37,7 +46,9 @@ const ProductsScreen = () => {
     const pending = useSelector(state => state.exchangeDuck.pendingList)
     const delivered = useSelector(state => state.exchangeDuck.receivedList)
     const deliveredData = useSelector(state => state.exchangeDuck.deliveredData)
-
+    const alertFailed = useSelector(state => state.exchangeDuck.alertFailed)
+    const exchangeDone = useSelector(state => state.exchangeDuck.exchangeDone)
+    const points = 600
 
     useEffect(() => {
         (async() => {
@@ -47,6 +58,7 @@ const ProductsScreen = () => {
             await dispatch(getOrdersList(getFiltersOrders()))
         })()
     },[])
+
     useEffect(() => {
         (async() => {
             const filters = await buildUrlPath(selectedFilter)
@@ -54,16 +66,48 @@ const ProductsScreen = () => {
         })()
     },[selectedFilter])
 
+    useEffect(() => {
+        if(alertFailed){
+            toast.show({
+                placement:'top',
+                render:({id}) =>(
+                    <Alert maxWidth="100%" alignSelf="center" flexDirection="row" status='error' variant='solid' backgroundColor={Colors.pink} zIndex={1}>
+                        <VStack space={1} flexShrink={1} w="99%" >
+                            <HStack flexShrink={1} alignItems="center" justifyContent="space-between" >
+                                <HStack space={2} flexShrink={1} alignItems="center">
+                                    <Alert.Icon/>
+                                    <Text style={{color: Colors.white, fontSize: getFontSize(15)}}>Ocurrio un error al crear la orden, inténtalo otra vez</Text>
+                                </HStack>
+                            </HStack>
+                        </VStack>
+                    </Alert>
+                )
+            })
+            setTimeout(() => {
+                dispatch(resetExchangeOrder())
+            },1000)
+        }
+    },[alertFailed])
+
+    useEffect(() => {
+        if(exchangeDone){
+            navigation.navigate('Confirm')
+            setTimeout(() => {
+                console.log('reseteado')
+                dispatch(resetExchangeOrder())
+            },500)
+        }
+    },[exchangeDone])
+
     const getFiltersOrders = () => {
         let path = `?per_page=10&sort=desc`//&user_id=${userId?.id}`//user_id=userId agregar userId
-        console.log('path',path)
         return path;        
     }
 
     const buildUrlPath = (filters) => {
         let path = ''
-        if (filters !=null) {
-            path += `?category_id=${encodeURIComponent(filters?.id)}`;
+        if (filters !=null ) {
+            path += filters.id != 0 ? `?category_id=${ encodeURIComponent(filters?.id)}` : '';
         }
         return path
     }
@@ -80,7 +124,7 @@ const ProductsScreen = () => {
                         dispatch(resetDeliveredData())
                     }else navigation.goBack()
                 }}>
-                <Text style={styles.title}>Tienes disponibles:<Text style={{fontWeight:'700'}}>1200 pts</Text></Text>
+                <Text style={styles.title}>Tienes disponibles:<Text style={{fontWeight:'700'}}>{points.toString()} pts</Text></Text>
                 <View style={styles.header}>
                     <TypeExchange selected={selectedType} setSelected={(val) => dispatch(onChangeType(val))}/>
                     {selectedType === 1 && (<Filters filters={categories} setSelected={(val) => setFilter(val)} selected={selectedFilter}/>)}
@@ -97,7 +141,11 @@ const ProductsScreen = () => {
                     {selectedType === 0 ? (
                         <ExchangeFuel />
                     ) : selectedType === 1 ? (
-                        <ExchangeList data={products}/>
+                        <ExchangeList 
+                            data={products}
+                            onMinus={(id, action) => dispatch(updateProductQuantity(id, action))}
+                            onPlus={(id, action) => dispatch(updateProductQuantity(id,action))}
+                        />
 
                     ): (
                         exchangedFilter ? orderData != null ? (
@@ -125,14 +173,17 @@ const ProductsScreen = () => {
                 <ModalShoppingCart 
                     visible={modalshopping} 
                     branches={branches}
-                    onSubmit={() => navigation.navigate('Confirm')}
-                    points={600}
+                    onSubmit={(car, branchId) => {
+                        dispatch(onExchangeProducts(car, branchId, userId, moment().format('YYYY-MM-DD')))
+                        //navigation.navigate('Confirm')
+                    }}
+                    points={points}
                     setVisible={() => dispatch(changeModalEx({prop:'modalShoppingCart', val:false}))}
                 />
             </HeaderLogged>
             {selectedType ===1 && 
                 <Cart 
-                    products={shoppingCart.length} 
+                    products={shoppingCart?.length} 
                     pressed={() => dispatch(changeModalEx({prop:'modalShoppingCart', val:true}))}
                 />
             }

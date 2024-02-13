@@ -1,27 +1,33 @@
 import React,{useEffect,useState} from "react";
 import {  Text, View, TouchableOpacity, StyleSheet, Dimensions, Image, ScrollView } from "react-native";
-import { Select, Modal, useToast, Alert, VStack, HStack } from "native-base";
+import { Select, Modal, useToast, Alert, VStack, HStack, Spinner } from "native-base";
 import { Colors } from "../../utils/Colors";
 import { getFontSize } from "../../utils/functions";
 import Animated, {
     runOnJS,
     useAnimatedStyle,
     useSharedValue,
-  } from 'react-native-reanimated';
-  
-  import { GestureDetector, GestureHandlerRootView, Gesture } from 'react-native-gesture-handler';
+} from 'react-native-reanimated';
+import { GestureDetector, GestureHandlerRootView, Gesture } from 'react-native-gesture-handler';
 import { useSelector, useDispatch } from "react-redux";
 import ShoppingItem from "../Exchanges/ShoppingCartItem";
+import { FontAwesome5 } from '@expo/vector-icons';
+import { changeBranch } from "../../store/ducks/exchangeDuck";
+
 
 const {height, width} = Dimensions.get('window');
 
 const ModalShoppingCart = ({visible, setVisible, branches, points, onSubmit}) => {
+    const dispatch = useDispatch();
     const translateY = useSharedValue(0);
     const pan = Gesture.Pan()
     const shoppingCart = useSelector(state => state.exchangeDuck.cart)
     const total = 2000
     const isVerifyMail = useSelector(state => state.profileDuck.isEmailVerified)
     const [showToast, setShowToast] = useState(false)
+    const [isDisabled, setDisabled] = useState(false)
+    const branchId = useSelector(state => state.exchangeDuck.branchId)
+    const loading = useSelector(state => state.exchangeDuck.loading)
     const toast = useToast();
 
     useEffect(() => {
@@ -29,7 +35,7 @@ const ModalShoppingCart = ({visible, setVisible, branches, points, onSubmit}) =>
             toast.show({
                 placement:'top',
                 render:({id}) =>(
-                    <Alert maxWidth="100%" alignSelf="center" flexDirection="row" status='error' variant='solid' backgroundColor={Colors.pink} zIndex={10}>
+                    <Alert maxWidth="100%" alignSelf="center" flexDirection="row" status='error' variant='solid' backgroundColor={Colors.pink} zIndex={1}>
                         <VStack space={1} flexShrink={1} w="100%" >
                             <HStack flexShrink={1} alignItems="center" justifyContent="space-between" >
                                 <HStack space={2} flexShrink={1} alignItems="center">
@@ -47,9 +53,15 @@ const ModalShoppingCart = ({visible, setVisible, branches, points, onSubmit}) =>
         }
     },[showToast])
 
+    useEffect(() => {
+        if(branchId != null && shoppingCart.length > 0 && getTotal() <= points){
+            setDisabled(false)
+        }else setDisabled(true)
+    },[branchId, shoppingCart])
+
     
     const  onStart = (event) => {
-    console.log('event',event)
+    //console.log('event',event)
         event.y = translateY.value;
     };
     const onActive = (event, ctx) => {
@@ -57,7 +69,7 @@ const ModalShoppingCart = ({visible, setVisible, branches, points, onSubmit}) =>
         if(event.translationY > 0) translateY.value = event.translationY;
     }
     const onEnd = event => {
-        console.log('end',event)
+        //console.log('end',event)
         if (event.translationY > 0) {
             runOnJS(setVisible)();
             setTimeout(() => {
@@ -78,11 +90,23 @@ const ModalShoppingCart = ({visible, setVisible, branches, points, onSubmit}) =>
     });
 
     const validateCar = () => {
-        if(isVerifyMail){
-            onSubmit()
-        }else{
-            setShowToast(true)
-        }
+        //if(isVerifyMail){
+            onSubmit(shoppingCart, branchId)
+        //}else{
+        //    setVisible()
+        //    setTimeout(() => {
+        //        setShowToast(true)
+        //    },500)
+        //}
+    }
+
+    const getTotal = () => {
+        return shoppingCart.reduce((total, item) => {
+            if (!isNaN(item.quantity) && !isNaN(item.price_in_points)){
+                return total + (item.price_in_points * item.quantity);
+
+            }else return total
+        }, 0);
     }
 
     return(
@@ -104,10 +128,11 @@ const ModalShoppingCart = ({visible, setVisible, branches, points, onSubmit}) =>
                                     <View style={styles.contDelivery}>
                                         <View style={styles.input}>
                                             <Select
-                                                value={''}
                                                 //onValueChange={(value) => dispatch(onChangeInputProf({prop:'gender', value}))}
                                                 borderWidth={0}
                                                 placeholder="Sucursal"
+                                                selectedValue={branchId}
+                                                onValueChange={(val) => dispatch(changeBranch(val))}
                                                 style={{}}>
                                                     {branches.map(item => (
                                                         <Select.Item value={item.id.toString()} label={item.label}/>
@@ -116,21 +141,27 @@ const ModalShoppingCart = ({visible, setVisible, branches, points, onSubmit}) =>
                                                 </Select>
 
                                         </View>
-                                        <Text style={styles.lblDelivery}>Fecha estimada de entrega : <Text style={{fontWeight:'700'}}>14 sept 2023</Text></Text>
+                                        {/*<Text style={styles.lblDelivery}>Fecha estimada de entrega : <Text style={{fontWeight:'700'}}>14 sept 2023</Text></Text>*/}
                                     </View>
                                 </View>
                                 <View style={styles.contTotal}>
                                     <Text>Total:</Text>
-                                    <Text style={styles.lblPoints}>{total.toString()}pts</Text>
+                                    <Text style={styles.lblPoints}>{getTotal()}pts</Text>
                                 </View>
-                                <TouchableOpacity style={styles.btn} onPress={() => validateCar()}>
-                                    <Text style={styles.lblBtn}>Realizar pedido</Text>
+                                <TouchableOpacity 
+                                    disabled={isDisabled}
+                                    style={[styles.btn,{backgroundColor: isDisabled ? Colors.grayStrong : Colors.blueGreen}]} 
+                                    onPress={() => validateCar()}>
+                                    {loading ? <Spinner size={'sm'} color={'white'} /> : <Text style={styles.lblBtn}>Realizar pedido</Text>}
                                 </TouchableOpacity>
+                                {getTotal() >= points && <Text style={{alignSelf:'center', color: Colors.pink, fontSize: getFontSize(16), fontWeight:'400'}}>Sin puntos suficientes</Text>}
                                 </>
 
                             ):(
-                                <View>
-                                    <Text>No hay articulos en el carrito de canjes</Text>
+                                <View style={{justifyContent:'center', alignItems:'center'}}>
+                                    <FontAwesome5 name="shopping-cart" size={50} color={Colors.grayStrong} />
+                                    <Text style={{color: Colors.grayStrong, fontSize: getFontSize(18), marginTop:15}}>No hay articulos en el carrito de canjes</Text>
+                                    <Text style={{color: Colors.grayStrong, fontSize: getFontSize(14), marginBottom:20}}>Agrega articulos para canjear</Text>
                                 </View>
                             )}
                         </Animated.View>
@@ -146,7 +177,8 @@ const styles = StyleSheet.create({
         backgroundColor:'rgba(0,0,0,0.5)', 
         flex:1, 
         justifyContent:'flex-end',
-        alignItems:'center'
+        alignItems:'center',
+        zIndex:10
     },
     card:{
         width: width,
@@ -170,8 +202,7 @@ const styles = StyleSheet.create({
     },
     btn:{
         width:120, 
-        height:40, 
-        backgroundColor:Colors.blueGreen, 
+        height:40,  
         borderRadius:8, 
         justifyContent:'center', 
         alignItems:'center'

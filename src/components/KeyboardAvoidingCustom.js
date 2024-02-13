@@ -1,8 +1,11 @@
 import React, {useEffect, useState} from "react";
-import { KeyboardAvoidingView, Keyboard, Platform, StyleSheet, TouchableWithoutFeedback, View } from "react-native";
+import { KeyboardAvoidingView, Keyboard, Platform, StyleSheet, Dimensions, TouchableHighlight } from "react-native";
 import { Colors } from "../utils/Colors";
 
-const KeyboardAvoidingCustom = ({children,iosOffset=0}) => {
+const {height, width} = Dimensions.get('window');
+
+
+const KeyboardAvoidingCustom = ({children,iosOffset=0, isModal=false}) => {
     const [keyboardOpen, setKeyboardOpen] = useState(false);
 
     useEffect(() => {
@@ -26,9 +29,9 @@ const KeyboardAvoidingCustom = ({children,iosOffset=0}) => {
             style={styles.contKeyAvoiding}  
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
             keyboardVerticalOffset={Platform.select({ios: iosOffset }) }>
-                <View onTouchStart={ Keyboard.dismiss}>
+                <TouchableHighlight onPress={() =>   Keyboard.dismiss() } underlayColor={Colors.white} style={isModal ? styles.contBtn : {}}>
                     {children}
-                </View>
+                </TouchableHighlight>
 
         </KeyboardAvoidingView>
     )
@@ -41,6 +44,11 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         alignItems:'center',
     },
+    contBtn:{
+        width: width/1.1, 
+        borderRadius:15, 
+        alignItems:'center'
+    }
 })
 
 export default KeyboardAvoidingCustom

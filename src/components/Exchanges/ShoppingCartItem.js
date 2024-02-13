@@ -4,7 +4,7 @@ import { getFontSize } from "../../utils/functions";
 import { Colors } from "../../utils/Colors";
 import { FontAwesome } from '@expo/vector-icons';
 import { useDispatch } from "react-redux";
-import { deleteCarItem } from "../../store/ducks/exchangeDuck";
+import { deleteCarItem, updateProductQuantity } from "../../store/ducks/exchangeDuck";
 import { Entypo } from '@expo/vector-icons';
 
 
@@ -18,11 +18,15 @@ const ShoppingItem = ({item, index,onDeleteItem}) => {
             <View style={{justifyContent:'space-evenly'}}>
                 <Text style={{color: Colors.blueGreen, fontSize: getFontSize(16), fontWeight:'400'}}>{item?.name}</Text>
                 <View style={styles.contCounter}>
-                    <TouchableOpacity >
+                    <TouchableOpacity 
+                        disabled={item?.quantity != 1 ? false : true}
+                        onPress={() => dispatch(updateProductQuantity(item?.id, (item?.quantity || 1) - 1))}>
                         <Entypo name="minus" size={18} color={Colors.blueGreen} />
                     </TouchableOpacity>
-                    <Text style={styles.lblCount}>0</Text>
-                    <TouchableOpacity >
+                    <Text style={styles.lblCount}>{item?.quantity || 1}</Text>
+                    <TouchableOpacity 
+                        onPress={() => dispatch(updateProductQuantity(item?.id, (item?.quantity || 1) + 1))}
+                    >
                         <Entypo name="plus" size={18} color={Colors.blueGreen} />
                     </TouchableOpacity>
 

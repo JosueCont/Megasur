@@ -1,7 +1,7 @@
 import { getDataUser, postDeleteAccount, postVerifyCodeMail, postverifyEmail, putUserData } from "../../utils/services/ApiApp"
 
-const CHANGE_INPUT = 'change_input'
-const CHANGE_MODAL = 'change_modal'
+const CHANGE_INPUT = 'change_input_profile'
+const CHANGE_MODAL = 'change_modal_profile'
 const GET_DATA_PROFILE = 'get_data_profile'
 const DATA_PROFILE__FAILED = 'data_profile_failed'
 const CHANGE_IMAGE = 'change_image'

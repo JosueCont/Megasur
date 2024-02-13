@@ -13,13 +13,19 @@ import ModalAlertSuccess from "../../components/modals/AlertModalSucces";
 import ModalAlertFailed from "../../components/modals/ModalAlertFail";
 import { useDispatch, useSelector } from "react-redux";
 import { updateVerificationCode, validateCode, changeModal, resetValidateCode, verifyPhoneNumber } from "../../store/ducks/authDuck";
+import {
+    CodeField,
+    Cursor,
+    useBlurOnFulfill,
+    useClearByFocusCell,
+  } from 'react-native-confirmation-code-field';
 
 const {height, width} = Dimensions.get('window');
 
 const ValidateCodeScreen = () => {
     const navigation = useNavigation()
     const dispatch = useDispatch();
-    const verificationCode = useSelector(state => state.authDuck.verificationCode);
+    //const verificationCode = useSelector(state => state.authDuck.verificationCode);
     const phone = useSelector(state => state.authDuck.phone)
     const modalAlertSuccess = useSelector(state => state.authDuck.modalSucces)
     const modalAlertFailed = useSelector(state => state.authDuck.modalFailed)
@@ -28,6 +34,15 @@ const ValidateCodeScreen = () => {
     const isLogged = useSelector(state => state.authDuck.isLogged)
     const dataUser = useSelector(state => state.authDuck.dataUser)
     const toast = useToast();
+    const [verificationCode, setValue] = useState('');
+
+    const CELL_COUNT = 5;
+
+    const [prop, getCellOnLayoutHandler] = useClearByFocusCell({
+        verificationCode,
+        setValue,
+    });
+    const ref = useBlurOnFulfill({verificationCode, cellCount: CELL_COUNT});
 
     const inputRefs = useRef([]);
 
@@ -104,7 +119,26 @@ const ValidateCodeScreen = () => {
             }}>
 
             <Text style={styles.subtitle}>Ingresa el código de verificación que enviamos.</Text>
-            <View style={styles.validateCont}>{renderCodeInputs()}</View>
+            <View style={styles.validateCont}>
+                <CodeField
+                    ref={ref}
+                    {...prop}
+                    value={verificationCode}
+                    onChangeText={setValue}
+                    cellCount={CELL_COUNT}
+                    //rootStyle={styles.input}
+                    keyboardType="number-pad"
+                    textContentType="oneTimeCode"
+                    renderCell={({index, symbol, isFocused}) => (
+                        <Text
+                            key={index}
+                            style={[styles.input, isFocused && styles.focusCell]}
+                            onLayout={getCellOnLayoutHandler(index)}>
+                            {symbol || (isFocused ? <Cursor/> : null)}
+                        </Text>
+                    )}
+                />
+            </View>
             <View style={styles.center}>
                 <TouchableOpacity 
                     disabled={verificationCode.length < 5 }
@@ -172,6 +206,7 @@ const styles = StyleSheet.create({
         fontWeight:'300',
         color:Colors.darkGray,
         width: width/7,
+        marginRight:5,
         height:70,
         elevation:4,
         shadowColor: '#000', // Color de la sombra
@@ -203,6 +238,9 @@ const styles = StyleSheet.create({
         fontWeight:'300', 
         color: Colors.darkGray, 
         textDecorationLine:'underline'
+    },
+    focusCell:{
+        borderColor: Colors.green
     }
 })
 

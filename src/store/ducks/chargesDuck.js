@@ -107,6 +107,12 @@ export const getCharges = (filters='', options) => async(dispatch) => {
                     }
                 }
             })
+
+            chargesMonth.sort((a,b) => {
+                const dateA = moment(a.title, 'MMMM YYYY');
+                const dateB = moment(b.title, 'MMMM YYYY');
+                return dateB - dateA; 
+            })
         }
         dispatch({type: GET_CHARGES_FUEL, payload: {chargesMonth, branches}})
     } catch (e) {

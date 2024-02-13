@@ -8,6 +8,12 @@ node_modules/
 dist/
 web-build/
 
+# Ignorar el archivo package-lock.json para proyectos de npm
+package-lock.json
+
+# Ignorar el archivo yarn.lock para proyectos de Yarn
+yarn.lock
+
 # Native
 *.orig.*
 *.jks
