@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
     },
     btnOk:{
         marginHorizontal:16, 
-        flex:1,  
+        //flex:1,  
         paddingVertical:10, 
         justifyContent:'center', 
         alignItems:'center', 

@@ -11,6 +11,7 @@ import TypeExchange from "../../../components/Exchanges/TypeExchange";
 import Filters from "../../../components/Exchanges/Filters";
 import ExchangeList from "../../../components/Exchanges/ExchangesList";
 import { 
+    addCartItem,
     changeModalEx, getCategories, getListCloseBranches, getOrdersList, 
     getProducts, onChangeType, onExchangeProducts, resetDeliveredData, 
     resetExchangeOrder, 
@@ -26,6 +27,7 @@ import DeliveredList from "../../../components/Exchanges/ReceivedList";
 import DeliveredSelected from "../../../components/Exchanges/DeliveredSelected";
 import EmptyList from "../../../components/Exchanges/EmptyList";
 import ExchangeFuel from "../../../components/Exchanges/ExchangeFuel";
+import ModalAlertFailed from "../../../components/modals/ModalAlertFail";
 
 const ProductsScreen = () => {
     const dispatch = useDispatch();
@@ -35,6 +37,7 @@ const ProductsScreen = () => {
     //const [selectedType, setSelected] = useState(0)
     const [selectedFilter, setFilter] = useState(null)
     const [exchangedFilter, setExchanged] = useState(true)
+    const [modalAlert, setModalAlert] = useState(false)
     const orderData = useSelector(state => state.exchangeDuck.orderData)
     const categories = useSelector(state => state.exchangeDuck.categories)
     const products = useSelector(state => state.exchangeDuck.products)
@@ -51,13 +54,16 @@ const ProductsScreen = () => {
     const points = 600
 
     useEffect(() => {
-        (async() => {
-            await dispatch(getCategories())  
-            const coords = await getPermissionLocation()
-            await dispatch(getListCloseBranches(coords?.coords))
-            await dispatch(getOrdersList(getFiltersOrders()))
-        })()
-    },[])
+        if(isfocused){
+            (async() => {
+                await dispatch(getCategories())  
+                const coords = await getPermissionLocation()
+                await dispatch(getListCloseBranches(coords?.coords))
+                await dispatch(getOrdersList(getFiltersOrders()))
+            })()
+        }
+    },[isfocused])
+
 
     useEffect(() => {
         (async() => {
@@ -112,6 +118,14 @@ const ProductsScreen = () => {
         return path
     }
 
+    const validateAddCar = (id) => {
+        const productToAdd = products.find(product => product.id === id);
+        const totalPoints = shoppingCart.reduce((total, item) => total + (item.price_in_points * item.quantity), 0);
+        const newTotalPoints = totalPoints + (productToAdd.price_in_points * 1);
+
+        return newTotalPoints;
+    }
+
     return(
         <>
             <HeaderLogged 
@@ -144,7 +158,17 @@ const ProductsScreen = () => {
                         <ExchangeList 
                             data={products}
                             onMinus={(id, action) => dispatch(updateProductQuantity(id, action))}
-                            onPlus={(id, action) => dispatch(updateProductQuantity(id,action))}
+                            onPlus={(id, action) => {
+                                const newTotalPoints = validateAddCar(id)
+                                newTotalPoints <= points ? dispatch(updateProductQuantity(id,action))
+                                : setModalAlert(true)
+                            }}
+                            onAddCar={(item, action) => {
+                                const totalPoints = validateAddCar(item?.id)
+                                totalPoints <= points ?  dispatch(addCartItem(item))
+                                : setModalAlert(true)
+                                
+                            }}
                         />
 
                     ): (
@@ -179,6 +203,13 @@ const ProductsScreen = () => {
                     }}
                     points={points}
                     setVisible={() => dispatch(changeModalEx({prop:'modalShoppingCart', val:false}))}
+                />
+
+                <ModalAlertFailed 
+                    visible={modalAlert}
+                    setVisible={() => setModalAlert(false)}
+                    message='No se ha podido agregar el articulo, tienes puntos insuficientes'
+                    titleBtn="Entendido"
                 />
             </HeaderLogged>
             {selectedType ===1 && 
