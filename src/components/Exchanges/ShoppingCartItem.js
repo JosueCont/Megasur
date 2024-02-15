@@ -3,13 +3,24 @@ import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { getFontSize } from "../../utils/functions";
 import { Colors } from "../../utils/Colors";
 import { FontAwesome } from '@expo/vector-icons';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { deleteCarItem, updateProductQuantity } from "../../store/ducks/exchangeDuck";
 import { Entypo } from '@expo/vector-icons';
 
 
-const ShoppingItem = ({item, index,onDeleteItem}) => {
+const ShoppingItem = ({item, index,onDeleteItem, points}) => {
     const dispatch = useDispatch();
+    const shoppingCart = useSelector(state => state.exchangeDuck.cart)
+    const products = useSelector(state => state.exchangeDuck.products)
+
+    const getValidation = (id,action) => {
+        const productToAdd = products.find(product => product.id === id);
+        const totalPoints = shoppingCart.reduce((total, item) => total + (item.price_in_points * item.quantity), 0);
+        const newTotalPoints = totalPoints + (productToAdd.price_in_points * 1);
+        
+        return newTotalPoints
+    }
+
     return(
         <View style={{flexDirection:'row', marginBottom:12, }}>
             <View style={{width: 75, height: 75, borderRadius: 13, borderWidth: 0.5, borderColor: Colors.grayStrong, marginRight:10}}>
@@ -25,7 +36,11 @@ const ShoppingItem = ({item, index,onDeleteItem}) => {
                     </TouchableOpacity>
                     <Text style={styles.lblCount}>{item?.quantity || 1}</Text>
                     <TouchableOpacity 
-                        onPress={() => dispatch(updateProductQuantity(item?.id, (item?.quantity || 1) + 1))}
+                        onPress={() => {
+                            const totalPoints = getValidation(item?.id, (item?.quantity || 1) + 1)
+                            totalPoints <= points ?  dispatch(updateProductQuantity(item?.id, (item?.quantity || 1) + 1))
+                            : console.log('No se puede actualizar, por puntos')
+                        }}
                     >
                         <Entypo name="plus" size={18} color={Colors.blueGreen} />
                     </TouchableOpacity>

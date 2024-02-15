@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions} from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Linking} from "react-native";
 import { getFontSize } from "../../utils/functions";
 import { Colors } from "../../utils/Colors";
 import CurveArrow from "../../../assets/svg/CurveArrow";
@@ -8,13 +8,18 @@ import StationList from "../StationsList";
 
 const {height, width} = Dimensions.get('window');
 
-const CloseStations = ({stations}) => {
+const CloseStations = ({stations,}) => {
     const navigation = useNavigation();
+
+    const onOpenMaps = (coords, locationName) => {
+        const url = `https://www.google.com/maps/search/?api=1&q=${encodeURIComponent(locationName)}&query=${coords.lat},${coords.lng}`;
+        Linking.openURL(url);
+    }
 
     return(
         <View >
             <Text style={styles.title}>Estaciones cerca de ti</Text>
-            {stations.length > 0 && <StationList stations={stations}/>}
+            {stations.length > 0 && <StationList stations={stations} openMaps={(coords, name) => onOpenMaps(coords, name)}/>}
         </View>
     )
 }

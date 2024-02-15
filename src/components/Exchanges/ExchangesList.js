@@ -9,7 +9,7 @@ import ExchangeItem from "./ExchangeItem";
 const {height, width} = Dimensions.get('window');
 
 
-const ExchangeList = ({data, showTitle=true, showActions=true, onMinus, onPlus}) => {
+const ExchangeList = ({data, showTitle=true, showActions=true, onMinus, onPlus, onAddCar}) => {
     const loader = useSelector(state => state.exchangeDuck.loading)
 
     return(
@@ -29,6 +29,7 @@ const ExchangeList = ({data, showTitle=true, showActions=true, onMinus, onPlus})
                         showActions={showActions}
                         setMinus={(id, action) => onMinus(id, action)}
                         setPlus={(id,action) => onPlus(id,action)}
+                        addCarITem={(item, action) => onAddCar(item,action)}
                     />
                 ))}
             </View>

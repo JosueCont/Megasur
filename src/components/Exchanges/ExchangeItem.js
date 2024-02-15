@@ -11,31 +11,23 @@ import { Entypo } from '@expo/vector-icons';
 const {height, width} = Dimensions.get('window');
 
 
-const ExchangeItem = ({item, index, showActions=true, setMinus, setPlus}) => {
+const ExchangeItem = ({item, index, showActions=true, setMinus, setPlus, addCarITem}) => {
     const navigation = useNavigation()
     const dispatch = useDispatch()
     const shoppingCart = useSelector(state => state.exchangeDuck.cart)
-    const [quantity, setQuantity] = useState(shoppingCart.find(product =>  product?.id === item?.id)?.quantity || 1)
     const points = 600
 
     const findShoppingCart = (item) => {
         return shoppingCart.find(product => product?.id == item?.id )
     }
 
-    const onMinusAction = (id) => {
-        setQuantity(quantity - 1)
-        setTimeout(() => {
-            setMinus(id, quantity - 1)
-
-        },500)
+    const onMinusAction = (id, quantity) => {
+        setMinus(id, (shoppingCart.find(product =>  product?.id === id)?.quantity || 1) - 1)
     }
 
-    const onPlusAction = (id) => {
-        setQuantity(quantity + 1)
-        setTimeout(() => {
-            setPlus(id, quantity +1 )
+    const onPlusAction = (id, quantity) => {
+        setPlus(id, (shoppingCart.find(product =>  product?.id === id)?.quantity || 1) +1 )
 
-        },500)
     }
 
     const getQuantity = (id) => {
@@ -72,14 +64,14 @@ const ExchangeItem = ({item, index, showActions=true, setMinus, setPlus}) => {
                     ): item?.is_active ? findShoppingCart(item) ? (
                         <View style={styles.contCounter}>
                             <TouchableOpacity 
-                                disabled={quantity === 1}
-                                onPress={() => onMinusAction(item?.id,)}
+                                disabled={(shoppingCart.find(product =>  product?.id === item?.id)?.quantity || 1) == 1}
+                                onPress={() => onMinusAction(item?.id,item?.quantity)}
                                 style={{ justifyContent:'center', alignItems:'flex-start', flex:1}}>
                                 <Entypo name="minus" size={18} color={Colors.blueGreen} />
                             </TouchableOpacity>
                             <Text style={styles.lblCount}>{getQuantity(item?.id)}</Text>
                             <TouchableOpacity 
-                                onPress={() => onPlusAction(item?.id, )}
+                                onPress={() => onPlusAction(item?.id, item?.quantity )}
                                 style={{ flex:1, justifyContent:'center', alignItems:'flex-end'}}>
                                 <Entypo name="plus" size={18} color={Colors.blueGreen} />
                             </TouchableOpacity>
@@ -87,7 +79,7 @@ const ExchangeItem = ({item, index, showActions=true, setMinus, setPlus}) => {
                         </View>
                     ) : (
                         <TouchableOpacity 
-                            onPress={() => dispatch(addCartItem(item))}
+                            onPress={() => addCarITem(item, (shoppingCart.find(product =>  product?.id === item?.id)?.quantity || 1) +1)}
                             style={[styles.contFooter,{borderColor: Colors.green,}]}>
                             <Text style={styles.lblAdd}>Agregar al carrito</Text>
                         </TouchableOpacity>

@@ -90,14 +90,14 @@ const ModalShoppingCart = ({visible, setVisible, branches, points, onSubmit}) =>
     });
 
     const validateCar = () => {
-        //if(isVerifyMail){
+        if(isVerifyMail){
             onSubmit(shoppingCart, branchId)
-        //}else{
-        //    setVisible()
-        //    setTimeout(() => {
-        //        setShowToast(true)
-        //    },500)
-        //}
+        }else{
+            setVisible()
+            setTimeout(() => {
+                setShowToast(true)
+            },500)
+        }
     }
 
     const getTotal = () => {
@@ -121,7 +121,7 @@ const ModalShoppingCart = ({visible, setVisible, branches, points, onSubmit}) =>
                                     showsVerticalScrollIndicator={false}
                                     contentContainerStyle={{ flexGrow:1, paddingBottom: 10}}
                                     style={styles.contentItems}>
-                                    {shoppingCart?.map((item,index) => <ShoppingItem item={item} index={index} />)}
+                                    {shoppingCart?.map((item,index) => <ShoppingItem item={item} index={index} points={points}/>)}
                                 </ScrollView>
                                 <View style={styles.contInfo}>
                                     <Text style={{flex:1, alignSelf:'flex-start', paddingTop:15}}>Enviar a:</Text>
