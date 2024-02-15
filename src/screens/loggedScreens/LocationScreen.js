@@ -1,11 +1,11 @@
-import React,{useState,useEffect} from "react";
-import { View, Text, TouchableOpacity, Dimensions, Platform, ScrollView, Image, StyleSheet, Linking } from "react-native";
+import React,{useState,useEffect, useRef} from "react";
+import { View, Text, TouchableOpacity, Dimensions, Platform, ScrollView, Image, StyleSheet, Linking, FlatList, PanResponder, Animated } from "react-native";
 import { getFontSize, getPermissionLocation } from "../../utils/functions";
 import { Colors } from "../../utils/Colors";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import HeaderLogged from "../../components/Headers/HeaderLogged";
 import MapView,{Marker, Callout, CalloutSubview} from "react-native-maps";
-import Animated, { useSharedValue, withTiming, interpolate, useAnimatedStyle, withSpring } from "react-native-reanimated";
+//import Animated, { useSharedValue, withTiming, interpolate, useAnimatedStyle, withSpring } from "react-native-reanimated";
 import { PanGestureHandler, State, GestureHandlerRootView, Gesture, GestureDetector } from "react-native-gesture-handler";
 import AccordionList from "../../components/profile/AccordionList";
 import HeaderLocation from "../../components/Headers/HeaderLocation";
@@ -16,7 +16,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { onChangeModalLoc } from "../../store/ducks/locationsDuck";
 import ModalLocation from "../../components/modals/ModalLocationStation";
-
+import AccordionItem from "../../components/profile/AccordionItem";
 
 const {height, width} = Dimensions.get('window');
 
@@ -31,44 +31,122 @@ const LocationScreen = () => {
     const [isOpen, setIsOpen] = useState(true);
     const [selectedMarker, setSelectMarker] = useState(null)
     const [modalLoading, setModalLoading] = useState(false)
-    const translateY = useSharedValue(0);
-    const context = useSharedValue({ y: 0 });
-    const pan = Gesture.Pan();
+    //const translateY = useSharedValue(0);
+    //const context = useSharedValue({ y: 0 });
+    //const pan = Gesture.Pan();
     const stations = useSelector(state => state.locationDuck.nearBranches)
     const zones = useSelector(state => state.locationDuck.branchesZones)
     const modalActive = useSelector(state => state.locationDuck.modalLocation)
 
+    const sheetMaxHeight = height - 200;
+    const sheetMinHeight = 75;
 
+    const MAX_Y = sheetMinHeight - sheetMaxHeight;
+    const MID_Y = (MAX_Y / 2) + 50;
+    const MIN_Y = 0;
 
-    //longitudeDelta cuando este el accordion 0.009, height 2.5, contrario heigth 1.54 y longitudeDelta 0.9
-    /*
-    CAmbiar tamaño al ir actualzando el evento
-    .onUpdate((event) => {
-        translateY.value = event.translationY + context.value.y;
-        translateY.value = Math.max(translateY.value, heigth/3);
-      })
-    */
+    const MAx_FLEX = 0.85
+    const MIN_FLEX = 0.55
 
-      useEffect(() => {
-        setIsOpen(true)
-        
-      },[isFocused])
+    const THRESHOLD = 60;
+
+    const lastRef = useRef(MID_Y);
+    const sheetRef = useRef(new Animated.Value(MID_Y)).current;
+    const animatedMapSize = useRef(new Animated.Value(MIN_FLEX)).current;
+    const animatedMapOpacity = useRef(new Animated.Value(1)).current;
 
     useEffect(() => {
-        (async() => {
-            const location = await getPermissionLocation()
-            console.log('location', Platform.OS, location)
-            setRegion({
-                latitude: location?.coords?.latitude,
-                longitude: location?.coords?.longitude
-            })
-            setNewRegion({
-                latitude: location?.coords?.latitude,
-                longitude: location?.coords?.longitude
-            })
-        })();
-        getByZone()
+      setIsOpen(true)
+      
+    },[isFocused])
+ 
+    useEffect(() => {
+      (async() => {
+          const location = await getPermissionLocation()
+          console.log('location', Platform.OS, location)
+          setRegion({
+              latitude: location?.coords?.latitude,
+              longitude: location?.coords?.longitude
+          })
+          setNewRegion({
+              latitude: location?.coords?.latitude,
+              longitude: location?.coords?.longitude
+          })
+      })();
+      getByZone()
     },[])
+
+    const panResponder = useRef(
+        PanResponder.create({
+          onMoveShouldSetPanResponder: () => true,
+          onPanResponderGrant: () => {
+            sheetRef.setOffset(lastRef.current);
+          },
+          onPanResponderMove: (_, gesture) => {
+            sheetRef.setValue(gesture.dy);
+          },
+          onPanResponderRelease: (_, gesture) => {
+            sheetRef.flattenOffset();
+    
+            if(gesture.dy > 0){
+                //dragging down
+                if(gesture.dy <= THRESHOLD) {
+                    lastRef.current === MAX_Y ? autoSpring(MAX_Y) : autoSpring(MID_Y);
+                    lastRef.current <= MID_Y && lastRef.current === MAX_Y && lastRef.current ? calculatesizeMap(MAx_FLEX) : calculatesizeMap(MIN_FLEX)
+                }else if(lastRef.current === MAX_Y){
+                    //calculatesizeMap(0.5) 
+                    autoSpring(MID_Y);
+                }else{
+                    autoSpring(MIN_Y);
+                    calculatesizeMap(MAx_FLEX) 
+              }
+            }else{
+                //dragging up
+                if(gesture.dy >= -THRESHOLD){
+                    lastRef.current === MIN_Y ? autoSpring(MIN_Y) : autoSpring(MID_Y);
+                    lastRef.current === MIN_Y && lastRef.current <= MID_Y ? calculatesizeMap(MIN_FLEX) : calculatesizeMap(MAx_FLEX)
+                }else {
+                    lastRef.current === MIN_Y ? autoSpring(MID_Y) : autoSpring(MAX_Y);
+                    calculatesizeMap(MIN_FLEX)
+              }
+            }
+          },
+        }),
+      ).current;
+
+    const calculatesizeMap = (val) => {
+        //const newSize = val >= MIN_Y ? 0.5 : 0.85; 
+        //newSize > MIN_Y ? (newSize < MAX_Y ? 0.85 : 0.5) : 0.5;
+
+        Animated.timing(animatedMapSize, {
+            toValue: val,
+            duration: 300,
+            useNativeDriver: false,
+        }).start();
+        
+        Animated.timing(animatedMapOpacity,{
+            toValue: val === MAx_FLEX ? 0 : 1,
+            duration:300,
+            useNativeDriver: false
+        }).start();
+        
+    }
+
+    const autoSpring = value => {
+        lastRef.current = value;
+        Animated.spring(sheetRef, {
+          toValue: lastRef.current,
+          useNativeDriver: false,
+        }).start();
+    };
+
+    const animatedStyles = {
+      height: sheetRef.interpolate({
+        inputRange: [MAX_Y, MIN_Y],
+        outputRange: [sheetMaxHeight, sheetMinHeight],
+        extrapolate: 'clamp',
+      }),
+    };
 
     const getByZone = () => {
         let dataAccordion = []
@@ -115,44 +193,6 @@ const LocationScreen = () => {
         return newZone[0]?.branches || []
     }
 
-    const onGestureEvent = event => {
-        context.value = { y: translateY.value };
-        //translateY.value = event.nativeEvent.translationY;
-      };
-
-    const onGestureUpdate = event => {
-        translateY.value = event.translationY + context.value.y;
-        translateY.value = Math.max(translateY.value, -height/3 + 50);
-    }
-    
-    const onGestureEnd = event => {
-       const shouldCloseSheet = event.translationY > 100;
-       //translateY.value = withSpring(shouldCloseSheet ? 0 : height/3);
-       setIsOpen(!shouldCloseSheet);
-       if(isOpen || !isOpen) setNewRegion({...initialRegion})
-      
-    };
-
-    const animatedStyle = useAnimatedStyle(() => {
-      return {
-        transform: [{ translateY: translateY.value}],
-        height: withTiming(isOpen ? height/2.7 : 50, {duration: 500}),
-        //opacity: withSpring(isOpen ? 1 : 0)
-      };
-    });
-
-    const sizeMap = useAnimatedStyle(() => {
-      return{
-          height: withTiming(isOpen ? height/2.3 : height/1.54 , {duration: 500})
-      }
-    })
-
-    const opacity = useAnimatedStyle(() => {
-      return{
-          opacity: withTiming(isOpen ? 1 : 0, {duration:300})
-      }
-    })
-
     const onPressMarker = (marker) => {
         setModalLoading(true)
         setNewRegion({
@@ -173,10 +213,10 @@ const LocationScreen = () => {
             title="Ubicaciones" 
             noPadding={true}
             goBack={() => navigation.goBack() }>
-                <Animated.View style={[sizeMap,{width: width, }]}>
+                <Animated.View style={[{width: width, flex: animatedMapSize }]}>
                     {initialRegion != null &&
                      <MapView 
-                        style={{flex:1}}
+                        style={{flex:1,}}
                         region={{...region, longitudeDelta: isOpen ? 0.009 : 0.9, latitudeDelta: 0.04}}
                         initialRegion={{
                             longitude: initialRegion?.longitude,
@@ -236,44 +276,26 @@ const LocationScreen = () => {
                         </TouchableOpacity>
                     )}
                 </Animated.View>
-                
-                <GestureHandlerRootView>
-                    <GestureDetector
-                        gesture={pan.onStart((event) => onGestureEvent(event)).onUpdate(event => onGestureUpdate(event)).onEnd((event) => onGestureEnd(event))}
-                        //onGestureEvent={onGestureEvent}
-                        //onHandlerStateChange={onGestureEnd}
-                        >
-                        <Animated.View style={[animatedStyle,{backgroundColor: modalActive ? Colors.white: Colors.lightGray,}]}>
-                            <TouchableOpacity style={{alignSelf:'center', marginBottom:5}}
-                                onPress={() => {
-                                    setIsOpen(!isOpen);
-                                    //translateY.value = isOpen ? 0 : height/3;
-                                }}>
-                                <View style={{width:154, height:8, backgroundColor: Colors.gray, borderRadius:8, marginTop:3}}/>
-                            </TouchableOpacity>
-                            <ScrollView
-                                keyboardShouldPersistTaps='handled'
-                                automaticallyAdjustKeyboardInsets
-                                nestedScrollEnabled={true}
-                                overScrollMode="always"
-                                showsVerticalScrollIndicator={false}
-                                scrollEnabled={isOpen ? true : false}
-                                //style={{flex:1}}
-                                contentContainerStyle={{
-                                    flexGrow: 1,
-                                    paddingBottom: 30,
+                <Animated.View style={[animatedStyles,{flex:1, position:'absolute', bottom:0, width: width, backgroundColor: Colors.lightGray }]} >
+                    <View {...panResponder.panHandlers} >
+                        <View style={styles.dragBar}/>
 
-                                }}>
-                                    <Animated.View style={[opacity,{flex:1}]}>
-                                        <AccordionList data={getByZone()} isLocation={true}/>
-                                    </Animated.View>
-                                    
-                            </ScrollView>
-                        </Animated.View>
+                    </View>
+                    <Animated.View style={{opacity: animatedMapOpacity}}>
+                        <FlatList 
+                            data={getByZone()}
+                            overScrollMode='always'
+                            keyExtractor={(item,i) => i.toString()}
+                            nestedScrollEnabled={true}
+                            //style={{backgroundColor:'red', }}
+                            contentContainerStyle={{ paddingBottom:30, flexGrow:1,}}
+                            renderItem={({item,index}) => (
+                                <AccordionItem item={item} index={index} isLocation={true}/>
+                            )}
+                        />
 
-                    </GestureDetector>
-
-                </GestureHandlerRootView>
+                    </Animated.View>
+                </Animated.View>
 
                 <ModalLocation 
                     visible={modalActive}
@@ -319,7 +341,15 @@ const styles = StyleSheet.create({
         width:30, 
         height: 30, 
         borderRadius:15 
-    }
+    },
+    dragBar: {
+        width: 160,
+        height: 6,
+        backgroundColor: Colors.gray,
+        borderRadius: 12,
+        alignSelf:'center', 
+        marginVertical:15
+      },
 })
 
 export default LocationScreen;
