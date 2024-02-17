@@ -12,21 +12,19 @@ const StationItem = ({station, index, isLocation, changeRegion, openMaps}) => {
     const navigation = useNavigation();
     return(
         <TouchableOpacity 
-            onPress={() => isLocation ? changeRegion(station?.location_as_lat_long) : console.log('NAda') }
+            onPress={() => isLocation ? changeRegion(station?.location_as_lat_long) : navigation.navigate('Stations',{fromCloseStations:true}) }
             style={[styles.card, {marginTop: isLocation ? 10 : 0, width: isLocation ? width/1.06 : width/1.1, }]} 
             key={index}>
             <View style={styles.contHeader}>
-                {isLocation ? (
-                    <View style={styles.contIsLocation}>
-                        <View style={styles.contImage}>
-                            <Image source={{uri: station?.franchise?.logo}} style={styles.imgFranchise}/>
-                        </View>
-                        <Text style={styles.name}>{station.name}</Text>
+                
+                <View style={styles.contIsLocation}>
+                    <View style={styles.contImage}>
+                        <Image source={{uri: station?.franchise?.logo}} style={styles.imgFranchise}/>
                     </View>
-                ):(
                     <Text style={styles.name}>{station.name}</Text>
-                )}
-                <TouchableOpacity onPress={() => isLocation ? openMaps(station?.location_as_lat_long, station?.name) : navigation.navigate('Stations',{fromCloseStations:true})}>
+                </View>
+                
+                <TouchableOpacity onPress={() => openMaps(station?.location_as_lat_long, station?.name) }>
                     <CurveArrow />
                 </TouchableOpacity>
             </View>

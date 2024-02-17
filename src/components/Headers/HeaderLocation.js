@@ -36,7 +36,7 @@ const HeaderLocation = ({children,isBack=false, title='Bienvenidos', onRefresh, 
                     </>
                 </TouchableOpacity>
             </View>
-                <View style={{marginVertical:noPadding ? 0 : 20, }}>
+                <View style={{marginVertical:noPadding ? 0 : 20, flex:1 }}>
                     {children}
                 </View>
         </View>

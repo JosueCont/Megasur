@@ -1,5 +1,6 @@
 const commonConfig = {
     "name": "megasur",
+    "owner": "hiuman",
     "slug": "megasur",
     "scheme":'megasur',
     "orientation": "portrait",
@@ -9,6 +10,9 @@ const commonConfig = {
       "image": "./assets/splash.png",
       "resizeMode": "cover",
       "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/aa1051a6-740e-4053-9c7a-e75f66a09e17"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -33,13 +37,10 @@ const commonConfig = {
             }
           ]
     ],
-    "updates": {
-        "url": "https://u.expo.dev/117d988c-e564-452d-bf28-f4a60e61cf8e"
-    },
     
     "extra": {
       "eas": {
-        "projectId": "117d988c-e564-452d-bf28-f4a60e61cf8e"
+        "projectId": "aa1051a6-740e-4053-9c7a-e75f66a09e17"
       }
     }
   
