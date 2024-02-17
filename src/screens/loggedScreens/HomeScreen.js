@@ -18,17 +18,23 @@ import { changeModalHome, getDataConfi, getAllCards, saveDataLocalStorage } from
 import { getCloseStations } from "../../store/ducks/locationsDuck";
 import { getProfileData } from "../../store/ducks/profileDuck";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getAdvertisements } from "../../utils/services/ApiApp";
+import { useIsFocused } from "@react-navigation/native";
 
 const {height, width} = Dimensions.get('window');
 
 
 const HomeScreen = () => {
     const dispatch = useDispatch();
+    const isFocused = useIsFocused()
 
     const modalQuizz = useSelector(state => state.homeDuck.modalQuizz)
     const stations = useSelector(state => state.locationDuck.nearBranches)
     const userId = useSelector(state => state.authDuck.dataUser?.id)
     const userCard = useSelector(state => state.homeDuck.cardsStorage)
+
+    const [dataAdvertisements, setDataAdvertisements] = useState([])
+    const [dataPromotions, setDataPromotions] = useState([])
 
 
     useEffect(() => {
@@ -46,6 +52,26 @@ const HomeScreen = () => {
                 
         })()
     },[userId])
+
+    useEffect(() => {
+        getDataAdvertisements()
+        getDataPromotions()
+    },[isFocused])
+
+    const getDataAdvertisements = async()=>{
+        const result = await getAdvertisements('?page=1&per_page=1000&type=1')
+        if (result.status == 200){
+            setDataAdvertisements(result.data?.items ? result.data.items : [])
+        }
+    }
+
+    const getDataPromotions = async()=>{
+        const result = await getAdvertisements('?page=1&per_page=1000&type=2')
+        if (result.status == 200){
+            setDataPromotions(result.data?.items ? result.data.items : [])
+        }
+    }
+
     const dataDisconunt = [
         {id:'1', discount:20, valityStart:'06/07/2023', valityEnd:'01/05/2024', image: require('../../../assets/promotion.png')},
         {id:'2', discount:15, valityStart:'06/07/2023', valityEnd:'01/05/2024', image: require('../../../assets/promotion.png')},
@@ -53,7 +79,7 @@ const HomeScreen = () => {
 
     ];
 
-    const dataPromotion = [
+    const dataPromotion_old = [
         {id:'1', title:'Tus puntos valen el doble', description:'Valido todos los Martes de 11:00am a 4:00pm', image: require('../../../assets/Art.png')},
         {id:'2', title:'Te llevamos al concierto', description:'Conoce como participar', image: require('../../../assets/Art.png')},
         {id:'3', title:'Encuentra lo mejor para tu vehiculo', description:'Encuentra en nuestras gasolineras una amplia variedad de accesorios', image: require('../../../assets/Art.png')}
@@ -71,8 +97,8 @@ const HomeScreen = () => {
             <Question />
             <ProvitionalPoints openModal={() => dispatch(changeModalHome({prop:'modalQuizz',val:true}))}/>
             <ExchangeCenter />
-            <ListPromotions dataPromotion={dataPromotion}/>
-            <ListDiscount dataDisconunt={dataDisconunt}/>
+            <ListPromotions dataPromotion={dataAdvertisements}/>
+            <ListDiscount dataDisconunt={dataPromotions}/>
             <CloseStations stations={stations}/>
             
             {/**Modals */}

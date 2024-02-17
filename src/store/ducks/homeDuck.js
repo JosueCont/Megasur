@@ -96,7 +96,7 @@ export const getQrCode = ({isRunning, user, cards, timer}) => async(dispatch) =>
             }
             //const response = await postValidateOTP(dataSend)
             console.log('response otp validtion', totp)
-            dispatch({type: SET_CODE, payload: totp})
+            dispatch({type: SET_CODE, payload: JSON.stringify(dataSend)})
             if(totp != ''){
                 dispatch(getCounter(counter))
             }
