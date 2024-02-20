@@ -7,6 +7,7 @@ export const postVerifyPhone = async(data) => await axiosPost(axiosTypes.VERIFY_
 export const postValidateCode = async(data) => await axiosPost(axiosTypes.VALIDATE_CODE, data)
 export const postRegisterUser = async(data) => await axiosPost(axiosTypes.REGISTER_USER,data);
 export const postRefreshToken = async(data) => await axiosPost(axiosTypes.REFRESH_TOKEN,data)
+export const postLogout = async(data) => await axiosPost(axiosTypes.LOGOUT, data);
 
 //logged
 

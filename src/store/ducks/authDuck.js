@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { postValidateCode, postVerifyPhone, postRegisterUser, getDataUser } from "../../utils/services/ApiApp";
+import { postValidateCode, postVerifyPhone, postRegisterUser, getDataUser, postLogout } from "../../utils/services/ApiApp";
 import { saveTokens } from "../../utils/functions";
 
 const CHANGE_INPUT = 'change_input';
@@ -139,7 +139,8 @@ export const validateCode = (data) => async(dispatch) => {
         dispatch({type: LOADING})
         let dataSend = {
             phone: +data.phone,
-            code: data.verificationCode
+            code: data.verificationCode,
+            device: data.device
         }
         console.log('dataSend', dataSend)
         const response = await postValidateCode(dataSend)
@@ -228,8 +229,12 @@ export const createSession = () => async(dispatch) => {
     }
 }
 
-export const logoutAction = () => async(dispatch) => {
+export const logoutAction = (data) => async(dispatch) => {
     try {
+        if (data){
+            console.log({expo_token: data})
+            await postLogout({expo_token: data})
+        }
         await AsyncStorage.removeItem('accessToken')
         //await AsyncStorage.removeItem('refreshToken')
         await AsyncStorage.removeItem('user')

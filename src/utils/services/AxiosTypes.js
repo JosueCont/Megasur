@@ -16,5 +16,6 @@ export const axiosTypes = {
     LIST_CATEGORIES:'/store/product-categories/',
     CLOSE_BRANCHES: '/business/branches/distance/',
     GET_ORDERS: '/store/orders/',
-    GET_PROMOTIONS: '/marketing/advertisement-app/'
+    GET_PROMOTIONS: '/marketing/advertisement-app/',
+    LOGOUT: '/security/users/logout/'
 }

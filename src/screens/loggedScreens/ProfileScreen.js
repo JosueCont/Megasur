@@ -17,6 +17,7 @@ import ModalDeleteAccount from "../../components/modals/DeleteAccount";
 import ModalTerms from "../../components/modals/ModalTerms";
 import PersonalInfoForm from "../../components/profile/PersonalInfo";
 import { useIsFocused } from "@react-navigation/native";
+import { getExpoToken } from "../../utils/functions";
 
 const ProfileScreen = () => {
     const dispatch = useDispatch();
@@ -32,15 +33,27 @@ const ProfileScreen = () => {
     const refresh = useSelector(state => state.profileDuck.refresh)
     const modalTerms = useSelector(state => state.profileDuck.modalTerms)
 
+    const [expoToken, setExpoToken] = useState(null)
+
 
     useEffect(() => {
         //if(userId && userId != undefined) 
         getDataUser()
+        applicationExpoToken()
     },[isValid,isUpdateAccount, isFocused])
 
     const getDataUser = async() => {
          dispatch(await getProfileData())
     }
+
+    const applicationExpoToken = async ()=>{
+        const resultToken = await getExpoToken()
+        if (resultToken){
+            setExpoToken(resultToken)
+        }
+
+    }
+
 
     const data = [
         {id:'1', title:'Información personal', component: <PersonalInfoForm />},
@@ -77,7 +90,7 @@ const ProfileScreen = () => {
                     onSubmit={() => {
                         dispatch(onChangeModalProf({prop:'modalActive', value: false}))
                         setTimeout(() => {
-                            dispatch(logoutAction())
+                            dispatch(logoutAction(expoToken))
                         },500)
                     }}
                 />
