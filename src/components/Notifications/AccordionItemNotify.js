@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useRef} from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Image} from "react-native";
 import { getFontSize } from "../../utils/functions";
 import { Colors } from "../../utils/Colors";
@@ -22,7 +22,9 @@ const AccordionNotifications = ({item, index, onDeleted}) => {
     const isSwipped = useSharedValue(0)
     const opacity = useSharedValue(1);
     const isDeleted = useSharedValue(false)
+    const isCancel = useSharedValue(false)
 
+    const cancelPressed = useRef(false);
 
     const TRANSLATE_X_THRESHOLD = -width * 0.3;
 
@@ -52,6 +54,7 @@ const AccordionNotifications = ({item, index, onDeleted}) => {
 
     const startGesture = (e) => {
         e.translationX = swipeRight.value
+        isCancel.value = false
     }
     
     const updateGesture = (e) => {
@@ -66,11 +69,18 @@ const AccordionNotifications = ({item, index, onDeleted}) => {
         if(shouldBeDismissed){
             swipeRight.value = withSpring(-width)
             isSwipped.value = withSpring(width*0.84)
-            opacity.value = withTiming(0, {duration:500}, (isFinished) => {
+            opacity.value = withTiming(isSwipped.value, {duration:2000}, (isFinished) => {
                 if (isFinished ) {
-                    isSwipped.value = withTiming(0,{duration:500})
-                    swipeRight.value = withTiming(0,{duration:500})
-                    runOnJS(onDeleted)(item);
+                    if(!isCancel.value){
+                        isSwipped.value = 0
+                        swipeRight.value = 0
+                        runOnJS(onDeleted)(item);
+                    }else{
+                        isSwipped.value = withTiming(0,{duration:2000})
+                        swipeRight.value = withTiming(0, {duration:2000})
+
+                    }
+                    
                     
                 }
             });
@@ -147,6 +157,9 @@ const AccordionNotifications = ({item, index, onDeleted}) => {
             </GestureHandlerRootView>
             <Animated.View style={[styles.contIcon, iconStyle]}>
                 <AntDesign name="delete" size={24} color={Colors.white} />
+                <TouchableOpacity style={{marginRight:5}}onPress={() => isCancel.value = true}>
+                    <MaterialIcons name="cancel" size={24} color={Colors.white} />
+                </TouchableOpacity>
                 {/*<Animated.Text style={[styles.lblDele, opacityLabel]}>Eliminar mensaje</Animated.Text>*/}
             </Animated.View>
 
@@ -192,7 +205,8 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.pink, 
         paddingVertical:10,
         borderRadius:8,
-        alignItems:'center'
+        alignItems:'center',
+        justifyContent:'space-between'
     },
     lblDele:{
         color: Colors.white, fontSize: getFontSize(13), fontWeight:'600'
