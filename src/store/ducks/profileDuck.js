@@ -180,7 +180,7 @@ export const requestDeleteAccount = (id) => async(dispatch) => {
 
     } catch (e) {
         console.log('error dele',e)
-        dispatch({type: DELETE_ACCOUNT_FAILED, message: 'Ocurrio un error al intentar eliminar la cuenta'})
+        dispatch({type: DELETE_ACCOUNT_FAILED, message: e?.response?.data?.detail || 'Ocurrio un error al intentar eliminar la cuenta'})
     }
 }
 
