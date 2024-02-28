@@ -92,7 +92,7 @@ const LocationScreen = () => {
                 //dragging down
                 if(gesture.dy <= THRESHOLD) {
                     lastRef.current === MAX_Y ? autoSpring(MAX_Y) : autoSpring(MID_Y);
-                    lastRef.current <= MID_Y && lastRef.current === MAX_Y && lastRef.current ? calculatesizeMap(MAx_FLEX) : calculatesizeMap(MIN_FLEX)
+                    lastRef.current <= MID_Y && lastRef.current === MAX_Y && lastRef.current != MAX_Y ? calculatesizeMap(MAx_FLEX) : calculatesizeMap(MIN_FLEX)
                 }else if(lastRef.current === MAX_Y){
                     //calculatesizeMap(0.5) 
                     autoSpring(MID_Y);
@@ -104,10 +104,10 @@ const LocationScreen = () => {
                 //dragging up
                 if(gesture.dy >= -THRESHOLD){
                     lastRef.current === MIN_Y ? autoSpring(MIN_Y) : autoSpring(MID_Y);
-                    lastRef.current === MIN_Y && lastRef.current <= MID_Y ? calculatesizeMap(MIN_FLEX) : calculatesizeMap(MAx_FLEX)
+                    lastRef.current === MIN_Y && lastRef.current <= MID_Y && lastRef.current != MAX_Y && calculatesizeMap(MIN_FLEX) //: calculatesizeMap(MIN_FLEX)
                 }else {
                     lastRef.current === MIN_Y ? autoSpring(MID_Y) : autoSpring(MAX_Y);
-                    calculatesizeMap(MIN_FLEX)
+                    calculatesizeMap(MIN_FLEX) 
               }
             }
           },

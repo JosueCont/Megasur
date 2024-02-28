@@ -37,3 +37,8 @@ export const getStations = async(lat, long) => await axiosGet(`${axiosTypes.CLOS
 export const getTransactions = async(filters) => await axiosGet(`${axiosTypes.GET_TRANSACTIONS}${filters}`)
 export const getInfoBranch = async(id) => await axiosGet(`${axiosTypes.GET_INFO_BRANCH}${id}`)
 export const putRateCharge = async(data,id) => await axiosPut(`${axiosTypes.GET_TRANSACTIONS}${id}/`, data)
+
+//surveys
+export const getSurveysTotal = async() => await axiosGet(`${axiosTypes.GET_SURVEYS}total/`);
+export const getSurveys = async() => await axiosGet(`${axiosTypes.GET_SURVEYS}all/?page=1&per_page=100`)
+export const postSurveys = async(data) => await axiosPost(axiosTypes.SEND_ANSWERS_SURVEY, data)

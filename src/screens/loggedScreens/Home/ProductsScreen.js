@@ -126,6 +126,12 @@ const ProductsScreen = () => {
         return newTotalPoints;
     }
 
+    const getTotalPRoducts = () => {
+        return shoppingCart.reduce((quantity, item) => {
+            return quantity + item.quantity;
+        }, 0);
+    }
+
     return(
         <>
             <HeaderLogged 
@@ -214,7 +220,7 @@ const ProductsScreen = () => {
             </HeaderLogged>
             {selectedType ===1 && 
                 <Cart 
-                    products={shoppingCart?.length} 
+                    products={getTotalPRoducts()} 
                     pressed={() => dispatch(changeModalEx({prop:'modalShoppingCart', val:true}))}
                 />
             }

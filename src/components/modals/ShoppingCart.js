@@ -11,7 +11,7 @@ import Animated, {
 import { GestureDetector, GestureHandlerRootView, Gesture } from 'react-native-gesture-handler';
 import { useSelector, useDispatch } from "react-redux";
 import ShoppingItem from "../Exchanges/ShoppingCartItem";
-import { FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome5, AntDesign } from '@expo/vector-icons';
 import { changeBranch } from "../../store/ducks/exchangeDuck";
 
 
@@ -111,10 +111,13 @@ const ModalShoppingCart = ({visible, setVisible, branches, points, onSubmit}) =>
 
     return(
         <Modal isOpen={visible} animationPreset='slide' transparent>
-            <View style={styles.container}>
+            <View style={styles.container} >
                 <GestureHandlerRootView>
                     <GestureDetector gesture={pan.onStart((event) => onStart(event)).onUpdate((event,ctx) => onActive(event,ctx)).onEnd((event) => onEnd(event))}>
                         <Animated.View style={[styles.card, animatedStyle]}>
+                            <TouchableOpacity style={styles.contClose} onPress={setVisible}>
+                                <AntDesign name="close" size={24} color="black" />
+                            </TouchableOpacity>
                             {shoppingCart.length > 0 ? (
                                 <>
                                 <ScrollView 
@@ -270,7 +273,17 @@ const styles = StyleSheet.create({
         color: Colors.white, 
         fontSize: getFontSize(13), 
         fontWeight:'400'
-    }
+    },
+    contClose:{
+        //alignSelf:'flex-end', 
+        position:'absolute',
+        right:0,
+        top:0,
+        backgroundColor: Colors.grayBorders, 
+        borderTopEndRadius:8,  
+        padding:4, marginBottom:5
+    },
+
 
 })
 

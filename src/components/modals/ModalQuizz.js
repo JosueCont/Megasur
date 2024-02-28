@@ -1,6 +1,6 @@
-import React,{useEffect,useState} from "react";
-import { Modal, Text, View, TouchableOpacity, StyleSheet, Dimensions, Image } from "react-native";
-import { TextArea } from "native-base";
+import React,{useEffect,useState, useRef} from "react";
+import { Modal, Text, View, TouchableOpacity, StyleSheet, Dimensions, Image, ScrollView } from "react-native";
+import { Spinner } from "native-base";
 import { Colors } from "../../utils/Colors";
 import { getFontSize } from "../../utils/functions";
 import { AntDesign } from '@expo/vector-icons'; 
@@ -8,27 +8,112 @@ import { StatusBar } from 'expo-status-bar';
 import Animated,{withSpring, useAnimatedStyle, useSharedValue} from "react-native-reanimated";
 import { useDispatch, useSelector } from "react-redux";
 import RateStars from "../RateStars";
-import { changeInputHome } from "../../store/ducks/homeDuck";
+import { addResponsesData, changeInputHome, changeModalHome, cleanSurvey, saveResponsesSurvey, setCurrentQuestionIndex } from "../../store/ducks/homeDuck";
 import KeyboardAvoidingCustom from "../KeyboardAvoidingCustom";
+import SurveyContent from "../Surveys/SurveyContent";
+import OpenQuestion from "../Surveys/OpenQuestion";
+import StarQuestion from "../Surveys/StarQuestion";
+import MultipleQuestion from "../Surveys/MultipleQuestion";
+import SelectQuestion from "../Surveys/SelectQuestion";
 
 const {height, width} = Dimensions.get('window');
 
-const ModalQuizz = ({visible, setVisible}) => {
+const ModalQuizz = ({visible, setVisible, quizz}) => {
     const dispatch = useDispatch();
     const [starRating, setStarRating] = useState(null);
     const [isComment, setComment] = useState(false)
+    const [startSurvey, setStartSurvey] = useState(false)
+    const [componentType, setComponentType] = useState(1)
+    //const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+
+    const [checks, setCheck] = useState([])
+    const [radio, setRadio] = useState(null)
+    const [disableBottom, setDisable] = useState(false)
+    //const [responses, setResponses] = useState([])
+
     const comment = useSelector(state => state.homeDuck.comment)
+    const responses = useSelector(state => state.homeDuck.responses)
+    const currentQuestionIndex = useSelector(state => state.homeDuck.currentQuestionIndex)
+    const isFinish = useSelector(state => state.homeDuck.isFinish)
+    const answerSuccess = useSelector(state => state.homeDuck.answerSuccess)
+    const loading = useSelector(state => state.homeDuck.loading)
+    const scrollViewRef = useRef();
+
+
 
     useEffect(() => {
         setStarRating(null)
         setComment(false)
+        setStartSurvey(false)
+        //setCurrentQuestionIndex(0)
+        dispatch(cleanSurvey())
     },[visible])
+
+    useEffect(() => {
+        const conditions = {
+            1: comment !== '',
+            2: starRating !== null,
+            3: radio !== null,
+            4: checks.length > 0 
+        };
+        
+        setDisable(!conditions[quizz?.questions[currentQuestionIndex-1]?.type]);
+    },[currentQuestionIndex, checks, starRating, radio, comment])
 
     const heightStyle = useAnimatedStyle(() => {
         return{
-            height: withSpring(starRating != null ? 330 : 200)
+            height: withSpring(startSurvey ? 330 : 200)
         }
     })
+
+    const onValueChanges = (name) => {
+        const newValues = values.filter(n=>n !== name);
+        if(value) {
+          setValues([...newValues, name]);
+        } else {
+          setValues(newValues);
+        }
+    }
+
+    const renderComponent = (question) => {
+        let typeQustion = {
+            1: <OpenQuestion question={question}/>,
+            2: <StarQuestion question={question} starRating={starRating} setStar={(val) => setStarRating(val)}/>,
+            3: <MultipleQuestion question={question} value={radio} setValue={(val) => setRadio(val)}/>,
+            4: <SelectQuestion question={question} value={checks} setGroupValues={setCheck}/>
+        }
+
+        return typeQustion[question?.type];
+
+    }
+
+    const onChangeComponent = async() => {
+        await validateData()
+        dispatch(setCurrentQuestionIndex(currentQuestionIndex,quizz?.questions.length, responses,quizz?.id, isFinish))
+        
+    }
+
+    const validateData = async() => {
+        let selectedResponse;
+        if (checks.length > 0) {
+            selectedResponse = checks;
+            setCheck([]);
+        }else if (radio !== null) {
+            selectedResponse = radio;
+            setRadio(null);
+        }else if(starRating !==null){
+            selectedResponse = starRating
+            setStarRating(null)
+        }else{
+            selectedResponse = comment
+            dispatch(changeModalHome({prop:'comment', val:''}))
+        }
+
+        setTimeout(() => {
+            dispatch(addResponsesData({ question_id: quizz.questions[currentQuestionIndex-1].id, response: {response: selectedResponse} }))
+        },500)
+
+    }
 
     return(
         <Modal
@@ -40,72 +125,55 @@ const ModalQuizz = ({visible, setVisible}) => {
                     style='light'
                     hidden={false}
                 />
-                <KeyboardAvoidingCustom>
                 <View style={styles.container}>
+                <KeyboardAvoidingCustom isModal={true} bottomModal={true}>
                     <Animated.View style={[styles.card, heightStyle]}>
                         <TouchableOpacity style={styles.contClose} onPress={setVisible}>
                             <AntDesign name="close" size={24} color="black" />
                         </TouchableOpacity>
-                        {!isComment ? (
-                            <>
+                        {!startSurvey ? (
+                            <View style={{flex:1}}>
                                 <View style={styles.contDesc}>
-                                    <Text style={styles.lbl}>Contesta está encuenta y gana <Text style={{fontWeight:'700'}}>100 pts.</Text></Text>
-                                    <Text style={styles.question}>¿Qué te parecio la ultima campaña publicitaria x?</Text>
+                                    <Text style={styles.lbl}>Contesta está encuesta y gana <Text style={{fontWeight:'700'}}>{quizz?.bonus_points} pts.</Text></Text>
+                                    <Text style={styles.lblDescription}>{quizz?.description}</Text>
                                 </View>
-                                <RateStars starRating={starRating} setStar={(val) => setStarRating(val)}/>
-                                {starRating != null ? (
-                                    <View style={styles.contSectionPoints}>
+                                <TouchableOpacity style={styles.btnStart} onPress={() => setStartSurvey(true)}>
+                                    <Text style={styles.lblBtn}>Comenzar</Text>
+                                </TouchableOpacity>
+                            </View>
+                        ):(
+                            <SurveyContent scrollViewRef={scrollViewRef}>
+                                {!isFinish ? (
+                                    renderComponent(quizz?.questions[currentQuestionIndex-1])
+
+                                ): answerSuccess ? (
+                                    <View style={styles.contSuccess}>
+                                        <Text style={styles.lblFinish}>¡Felicidades!</Text>
                                         <Text style={styles.lblPoints}>+100<Text style={{fontWeight:'400'}}>pts</Text></Text>
                                         <Text style={[styles.lblDesc,{fontSize: getFontSize(15)}]}>Muchas gracias, tu opinion nos importa.</Text>
                                         <Text style={[styles.lblDesc,{fontSize: getFontSize(12)}]}>¡Tus puntos han sido agregados a tu cuenta!</Text>
-                                        <View style={styles.contBtn}>
-                                            <TouchableOpacity 
-                                                onPress={() => setComment(true)}
-                                                style={[styles.btn,{marginRight:15,}]}>
-                                                <Text style={styles.lblBtn}>Añadir comentario</Text>
-                                            </TouchableOpacity>
-                                            <TouchableOpacity style={styles.btn} onPress={setVisible}>
-                                                <Text style={styles.lblBtn}>Omitir</Text>
-                                            </TouchableOpacity>
-                                        </View>
                                     </View>
-                                ) : null}
-                            
-                            </>
-                        ) : (
-                            <View >
-                                <Text style={styles.lblComment}>Dinos que podemos mejorar</Text>
-                                <TextArea 
-                                    w={width/1.1}
-                                    h={180}
-                                    borderRadius={5}
-                                    backgroundColor={Colors.white}
-                                    marginTop={3}
-                                    alignSelf={'center'}
-                                    //marginX={3}
-                                    marginBottom={5}
-                                    shadow={{
-                                        elevation:4,
-                                        shadowColor: '#000', // Color de la sombra
-                                        shadowOffset: {
-                                          width: 0,  
-                                          height: 4,
-                                        },
-                                        shadowOpacity: 0.25, 
-                                        shadowRadius: 4, 
-                                    }}
-                                    
-                                    value={comment}
-                                    onChangeText={(val) => dispatch(changeInputHome({prop:'comment', val}))}
-                                />
-                                <TouchableOpacity style={styles.btnSend} onPress={setVisible}>
-                                    <Text style={styles.lblSend}>Enviar</Text>
-                                </TouchableOpacity>
-                            </View>
+                                ) :(
+                                    <View style={styles.contSuccess}>
+                                        <Text style={styles.lblFinish}>¡Haz finalizado la encuesta!</Text>
+                                        <Text style={styles.lblBanner}>No olvides enviar tus respuestas para obtener la recompenza</Text>
+                                    </View>
+                                ) }
+                            </SurveyContent>
                         )}
+
+                        {startSurvey && (
+                            <TouchableOpacity 
+                                disabled={isFinish ? false : disableBottom}
+                                style={[styles.btnStart, {marginBottom:20, backgroundColor: isFinish ? Colors.blueGreen : disableBottom ? Colors.gray : Colors.blueGreen}]} 
+                                onPress={() =>  answerSuccess ? setVisible() : onChangeComponent()}>
+                                {loading ? <Spinner size={'sm'} color={'white'} /> : <Text style={styles.lblBtn}>{answerSuccess ? 'Finalizar': !isFinish ? 'Siguiente'  :'Enviar respuestas'}</Text>}
+                            </TouchableOpacity>
+                        )}
+                                
                     </Animated.View>
-                </View>
                 </KeyboardAvoidingCustom>
+                </View>
         </Modal>
     )
 }
@@ -126,14 +194,15 @@ const styles = StyleSheet.create({
     },
     contClose:{
         alignSelf:'flex-end', 
-        backgroundColor: Colors.gray, 
+        backgroundColor: Colors.grayBorders, 
         borderTopEndRadius:15,  
         padding:4, marginBottom:5
     },
     contDesc:{
         justifyContent:'center',
         alignItems:'center', 
-        marginBottom:10
+        marginBottom:10,
+        marginHorizontal:10
     },
     lbl:{
         color: Colors.grayStrong, 
@@ -159,7 +228,7 @@ const styles = StyleSheet.create({
     },
     lblDesc:{
         color: Colors.grayStrong, 
-        fontWeight:'400'
+        fontWeight:'400',
     },
     contBtn:{
         flexDirection:'row', 
@@ -197,6 +266,41 @@ const styles = StyleSheet.create({
         fontSize: getFontSize(14), 
         fontWeight:'400', 
         marginLeft:15
+    },
+
+    lblDescription:{
+        //width: width/1.7,
+        fontSize: getFontSize(16),
+        fontWeight:'400',
+        color: Colors.grayStrong,
+    },
+    btnStart:{
+        marginHorizontal:20, 
+        marginTop:15, 
+        paddingVertical:15, 
+        backgroundColor: Colors.blueGreen, 
+        borderRadius:8, 
+        justifyContent:'center', 
+        alignItems:'center',
+    },
+    contSuccess:{
+        flex:1, 
+        height:200, 
+        justifyContent:'center', 
+        alignItems:'center',
+    },
+    lblFinish:{
+        color: Colors.blueGreen, 
+        fontSize: getFontSize(30), 
+        fontWeight:'700', 
+        textAlign:'center'
+    },
+    lblBanner:{
+        color: Colors.darkGray, 
+        fontSize: getFontSize(16), 
+        fontWeight:'400', 
+        marginHorizontal:20, 
+        textAlign:'center'
     }
 })
 
