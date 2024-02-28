@@ -13,6 +13,7 @@ import ConfirmExchange from "../screens/loggedScreens/Home/ConfirmExchange";
 import LocationBranchScreen from "../screens/loggedScreens/Home/LocationBranch";
 import NotificationScreen from "../screens/loggedScreens/NotificationScreen";
 import ConfirmFuelExchange from "../screens/loggedScreens/Home/ConfirmFuelExchange";
+import SurveysScreen from "../screens/loggedScreens/Home/SurveyScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -33,6 +34,7 @@ const HomeNavigator = () => {
             <Stack.Screen name="Confirm" component={ConfirmExchange} />
             <Stack.Screen name="LocationBranch" component={LocationBranchScreen} />
             <Stack.Screen name="ConfirmFuel" component={ConfirmFuelExchange}/>
+            <Stack.Screen name="Surveys" component={SurveysScreen} />
         </Stack.Navigator>
 
     )

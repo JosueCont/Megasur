@@ -15,5 +15,7 @@ export const axiosTypes = {
     LIST_PRODUCTS:'/store/products/',
     LIST_CATEGORIES:'/store/product-categories/',
     CLOSE_BRANCHES: '/business/branches/distance/',
-    GET_ORDERS: '/store/orders/'
+    GET_ORDERS: '/store/orders/',
+    GET_SURVEYS:'/marketing/pending-poll/',
+    SEND_ANSWERS_SURVEY:'/marketing/poll/response/'
 }
