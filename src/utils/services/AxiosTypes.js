@@ -17,5 +17,6 @@ export const axiosTypes = {
     CLOSE_BRANCHES: '/business/branches/distance/',
     GET_ORDERS: '/store/orders/',
     GET_SURVEYS:'/marketing/pending-poll/',
-    SEND_ANSWERS_SURVEY:'/marketing/poll/response/'
+    SEND_ANSWERS_SURVEY:'/marketing/poll/response/',
+    ASWERED_SURVEYS:'/marketing/poll/response/polls/'
 }

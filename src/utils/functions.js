@@ -1,5 +1,6 @@
 import { PixelRatio } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Platform } from "react-native";
 import * as Device from 'expo-device'
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
@@ -37,7 +38,7 @@ export const getExpoToken = async() => {
             });
         }
 
-        return token;
+        return token || null;
     } catch (e) {
         console.log("registerForPushNotificationsAsync error =>", e.toString())
     }
