@@ -224,7 +224,7 @@ const styles = StyleSheet.create({
         fontWeight:'400', 
         marginBottom:4,
         alignSelf:'flex-start',
-        marginLeft:2,
+        marginLeft:15,
         marginTop:8,
     },
     contBt:{

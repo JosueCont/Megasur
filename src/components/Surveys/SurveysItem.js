@@ -9,23 +9,27 @@ import moment from "moment";
 const {height, width} = Dimensions.get('window');
 
 
-const SurveyItem = ({item, index, onSelectedSurvey}) => {
+const SurveyItem = ({item, index, onSelectedSurvey, isAnswered=false}) => {
     return(
-        <TouchableOpacity style={styles.card} key={index} onPress={() => onSelectedSurvey(item)}>
+        <TouchableOpacity style={styles.card} key={index} onPress={() => isAnswered ? console.log('pressed') : onSelectedSurvey(item)}>
             <View style={styles.contHeader}>
                 <View style={styles.contTitle}>
                     <View style={styles.contIcon}>
                         <FontAwesome5 name="clipboard-list" size={20} color={Colors.blueGreen} />
                     </View>
-                    <Text style={styles.lblTitle}>{item?.name}</Text>
+                    <Text style={styles.lblTitle}>{isAnswered ? item?.poll?.name : item?.name}</Text>
+                    
                 </View>
-                <Text style={styles.lblBonus}>{item?.bonus_points.toString()} pts.</Text>
+                <Text style={styles.lblBonus}>{isAnswered ? '+'+item?.poll?.bonus_points.toString() : item?.bonus_points.toString()} pts.</Text>
             </View>
-            <Text style={styles.lblDesc} ellipsizeMode='tail' numberOfLines={2} >{item?.description}</Text>
+            <Text style={styles.lblDesc} ellipsizeMode='tail' numberOfLines={2} >{isAnswered ? item?.poll?.description : item?.description}</Text>
             <View style={[styles.contTitle,{justifyContent:'space-between', }]}>
-
-                <Text style={styles.lblDate}><Text style={{color: Colors.darkGray,fontWeight:'700'}}>Valida hasta:</Text> {moment(item?.end_date).format('DD MMMM H:MM')}</Text>
-                <Text style={{ color: Colors.grayStrong, fontSize: getFontSize(13), fontWeight:'700'}}>Preguntas: {item?.questions.length}</Text>
+                {isAnswered ? (
+                    <Text style={styles.lblDate}><Text style={{color: Colors.darkGray,fontWeight:'700'}}>Respondida el:</Text> {moment(item?.answer_date).format('DD MMMM H:MM')}</Text>
+                ):(
+                    <Text style={styles.lblDate}><Text style={{color: Colors.darkGray,fontWeight:'700'}}>Valida hasta:</Text> {moment(item?.end_date).format('DD MMMM H:MM')}</Text>
+                )}
+                {!isAnswered && <Text style={{ color: Colors.grayStrong, fontSize: getFontSize(13), fontWeight:'700'}}>Preguntas: {item?.questions.length}</Text>}
             </View>
         </TouchableOpacity>
     )

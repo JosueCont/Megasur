@@ -5,12 +5,15 @@ import { Colors } from "../../utils/Colors";
 import LogoMega from "../../../assets/svg/LogoMega";
 import { MaterialIcons, AntDesign } from '@expo/vector-icons';
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigation } from "@react-navigation/native";
 import { onChangeModalProf, onVerifyEmail, verifyCodeEmail } from "../../store/ducks/profileDuck";
 import ModalVerifyEmail from "../modals/ModalVerifyEmail";
+import SwitchNotification from "./SwitchNotification";
 
 
 const VerifyEmail = () => {
     const dispatch = useDispatch();
+    const navigation = useNavigation();
     const modalVerify = useSelector(state => state.profileDuck.modalVerify)
     const user = useSelector(state => state.profileDuck.dataUser)
     const isValid = useSelector(state => state.profileDuck.isEmailVerified)
@@ -18,8 +21,14 @@ const VerifyEmail = () => {
     
     return(
         <View style={styles.container}>
-            <View>
-                <Text style={styles.title}>{user?.first_name} {user?.last_name}</Text>
+            <TouchableOpacity 
+                onPress={() => navigation.navigate('FormProfile')}
+                style={{height:120, width:120, borderRadius:60, backgroundColor: Colors.grayBorders}}>
+                
+            </TouchableOpacity>
+            <View style={{flex:2, marginLeft:10}}>
+                <Text style={styles.title}>{user?.first_name}</Text>
+                <Text style={[styles.title,{fontWeight:'400'}]}>{user?.last_name}</Text>
                 <View style={styles.contMail}>
                     {isValid && <AntDesign name="checkcircle" size={16} color={Colors.green} /> }
                     <Text style={[styles.lblMail,{color: isValid ? Colors.darkGray : Colors.red, }]}>{user?.email}</Text>
@@ -30,13 +39,14 @@ const VerifyEmail = () => {
                             dispatch(onVerifyEmail(user?.id));
                             dispatch(onChangeModalProf({prop:'modalVerify', value:true}));
                         }}
-                        style={{flexDirection:'row'}}>
+                        style={{flexDirection:'row',}}>
                         <AntDesign name="warning" size={15} color={Colors.red} />
                         <Text style={styles.lblWarinig}>Verifica aquí tu correo electrónico</Text>
                     </TouchableOpacity>
                 ):null}
+                <SwitchNotification />
             </View>
-            <Image source={require('../../../assets/LogoMegaCard.png')} style={styles.img}/>
+            {/*<Image source={require('../../../assets/LogoMegaCard.png')} style={styles.img}/>*/}
             <ModalVerifyEmail 
                 visible={modalVerify} 
                 onClose={() => dispatch(onChangeModalProf({prop:'modalVerify', value:false}))}
@@ -53,7 +63,10 @@ const styles = StyleSheet.create({
         flex:1, 
         justifyContent:'space-between', 
         alignItems:'center', 
-        marginBottom:15
+        marginBottom:20,
+        paddingHorizontal:10,
+        borderBottomColor: Colors.grayBorders,
+        borderBottomWidth:2
     },
     title:{
         color: Colors.darkGray, 
@@ -63,17 +76,18 @@ const styles = StyleSheet.create({
     contMail:{
         flexDirection:'row', 
         alignItems:'center',
+        //justifyContent:'center'
     },
     lblMail:{
-        fontSize: getFontSize(15), 
+        fontSize: getFontSize(12), 
         fontWeight:'700', 
-        marginBottom:10, 
+        marginBottom:4, 
         marginLeft:4,
         marginTop:5
     },
     lblWarinig:{
         color: Colors.red, 
-        fontSize: getFontSize(14), 
+        fontSize: getFontSize(13), 
         fontWeight:'400'
     },
     img:{

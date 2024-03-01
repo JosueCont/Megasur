@@ -14,6 +14,12 @@ import LocationBranchScreen from "../screens/loggedScreens/Home/LocationBranch";
 import NotificationScreen from "../screens/loggedScreens/NotificationScreen";
 import ConfirmFuelExchange from "../screens/loggedScreens/Home/ConfirmFuelExchange";
 import SurveysScreen from "../screens/loggedScreens/Home/SurveyScreen";
+import UserProfileScreen from "../screens/loggedScreens/Profile/UserProfileScreen";
+import LegalInfoScreen from "../screens/loggedScreens/Profile/LegalInfoScreen";
+import MyCarScreen from "../screens/loggedScreens/Profile/MyCarScreen";
+import LinkScreen from "../screens/loggedScreens/Profile/LinkScreen";
+import AnsweredSurveyScreen from "../screens/loggedScreens/Profile/AnswerSurveyScreen";
+import CheckInScreen from "../screens/loggedScreens/Profile/CheckInScree";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -40,6 +46,28 @@ const HomeNavigator = () => {
     )
 }
 
+const ProfileNavigator = () => {
+    return(
+        <Stack.Navigator
+            mode={'card'}
+            backBehavior={'history'}
+            initialRouteName="Account"
+            screenOptions={({navigation, route}) =>({
+                headerShown: false
+            })}
+        >
+            <Stack.Screen name="Account" component={ProfileScreen}/>
+            <Stack.Screen name="FormProfile" component={UserProfileScreen}/>
+            <Stack.Screen name="MyCar" component={MyCarScreen}/>
+            <Stack.Screen name="Link" component={LinkScreen}/>
+            <Stack.Screen name="CheckIn" component={CheckInScreen}/>
+            <Stack.Screen name="AnsweredSurvey" component={AnsweredSurveyScreen}/>
+            <Stack.Screen name="InfoLegal" component={LegalInfoScreen}/>
+            
+        </Stack.Navigator>
+    )
+}
+
 const TabNavigator = () => {
     return(
         <Tab.Navigator 
@@ -49,9 +77,9 @@ const TabNavigator = () => {
             })}>
             <Tab.Screen name="Home" component={HomeNavigator} />
             <Tab.Screen name="Charges" component={ChargerScreen}/>
-            <Tab.Screen name="Scan" component={ScanScreen}/>
+            {/*<Tab.Screen name="Scan" component={ScanScreen}/>*/}
             <Tab.Screen name="Stations" component={LocationScreen}/>
-            <Tab.Screen name="Profile" component={ProfileScreen}/>
+            <Tab.Screen name="Profile" component={ProfileNavigator}/>
         </Tab.Navigator>
 
     )
