@@ -11,7 +11,7 @@ const ListPromotions = ({dataPromotion}) => {
 
     return(
         <View style={{marginLeft:20, marginBottom:25}}>
-            <Text style={styles.title}>Promociones</Text>
+            <Text style={styles.title}>Anuncios</Text>
             <FlatList 
                 data={dataPromotion}
                 keyExtractor={item => item.id.toString()}

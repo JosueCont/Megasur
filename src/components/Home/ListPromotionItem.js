@@ -2,18 +2,23 @@ import React, {useState, useEffect} from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Image} from "react-native";
 import { getFontSize } from "../../utils/functions";
 import { Colors } from "../../utils/Colors";
+import { useNavigation } from "@react-navigation/native";
 
 const {height, width} = Dimensions.get('window');
 
 const ListPromotionItem = ({item,index}) => {
+    const navigation = useNavigation();
     return(
-        <View style={styles.card}>
-            <Image source={item.image} style={styles.img}/>
+        <TouchableOpacity
+            style={styles.card}
+            onPress={()=>navigation.navigate('AnnouncementDetail', { itemId: item.id })}
+        >
+            <Image source={{uri:item.image}} style={styles.img}/>
             <View style={{width: width/2.5,marginLeft:8}}>
                 <Text style={styles.title}>{item.title}</Text>
-                <Text style={styles.desc}>{item.description}</Text>
+                <Text style={styles.desc}>{item.short_description}</Text>
             </View>
-        </View>
+        </TouchableOpacity>
     )
 }
 
