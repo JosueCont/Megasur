@@ -14,12 +14,14 @@ import ListPromotions from "../../components/Home/ListPromotions";
 import ListDiscount from "../../components/Home/ListDiscount";
 import CloseStations from "../../components/Home/CloseStations";
 import ModalQuizz from "../../components/modals/ModalQuizz";
-import { changeModalHome, getDataConfi, getAllCards, saveDataLocalStorage } from "../../store/ducks/homeDuck";
+import { changeModalHome, getDataConfi, getAllCards, saveDataLocalStorage, getAllSurveys, getTotalSurveys } from "../../store/ducks/homeDuck";
 import { getCloseStations } from "../../store/ducks/locationsDuck";
 import { getProfileData } from "../../store/ducks/profileDuck";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getAdvertisements } from "../../utils/services/ApiApp";
 import { useIsFocused } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
+import ModalAlertFailed from "../../components/modals/ModalAlertFail";
 
 const {height, width} = Dimensions.get('window');
 
@@ -27,11 +29,18 @@ const {height, width} = Dimensions.get('window');
 const HomeScreen = () => {
     const dispatch = useDispatch();
     const isFocused = useIsFocused()
+    const navigation = useNavigation();
 
     const modalQuizz = useSelector(state => state.homeDuck.modalQuizz)
     const stations = useSelector(state => state.locationDuck.nearBranches)
     const userId = useSelector(state => state.authDuck.dataUser?.id)
     const userCard = useSelector(state => state.homeDuck.cardsStorage)
+    const totalSurveys = useSelector(state => state.homeDuck.totalSurveys)
+    const surveys = useSelector(state => state.homeDuck.surveys)
+    const modalFailed = useSelector(state => state.homeDuck.modalFailed)
+    const message = useSelector(state => state.homeDuck.message)
+    const [selectedSurver, setSelectedSurvey] = useState(null)
+
 
     const [dataAdvertisements, setDataAdvertisements] = useState([])
     const [dataPromotions, setDataPromotions] = useState([])
@@ -47,6 +56,7 @@ const HomeScreen = () => {
                 await dispatch(getCloseStations(location?.coords))
                 //await dispatch(getAllCards(userId))
                 await dispatch(getProfileData())
+                await dispatch(getAllSurveys())
 
             }
                 
@@ -95,7 +105,15 @@ const HomeScreen = () => {
         <HeaderLogged onRefresh={() => console.log('refreshPAge')}>
             <FlipCard cards={userCard}/>
             <Question />
-            <ProvitionalPoints openModal={() => dispatch(changeModalHome({prop:'modalQuizz',val:true}))}/>
+            <ProvitionalPoints 
+                showSurvey={() => {
+                    if(totalSurveys === 1){
+                        setSelectedSurvey(surveys[0])
+                        dispatch(changeModalHome({prop:'modalQuizz',val:true}))
+                    }else navigation.navigate('Surveys')
+                }}
+                totalSurveys={totalSurveys}
+            />
             <ExchangeCenter />
             <ListPromotions dataPromotion={dataAdvertisements}/>
             <ListDiscount dataDisconunt={dataPromotions}/>
@@ -104,7 +122,14 @@ const HomeScreen = () => {
             {/**Modals */}
             <ModalQuizz 
                 visible={modalQuizz}
+                quizz={selectedSurver}
                 setVisible={() => dispatch(changeModalHome({prop:'modalQuizz',val:false}))}
+            />
+            <ModalAlertFailed 
+                visible={modalFailed}
+                setVisible={() => dispatch(changeModalHome({prop:'modalFailed', val:false}))}
+                message={message}
+                titleBtn="Entendido"
             />
         </HeaderLogged>
     )

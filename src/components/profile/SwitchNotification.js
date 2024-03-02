@@ -12,7 +12,7 @@ const SwitchNotification = () => {
     return(
         <>
             <View style={styles.container}>
-                <View style={{width: width/1.3,}}>
+                <View style={{ width: width/2.4}}>
                     <Text style={styles.title}>Notifiacaciones</Text>
                     <Text style={styles.lbl}>Activa tus notificaciones para recibir promociones.</Text>
                 </View>
@@ -25,10 +25,12 @@ const SwitchNotification = () => {
 
 const styles = StyleSheet.create({
     container:{
+        flex:1,
         flexDirection:'row',  
         justifyContent:'space-between', 
         alignItems:'center',
-        marginBottom:20
+        marginBottom:20,
+        marginTop:5
     },
     title:{
         color: Colors.darkGray, 

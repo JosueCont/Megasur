@@ -5,7 +5,7 @@ import { Colors } from "../utils/Colors";
 const {height, width} = Dimensions.get('window');
 
 
-const KeyboardAvoidingCustom = ({children,iosOffset=0, isModal=false}) => {
+const KeyboardAvoidingCustom = ({children,iosOffset=0, isModal=false, bottomModal=false}) => {
     const [keyboardOpen, setKeyboardOpen] = useState(false);
 
     useEffect(() => {
@@ -26,10 +26,10 @@ const KeyboardAvoidingCustom = ({children,iosOffset=0, isModal=false}) => {
     return(
         <KeyboardAvoidingView 
             enabled={keyboardOpen}
-            style={styles.contKeyAvoiding}  
+            style={bottomModal ? styles.contAvoidinBottom :styles.contKeyAvoiding}  
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
             keyboardVerticalOffset={Platform.select({ios: iosOffset }) }>
-                <TouchableHighlight onPress={() =>   Keyboard.dismiss() } underlayColor={Colors.white} style={isModal ? styles.contBtn : {}}>
+                <TouchableHighlight onPress={() =>   Keyboard.dismiss() } underlayColor={Colors.white} style={isModal ? bottomModal ? styles.contentBottom : styles.contBtn : {}}>
                     {children}
                 </TouchableHighlight>
 
@@ -48,6 +48,15 @@ const styles = StyleSheet.create({
         width: width/1.1, 
         borderRadius:15, 
         alignItems:'center'
+    },
+    contentBottom:{
+        borderRadius:15, 
+        alignItems:'center'
+    },
+    contAvoidinBottom:{
+        flex:1, 
+        justifyContent:'flex-end',
+        alignItems:'center',
     }
 })
 

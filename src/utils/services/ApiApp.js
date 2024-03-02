@@ -39,7 +39,11 @@ export const getTransactions = async(filters) => await axiosGet(`${axiosTypes.GE
 export const getInfoBranch = async(id) => await axiosGet(`${axiosTypes.GET_INFO_BRANCH}${id}`)
 export const putRateCharge = async(data,id) => await axiosPut(`${axiosTypes.GET_TRANSACTIONS}${id}/`, data)
 
-
 //promotions
 export const getAdvertisements = async(filters) => await axiosGet(`${axiosTypes.GET_PROMOTIONS}${filters}`)
 export const getAdvertisementId = async(AdvertisementId) => await axiosGet(`${axiosTypes.GET_PROMOTIONS}${AdvertisementId}/`)
+//surveys
+export const getSurveysTotal = async() => await axiosGet(`${axiosTypes.GET_SURVEYS}total/`);
+export const getSurveys = async() => await axiosGet(`${axiosTypes.GET_SURVEYS}all/?page=1&per_page=100`)
+export const postSurveys = async(data) => await axiosPost(axiosTypes.SEND_ANSWERS_SURVEY, data)
+export const getAnsweredSurveys = async(userId,filter='?page=1&per_page=20') => await axiosGet(`${axiosTypes.ASWERED_SURVEYS}${userId}/${filter}`)

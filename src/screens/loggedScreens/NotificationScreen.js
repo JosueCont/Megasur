@@ -34,26 +34,6 @@ const NotificationScreen = () => {
     useEffect(() => {
         //setNotifications()
     },[notifications])
-    const data = [
-        {
-            id:1,
-            title:'Gracias por sus respuestas',
-            date:'20/01/2024',
-            description:'Por responder a la encuesta te hemos dado 100 puntos'
-        },
-        {
-            id:2,
-            title: 'Aprovecha los ultimos descuentos',
-            date:'30/01/2024',
-            description:'Ultimos días de enero con increibles descuentos en sucursales'
-        },
-        {
-            id:3,
-            title:'Bienvenido febrero',
-            date:'01/02/2024',
-            description:'Carga con nosotros y obten 300 puntos extra como regalo'
-        }
-    ]
 
     const onDeleteItem = (notification) => {
         setNotifications( prev => prev.filter(item => item.id !== notification))
@@ -71,10 +51,9 @@ const NotificationScreen = () => {
                             index={index} 
                             item={item}
                             onDeleted={(item) => {
-                                setTimeout(() => {
-                                    onDeleteItem(item.id)
-                                },400)
-                            }}/>
+                                onDeleteItem(item.id)
+                            }}
+                        />
                     ))}
 
                 </View>

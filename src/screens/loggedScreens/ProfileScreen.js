@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Image, Dimensions } from "react-native";
 import { getFontSize } from "../../utils/functions";
 import { Colors } from "../../utils/Colors";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,6 +18,9 @@ import ModalTerms from "../../components/modals/ModalTerms";
 import PersonalInfoForm from "../../components/profile/PersonalInfo";
 import { useIsFocused } from "@react-navigation/native";
 import { getExpoToken } from "../../utils/functions";
+import ListActionsProfile from "../../components/profile/ListActions";
+
+const {height, width} = Dimensions.get('window');
 
 const ProfileScreen = () => {
     const dispatch = useDispatch();
@@ -79,10 +82,12 @@ const ProfileScreen = () => {
                     },500)
                 }} 
                 refresh={refresh}>
+                    <Image source={require('../../../assets/waves.png')} style={{width: width, height: 100, resizeMode:'stretch', position:'relative', top:-20 }}/>
                 <View style={{marginHorizontal:10,}}>
                     <VerifyEmail />
-                    <SwitchNotification />
-                    <AccordionList data={data}/>
+                    <ListActionsProfile />
+                    {/*<SwitchNotification />*/}
+                    {/*<AccordionList data={data}/>*/}
                 </View>
                 <ModalCloseSession 
                     visible={modalSession}

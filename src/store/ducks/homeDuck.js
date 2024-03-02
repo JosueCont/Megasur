@@ -1,4 +1,4 @@
-import { getCards, getSiteConfig, postValidateOTP } from "../../utils/services/ApiApp"
+import { getCards, getSiteConfig, getSurveys, getSurveysTotal, postSurveys, postValidateOTP } from "../../utils/services/ApiApp"
 import { createDigest, createRandomBytes } from "@otplib/plugin-crypto-js"
 import { keyDecoder, keyEncoder } from "@otplib/plugin-base32-enc-dec"
 import { totpToken, totpOptions, KeyEncodings } from "@otplib/core" 
@@ -14,6 +14,16 @@ const SET_TIME = 'set_time'
 const UPDATE_AUTO_RUNNING = 'update_auto_running'
 
 const SAVE_LOCAL_STORAGE = 'save_localStorage'
+const SET_SURVEYS = 'set_serveys'
+const SET_TOTAL_SURVEYS = 'set_total_serveys'
+const ERROR_SURVEYS = 'error_serveys'
+const ADD_RESPONSES = 'add_responses'
+
+const SET_CURRENT_QUESTION_INDEX = 'set_index_question'
+const ADD_NEW_SCREEN = 'add_new_screen'
+const CLEAN_SURVEY = 'clean_survey'
+const ANSWER_SURVEY_SUCCESS = 'answer_survey_success'
+const ANSWER_SURVEY_FAILED = 'answer_survey_failed'
 
 
 const initialState = {
@@ -26,7 +36,15 @@ const initialState = {
     seconds:0,
     loading:false,
     cardsStorage:[],
-    userStorage:null
+    userStorage:null,
+    surveys:[],
+    totalSurveys:0,
+    responses:[],
+    currentQuestionIndex:1,
+    isFinish:false,
+    answerSuccess:false,
+    modalFailed:false,
+    message:''
 }
 
 const homeDuck = (state = initialState, action) => {
@@ -47,6 +65,24 @@ const homeDuck = (state = initialState, action) => {
             return{ ...state, isRunning: false}
         case SAVE_LOCAL_STORAGE:
             return{ ...state, cardsStorage: action.payload.cards}
+        case SET_TOTAL_SURVEYS:
+            return{ ...state, totalSurveys: action.payload}
+        case SET_SURVEYS: 
+            return{ ...state, surveys: action.payload, loading: false} //Quitar [] cuando regrese array
+        case ERROR_SURVEYS:
+            return{ ...state, loading: false}
+        case ADD_RESPONSES:
+            return{ ...state, responses:[...state.responses, action.payload]}
+        case SET_CURRENT_QUESTION_INDEX:
+            return{ ...state, currentQuestionIndex: action.payload}
+        case ADD_NEW_SCREEN:
+            return{ ...state, isFinish: true}
+        case CLEAN_SURVEY:
+            return{ ...state, currentQuestionIndex:1, isFinish: false, responses:[], answerSuccess: false }
+        case ANSWER_SURVEY_SUCCESS:
+            return{ ...state, answerSuccess: true, loading: false}
+        case ANSWER_SURVEY_FAILED:
+            return{ ...state, answerSuccess: false, loading: false, isFinish: false, modalQuizz: false, modalFailed: true, message: action.payload }
         default:
             return state;
     }
@@ -160,4 +196,85 @@ export const saveDataLocalStorage = (cards) => async(dispatch) => {
         
     }
 }
+
+export const getAllSurveys = () => async(dispatch) => {
+    try {
+        Promise.all([
+            dispatch(getTotalSurveys()),
+            dispatch(getListSurveys())
+        ])
+    } catch (e) {
+        console.log('error surve',e)
+    }
+}
+
+export const getTotalSurveys = () => async(dispatch) => {
+    try {
+        const response = await getSurveysTotal();
+        console.log('response stotalurveys',response?.data)
+        dispatch({type: SET_TOTAL_SURVEYS, payload: response?.data})
+
+    } catch (e) {
+        console.log('error surve',e)
+        dispatch({type: ERROR_SURVEYS})
+
+
+    }
+}
+
+export const getListSurveys = () => async(dispatch) => {
+    try {
+        dispatch({type: LOADING})
+        const response = await getSurveys();
+        dispatch({type: SET_SURVEYS, payload: response?.data})
+        console.log('surveys',response?.data)
+    } catch (e) {
+        console.log('err',e)
+        dispatch({type: ERROR_SURVEYS})
+    }
+}
+
+export const addResponsesData = (data) => {
+    return{
+        type: ADD_RESPONSES,
+        payload: data
+    }
+}
+
+export const saveResponsesSurvey = (quizz_id, responses) => async(dispatch) => {
+    try {
+        dispatch({type: LOADING})
+        let dataSend = {
+            poll_id: quizz_id,
+            responses: responses
+        }
+        dispatch({type: ANSWER_SURVEY_SUCCESS})
+        console.log('dataSend',dataSend)
+        const response = await postSurveys(dataSend)
+        console.log('response survey', response?.data)
+    } catch (e) {
+        dispatch({type: ANSWER_SURVEY_FAILED, payload: 'Ocurrio un error al enviar respuestas, vuelve a intentarlo'})
+        console.log('error',e)
+    }
+}
+
+export const setCurrentQuestionIndex = (currentIndex, totalQuestions, responses, quiz_id, isFinish) => dispatch => {
+    if (currentIndex < totalQuestions) {
+        dispatch({ type: SET_CURRENT_QUESTION_INDEX, payload: currentIndex + 1 });
+    } else {
+        dispatch({type: ADD_NEW_SCREEN})
+        if(isFinish){
+            setTimeout(() => {
+                dispatch(saveResponsesSurvey(quiz_id,responses));
+            }, 500);
+        }
+    }
+};
+
+export const cleanSurvey = () => {
+    return{
+        type: CLEAN_SURVEY
+    }
+}
+
 export default homeDuck;

@@ -1,4 +1,5 @@
-import { getDataUser, postDeleteAccount, postVerifyCodeMail, postverifyEmail, putUserData } from "../../utils/services/ApiApp"
+import moment from "moment"
+import { getAnsweredSurveys, getDataUser, postDeleteAccount, postVerifyCodeMail, postverifyEmail, putUserData } from "../../utils/services/ApiApp"
 
 const CHANGE_INPUT = 'change_input_profile'
 const CHANGE_MODAL = 'change_modal_profile'
@@ -14,6 +15,8 @@ const UPDATE_DATA_USER_FAILED = 'update_data_user_failed'
 const DELETE_ACCOUNT_SUCCESS = 'delete_account_success'
 const DELETE_ACCOUNT_FAILED = 'delete_account_failed'
 const REFRESH = 'refresh'
+
+const SET_ANSWERED_SURVEYS = 'answered_surveys'
 
 const initialState = {
     loading:false,
@@ -36,7 +39,8 @@ const initialState = {
     isAccountUpdate:false,
     dataUser: null,
     refresh: false,
-    modalTerms:false
+    modalTerms:false,
+    answeredSurveys:[]
 }
 
 const profileDuck = (state = initialState, action) => {
@@ -82,6 +86,8 @@ const profileDuck = (state = initialState, action) => {
             return{ ...state, modalSuccess: true, message: action.message}
         case DELETE_ACCOUNT_FAILED:
             return{ ...state, modalFailed: true, message: action.message}
+        case SET_ANSWERED_SURVEYS:
+            return{ ...state, loading:false, answeredSurveys: action.payload, refresh: false}
         default:
             return state
     }
@@ -180,13 +186,40 @@ export const requestDeleteAccount = (id) => async(dispatch) => {
 
     } catch (e) {
         console.log('error dele',e)
-        dispatch({type: DELETE_ACCOUNT_FAILED, message: 'Ocurrio un error al intentar eliminar la cuenta'})
+        dispatch({type: DELETE_ACCOUNT_FAILED, message: e?.response?.data?.detail || 'Ocurrio un error al intentar eliminar la cuenta'})
     }
 }
 
 export const refreshAction = () => {
     return{
         type: REFRESH,
+    }
+}
+
+export const getAllAnsweredSurveys = (userId) => async(dispatch) => {
+    try {
+        dispatch({type: LOADING})
+        const response = await getAnsweredSurveys(userId)
+        let sortSurveys = [];
+        if(response?.data?.items.length > 0){
+            response?.data?.items.forEach(survey => {
+                let dateSurvey = moment(survey?.answer_date).format('MMMM YYYY')
+                const existMonth = sortSurveys.find((month) => month.title === dateSurvey)
+                if(!existMonth){
+                    sortSurveys.push({
+                        title: dateSurvey,
+                        surveys: [survey]
+                    })
+                }else{
+                    existMonth?.surveys?.push(survey)
+                }
+            });
+
+        }
+        dispatch({type: SET_ANSWERED_SURVEYS, payload: sortSurveys});
+        console.log('answered surveys',sortSurveys)
+    } catch (e) {
+        console.log('error answ sur',e)
     }
 }
 
