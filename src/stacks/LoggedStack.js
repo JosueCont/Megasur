@@ -20,6 +20,7 @@ import MyCarScreen from "../screens/loggedScreens/Profile/MyCarScreen";
 import LinkScreen from "../screens/loggedScreens/Profile/LinkScreen";
 import AnsweredSurveyScreen from "../screens/loggedScreens/Profile/AnswerSurveyScreen";
 import CheckInScreen from "../screens/loggedScreens/Profile/CheckInScree";
+import ConfirmRateScreen from "../screens/loggedScreens/Charges/ConfirmRateScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -68,6 +69,23 @@ const ProfileNavigator = () => {
     )
 }
 
+const ChargesNavigator = () => {
+    return(
+        <Stack.Navigator
+            mode={'card'}
+            backBehavior={'history'}
+            initialRouteName="ListCharges"
+            screenOptions={({navigation, route}) =>({
+                headerShown: false
+            })}
+        >
+            <Stack.Screen name="ListCharges" component={ChargerScreen}/>
+            <Stack.Screen name="ConfirmRate" component={ConfirmRateScreen}/>
+            
+        </Stack.Navigator>
+    )
+}
+
 const TabNavigator = () => {
     return(
         <Tab.Navigator 
@@ -76,7 +94,7 @@ const TabNavigator = () => {
                 headerShown:false
             })}>
             <Tab.Screen name="Home" component={HomeNavigator} />
-            <Tab.Screen name="Charges" component={ChargerScreen}/>
+            <Tab.Screen name="Charges" component={ChargesNavigator}/>
             {/*<Tab.Screen name="Scan" component={ScanScreen}/>*/}
             <Tab.Screen name="Stations" component={LocationScreen}/>
             <Tab.Screen name="Profile" component={ProfileNavigator}/>

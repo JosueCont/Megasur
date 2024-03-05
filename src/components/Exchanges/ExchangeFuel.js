@@ -10,7 +10,7 @@ import { changeModalEx } from "../../store/ducks/exchangeDuck";
 import ModalExchangeFuel from "../modals/ModalQrExchange";
 import { useNavigation } from "@react-navigation/native";
 
-
+const {height, width} = Dimensions.get('window');
 
 const ExchangeFuel = ({availablePoints=1200}) => {
     const dispatch = useDispatch();
@@ -25,18 +25,18 @@ const ExchangeFuel = ({availablePoints=1200}) => {
     }
 
     return(
-        <View style={{marginTop:20}}>
-            <View style={{flexDirection:'row', marginBottom:30}}>
+        <View style={{marginTop:10}}>
+            <View style={{ marginBottom:30}}>
                 <Text style={styles.lblTitle}>Puntos a redimir:</Text>
                 <View style={{flex:1}}>
                     <Slider 
                         defaultValue={0} 
                         size="lg"  
                         colorScheme='yellow' 
-                        w="95%"
-                        maxW="250"
+                        w="100%"
+                        maxW={width * .9}
                         maxValue={availablePoints}
-                        step={availablePoints < 100 ? 10 : 50}
+                        step={availablePoints <= 200 ? 10 : 50}
                         onChange={(val) => setSlider(val)}>
                         <Slider.Track bg={Colors.grayBorders} size={12}>
                             <Slider.FilledTrack bg={Colors.yellow} size={12}/>
@@ -60,13 +60,13 @@ const ExchangeFuel = ({availablePoints=1200}) => {
                 {types.map((type, index) => (
                     <View style={styles.contItem}>
                         <TouchableOpacity 
-                            style={[styles.check, {
-                                backgroundColor: index === typeFuel ? Colors.blueGreen : Colors.lightGray
-                            }]} 
+                            style={{flexDirection:'row'}}
                             onPress={() => setType(index)}>
-                            
+                            <View style={[styles.check, {
+                                backgroundColor: index === typeFuel ? Colors.blueGreen : Colors.lightGray
+                            }]}/>
+                            <Text style={styles.lblType}>{type}</Text>
                         </TouchableOpacity>
-                        <Text style={styles.lblType}>{type}</Text>
                     </View>
                 ))}
             </View>
@@ -101,8 +101,10 @@ const styles = StyleSheet.create({
         color: Colors.grayStrong, 
         fontSize: getFontSize(16), 
         fontWeight:'400', 
-        width:70, 
-        marginRight:10
+        textAlign:'center',
+        marginBottom:15
+        //width:70, 
+        //marginRight:10
     },
     lbl:{
         color: Colors.grayStrong,

@@ -4,15 +4,25 @@ import CurveArrow from "../../assets/svg/CurveArrow";
 import { getFontSize } from "../utils/functions";
 import { Colors } from "../utils/Colors";
 import { useNavigation } from "@react-navigation/native";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useDispatch } from "react-redux";
+import { setLocationStation } from "../store/ducks/locationsDuck";
+
 
 const {height, width} = Dimensions.get('window');
 
 const StationItem = ({station, index, isLocation, changeRegion, openMaps}) => {
 
     const navigation = useNavigation();
+    const dispatch = useDispatch();
+
+    const setNavigate = () => {
+        dispatch(setLocationStation(station?.location_as_lat_long))
+        navigation.navigate('Stations',{fromCloseStations:true,})
+    }
     return(
         <TouchableOpacity 
-            onPress={() => isLocation ? changeRegion(station?.location_as_lat_long) : navigation.navigate('Stations',{fromCloseStations:true}) }
+            onPress={() => isLocation ? changeRegion(station?.location_as_lat_long) : setNavigate() }
             style={[styles.card, {marginTop: isLocation ? 10 : 0, width: isLocation ? width/1.06 : width/1.1, }]} 
             key={index}>
             <View style={styles.contHeader}>
@@ -24,8 +34,10 @@ const StationItem = ({station, index, isLocation, changeRegion, openMaps}) => {
                     <Text style={styles.name}>{station.name}</Text>
                 </View>
                 
-                <TouchableOpacity onPress={() => openMaps(station?.location_as_lat_long, station?.name) }>
-                    <CurveArrow />
+                <TouchableOpacity 
+                    style={{width:20, height:20, borderColor: Colors.blueGreen, borderRadius:4, borderWidth:1, justifyContent:'center',alignItems:'center', transform:[{rotate:'45deg'}]}}
+                    onPress={() => openMaps(station?.location_as_lat_long, station?.name) }>
+                    <MaterialCommunityIcons name="google-maps" size={15} color={Colors.blueGreen} style={{transform:[{rotate:'-45deg'}]}}/>
                 </TouchableOpacity>
             </View>
             <Text style={styles.lbl}>{station?.address}</Text>

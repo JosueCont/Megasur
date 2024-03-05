@@ -13,7 +13,7 @@ const SwitchNotification = () => {
         <>
             <View style={styles.container}>
                 <View style={{ width: width/2.4}}>
-                    <Text style={styles.title}>Notifiacaciones</Text>
+                    <Text style={styles.title}>Notificaciones</Text>
                     <Text style={styles.lbl}>Activa tus notificaciones para recibir promociones.</Text>
                 </View>
                 <Switch size={'sm'} colorScheme={'green'}/>

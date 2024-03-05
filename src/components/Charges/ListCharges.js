@@ -22,7 +22,7 @@ const ChargesList = ({charges, setVisible}) => {
                             openModal={(val) => setVisible(val)}
                         />
                     )}
-                    <View style={[styles.line,{ borderStyle:'dotted', marginTop:10}]}/>
+                    <View style={[styles.line,{ borderStyle:'dotted', marginTop:10,}]}/>
                     
                 </View>
             ))}

@@ -13,9 +13,12 @@ import { updateInfoCharge, changeModalCharges, onRateCharge, refreshAction } fro
 import { useDispatch, useSelector } from "react-redux";
 import ModalRateCharge from "../../components/modals/ModalRateCharge";
 import { getCharges } from "../../store/ducks/chargesDuck";
+import ModalAlertFailed from "../../components/modals/ModalAlertFail";
+import { useNavigation } from "@react-navigation/native";
 
 const ChargerScreen = () => {
     const dispatch = useDispatch();
+    const navigation = useNavigation()
     const modalRate = useSelector(state => state.chargesDuck.modalActive)
     const charges = useSelector(state => state.chargesDuck.fuelCharges)
     const typeFuel = useSelector(state => state.chargesDuck.type)
@@ -26,6 +29,8 @@ const ChargerScreen = () => {
     const toasUpdate = useSelector(state => state.chargesDuck.modalSuccess)
     const message = useSelector(state => state.chargesDuck.message)
     const refresh = useSelector(state => state.chargesDuck.refresh)
+    const modalFailed = useSelector(state => state.chargesDuck.modalFailed)
+    const infoCharge = useSelector(state => state.chargesDuck.infoCharge)
     const toast = useToast();
 
     useEffect(() => {
@@ -48,6 +53,7 @@ const ChargerScreen = () => {
                     </Alert>
                 )
             })
+            navigation.navigate('ConfirmRate',{points:infoCharge?.score_points})
         }
     },[isRate])
 
@@ -107,6 +113,11 @@ const ChargerScreen = () => {
 
                         },500)
                     }}
+                />
+                <ModalAlertFailed 
+                    visible={modalFailed}
+                    setVisible={() => dispatch(changeModalCharges({prop:'modalFailed', value: false}))}
+                    message={message}
                 />
             </HeaderLogged>
             <Help />

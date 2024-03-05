@@ -51,7 +51,7 @@ const chargesDuck = (state = initialState, action) => {
         case RATE_CHARGE_SUCCESS:
             return{ ...state, isRate: action.payload, modalSuccess: true, message: 'Se ha calificado la carga'}
         case RATE_CHARGE_FAILED:
-            return{ ...state,}
+            return{ ...state, modalFailed: true, message: action.payload}
         default:
             return state;
     }
@@ -88,9 +88,10 @@ export const getCharges = (filters='', options) => async(dispatch) => {
         const uniqueBranches = new Set();
         if(response?.data?.items.length > 0 ){
             response?.data?.items.forEach((charge,index) => {
+                console.log('charge',charge)
                 let dateFuel = moment(charge.fuel_datetime).format('MMMM YYYY') 
                 const existMonth = chargesMonth.find((month) => month.title === dateFuel)
-                charge.name = `Sucursal Itzáes ${index+1}`//getName(charge.branch_id)
+                //charge.name = `Sucursal Itzáes ${index+1}`//getName(charge.branch_id)
                 if(!existMonth){
                     chargesMonth.push({
                         title: dateFuel,
@@ -114,6 +115,7 @@ export const getCharges = (filters='', options) => async(dispatch) => {
                 return dateB - dateA; 
             })
         }
+        console.log('cargas',chargesMonth)
         dispatch({type: GET_CHARGES_FUEL, payload: {chargesMonth, branches}})
     } catch (e) {
         console.log('error cargas',e)
@@ -144,7 +146,7 @@ export const onRateCharge = (data) => async(dispatch) => {
         const response = await putRateCharge(dataSend, data?.charge?.id)
         if(response?.data?.id) dispatch({type: RATE_CHARGE_SUCCESS, payload: !data?.isRate})
     } catch (e) {
-        dispatch({type: RATE_CHARGE_FAILED})
+        dispatch({type: RATE_CHARGE_FAILED, payload:'Error al calificar la carga'})
         console.log('error',e)
     }
 }

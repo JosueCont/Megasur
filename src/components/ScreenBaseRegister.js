@@ -16,8 +16,9 @@ const ScreenBaseRegister = ({children, changeSection,componentType, onsubmit, is
     //MAndar una variable isDisable para que identifique en cada componente si esta desabilitado el boton
     const loader = useSelector(state => state.authDuck.loading)
     return(
-        <KeyboardAvoidingCustom>
         <View style={styles.container}>
+            <KeyboardAvoidingCustom isRegister={true}>
+                <View>
             <StatusBar
                 animated={true}
                 backgroundColor="transparent"
@@ -57,6 +58,7 @@ const ScreenBaseRegister = ({children, changeSection,componentType, onsubmit, is
             </ScrollView>
         </View>
         </KeyboardAvoidingCustom>
+        </View>
     )
 }
 

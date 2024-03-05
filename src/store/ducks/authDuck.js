@@ -235,10 +235,12 @@ export const logoutAction = () => async(dispatch) => {
         await AsyncStorage.removeItem('user')
         await AsyncStorage.removeItem('cards')
 
-        dispatch({type: LOGOUT})
+        //dispatch({type: LOGOUT})
 
     } catch (e) {
         console.log('error al cerrar session', e);
+    } finally {
+        dispatch({type: LOGOUT})
     }
 }
 

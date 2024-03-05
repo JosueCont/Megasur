@@ -71,6 +71,9 @@ const PersonalInfoForm = () => {
     }
     return(
         <View style={styles.container}>
+            <TouchableOpacity style={{marginVertical:20,}}>
+                <Image source={require('../../../assets/profile.png')}style={{width:140, height:140, borderRadius:70, resizeMode:'contain'}}/>
+            </TouchableOpacity>
             <Text style={styles.lbl}>Nombre(s)</Text>
             <Input 
                 isLogged={true} 
@@ -216,7 +219,8 @@ const PersonalInfoForm = () => {
 const styles = StyleSheet.create({
     container:{
         flex:1, 
-        alignItems:'center'
+        alignItems:'center',
+        marginHorizontal:15
     },
     lbl:{
         fontSize:getFontSize(14), 
@@ -259,7 +263,7 @@ const styles = StyleSheet.create({
     },
     input:{
         backgroundColor: Colors.white,
-        width:width/1.05, 
+        width:width * .9, 
         height: 44,  
         borderRadius:8, 
         //padding:7,
