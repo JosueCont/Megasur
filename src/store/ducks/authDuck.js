@@ -231,9 +231,8 @@ export const createSession = () => async(dispatch) => {
 
 export const logoutAction = (data) => async(dispatch) => {
     try {
-        if (data){
-            console.log({expo_token: data})
-            await postLogout({expo_token: data})
+        if (data != null){
+            const response = await postLogout({expo_token: data})
         }
         await AsyncStorage.removeItem('accessToken')
         //await AsyncStorage.removeItem('refreshToken')

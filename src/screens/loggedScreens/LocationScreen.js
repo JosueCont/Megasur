@@ -75,6 +75,7 @@ const LocationScreen = () => {
                     latitude: locationStation != null ? locationStation.lat : location?.coords?.latitude,
                     longitude: locationStation != null ? locationStation.lng : location?.coords?.longitude
                 })
+                dispatch((setLocationStation(null)))
             })();
             getByZone()
 

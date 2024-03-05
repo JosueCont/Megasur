@@ -1,6 +1,8 @@
 import axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { postRefreshToken } from './ApiApp';
+import { logoutAction } from '../../store/ducks/authDuck';
+import { getExpoToken } from '../functions';
 
 export const baseURL = 'https://api.megasur.hiumanlab.mx';
 
@@ -15,6 +17,11 @@ const timeOut = 120000;
 
 let APIKit = axios.create(config);
 
+let store
+
+export const injectStore = _store => {
+  store = _store
+}
 
 APIKit.defaults.timeout = timeOut;
 
@@ -35,8 +42,10 @@ APIKit.interceptors.request.use(async(config) => {
 
 APIKit.interceptors.response.use((config)  => config,
     async(error) => {
-        //const originalRequest = error.config;
-        //if (error.response.status === 401 && !originalRequest._retry){
+        const originalRequest = error.config;
+        if (error.response.status === 401 && !originalRequest._retry){
+            const expoToken = await getExpoToken();
+            //store.dispatch(await logoutAction(expoToken))
         //    const dataUser = await AsyncStorage.getItem('user');
         //    let user = JSON.parse(dataUser)
         //    if(user){
@@ -50,7 +59,7 @@ APIKit.interceptors.response.use((config)  => config,
         //    }else{
         //        return Promise.reject(error)
         //    }
-        //}
+        }
         return Promise.reject(error);
     }
 )

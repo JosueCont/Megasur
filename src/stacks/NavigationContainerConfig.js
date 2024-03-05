@@ -7,8 +7,12 @@ import SplashScreen from "../screens/SplashScreen";
 import { preventAutoHideAsync } from "expo-splash-screen";
 import { useSelector, useDispatch } from "react-redux";
 import { createSession } from "../store/ducks/authDuck";
+import { injectStore } from "../utils/services/AxiosConfig";
+import { store } from "../store/store";
 
 preventAutoHideAsync();
+
+injectStore(store)
 
 const NavigationContainerConfig = () => {
     const dispatch = useDispatch();
