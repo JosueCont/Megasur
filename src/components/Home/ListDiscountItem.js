@@ -2,6 +2,7 @@ import React, {useState, useEffect} from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Image} from "react-native";
 import { getFontSize } from "../../utils/functions";
 import { Colors } from "../../utils/Colors";
+import { useNavigation } from "@react-navigation/native";
 import moment from "moment";
 import 'moment/locale/es';
 
@@ -10,15 +11,20 @@ const {height, width} = Dimensions.get('window');
 
 
 const ListDiscountItem = ({item,index}) => {
+    const navigation = useNavigation();
     return(
-        <View style={styles.card}>
+        <TouchableOpacity 
+            style={styles.card}
+            onPress={()=>navigation.navigate('AnnouncementDetail', { itemId: item.id })}
+        >
             <View style={{width: width/2.8,}}>
-                <Text style={styles.discount}>{item.discount.toString()}%</Text>
-                <Text style={styles.desc}>de descuento en consumo total en restaurante</Text>
-                <Text style={styles.vigency}>Vigencia del {moment(item.valityStart,'DD/MM/YYYY').format('DD MMMM YYYY')} al {moment(item.valityEnd,'DD/MM/YYYY').format('DD MMMM YYYY')}</Text>
+                {/* <Text style={styles.discount}>{item.discount.toString()}%</Text> */}
+                <Text style={styles.discount}>{item.title}</Text>
+                <Text style={styles.desc}>{item.short_description}</Text>
+                {/* <Text style={styles.vigency}>Vigencia del {moment(item.valityStart,'DD/MM/YYYY').format('DD MMMM YYYY')} al {moment(item.valityEnd,'DD/MM/YYYY').format('DD MMMM YYYY')}</Text> */}
             </View>
-            <Image source={item.image} style={styles.img}/>
-        </View>
+            {item.partner && <Image source={{uri:item.partner.image}} style={styles.img}/>}
+        </TouchableOpacity>
     )
 }
 
@@ -61,9 +67,10 @@ const styles = StyleSheet.create({
     },
     img:{
         width:120, 
-        height:130, 
+        height:125, 
         resizeMode:'contain',
-        alignSelf:'center'
+        alignSelf:'center',
+        borderRadius: 80
     }
 })
 

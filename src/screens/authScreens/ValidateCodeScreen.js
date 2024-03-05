@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useRef} from "react";
-import { View, Text, TouchableOpacity, StatusBar, Image, TouchableHighlight, Dimensions, StyleSheet, TextInput, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback } from "react-native";
+import { View, Text, TouchableOpacity, StatusBar, Image, TouchableHighlight, Dimensions, StyleSheet, TextInput, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback, Platform } from "react-native";
 import { getFontSize } from "../../utils/functions";
 import { Spinner, useToast, Alert, VStack, HStack, } from "native-base";
 import { Colors } from "../../utils/Colors";
@@ -19,10 +19,13 @@ import {
     useBlurOnFulfill,
     useClearByFocusCell,
   } from 'react-native-confirmation-code-field';
+import { getExpoToken } from "../../utils/functions";
+import { useIsFocused } from "@react-navigation/native";
 
 const {height, width} = Dimensions.get('window');
 
 const ValidateCodeScreen = () => {
+    const isFocused = useIsFocused()
     const navigation = useNavigation()
     const dispatch = useDispatch();
     //const verificationCode = useSelector(state => state.authDuck.verificationCode);
@@ -35,6 +38,7 @@ const ValidateCodeScreen = () => {
     const dataUser = useSelector(state => state.authDuck.dataUser)
     const toast = useToast();
     const [verificationCode, setValue] = useState('');
+    const [device, setDevice] = useState({})
 
     const CELL_COUNT = 5;
 
@@ -66,6 +70,23 @@ const ValidateCodeScreen = () => {
             })
         }
     },[isLogged])
+
+    useEffect(()=>{
+        if(isFocused){
+            applicationExpoToken()
+        }
+    },[isFocused])
+
+    const applicationExpoToken = async ()=>{
+        const os = Platform.OS;
+        const resultToken = await getExpoToken()
+        if (resultToken){
+            setDevice({
+                "token": resultToken,
+                "os": os
+            })
+        }
+    }
 
     const handleKeyPress = (index, key) => {
         if (key === 'Backspace' && index > 0 && !verificationCode[index]) {
@@ -143,7 +164,7 @@ const ValidateCodeScreen = () => {
                 <TouchableOpacity 
                     disabled={verificationCode.length < 5 }
                     style={[styles.btnValidate,{backgroundColor: verificationCode.length < 5 ? Colors.gray :Colors.blueGreen, }]} 
-                    onPress={async() => await dispatch(validateCode({verificationCode, phone}))}>
+                    onPress={async() => await dispatch(validateCode({verificationCode, phone, device}))}>
                     {loader ? <Spinner size={'sm'} color={'white'} /> : <Text style={styles.txtValidate}>Verificar</Text>}
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => dispatch(verifyPhoneNumber(phone))}>

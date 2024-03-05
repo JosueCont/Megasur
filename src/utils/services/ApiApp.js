@@ -7,6 +7,7 @@ export const postVerifyPhone = async(data) => await axiosPost(axiosTypes.VERIFY_
 export const postValidateCode = async(data) => await axiosPost(axiosTypes.VALIDATE_CODE, data)
 export const postRegisterUser = async(data) => await axiosPost(axiosTypes.REGISTER_USER,data);
 export const postRefreshToken = async(data) => await axiosPost(axiosTypes.REFRESH_TOKEN,data)
+export const postLogout = async(data) => await axiosPost(axiosTypes.LOGOUT, data);
 
 //logged
 
@@ -38,6 +39,9 @@ export const getTransactions = async(filters) => await axiosGet(`${axiosTypes.GE
 export const getInfoBranch = async(id) => await axiosGet(`${axiosTypes.GET_INFO_BRANCH}${id}`)
 export const putRateCharge = async(data,id) => await axiosPut(`${axiosTypes.GET_TRANSACTIONS}${id}/`, data)
 
+//promotions
+export const getAdvertisements = async(filters) => await axiosGet(`${axiosTypes.GET_PROMOTIONS}${filters}`)
+export const getAdvertisementId = async(AdvertisementId) => await axiosGet(`${axiosTypes.GET_PROMOTIONS}${AdvertisementId}/`)
 //surveys
 export const getSurveysTotal = async() => await axiosGet(`${axiosTypes.GET_SURVEYS}total/`);
 export const getSurveys = async() => await axiosGet(`${axiosTypes.GET_SURVEYS}all/?page=1&per_page=100`)

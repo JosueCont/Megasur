@@ -6,6 +6,15 @@ import { theme } from './src/utils/theme';
 import { NativeBaseProvider } from 'native-base';
 import NavigationContainerConfig from './src/stacks/NavigationContainerConfig';
 import { Buffer } from 'buffer';
+import * as Notifications from 'expo-notifications';
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: true,
+  }),
+});
 
 export default function App() {
   LogBox.ignoreAllLogs();

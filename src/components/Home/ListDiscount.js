@@ -10,7 +10,7 @@ const ListDiscount = ({dataDisconunt}) => {
 
     return(
         <View style={{marginLeft:20, marginBottom:25}}>
-            <Text style={styles.title}>Descuentos presentando tu Megacard</Text>
+            <Text style={styles.title}>Promociones</Text>
             <FlatList 
                 data={dataDisconunt}
                 keyExtractor={item => item.id.toString()}
