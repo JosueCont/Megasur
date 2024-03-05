@@ -15,7 +15,7 @@ const ProvitionalPoints = ({pressed, showSurvey, totalSurveys}) => {
         <>
         {totalSurveys >=1 && (
             <TouchableOpacity onPress={showSurvey}>
-                {banner?.banner != null ? (
+                {(banner?.banner != null && banner?.banner != '') ? (
                     <Image source={{uri: banner.banner}} style={{width: width/1.1, height: 160, resizeMode:'contain', alignSelf:'center'}}/>
                 ):(
                     <View style={styles.container}>

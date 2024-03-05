@@ -233,6 +233,7 @@ export const logoutAction = (data) => async(dispatch) => {
     try {
         if (data != null){
             const response = await postLogout({expo_token: data})
+            console.log('logout',response)
         }
         await AsyncStorage.removeItem('accessToken')
         //await AsyncStorage.removeItem('refreshToken')

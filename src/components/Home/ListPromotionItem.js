@@ -13,7 +13,12 @@ const ListPromotionItem = ({item,index}) => {
             style={styles.card}
             onPress={()=>navigation.navigate('AnnouncementDetail', { itemId: item.id })}
         >
-            <Image source={{uri:item.image}} style={styles.img}/>
+            {item?.image != null && item?.image !='' ? (
+
+                <Image source={{uri:item.image}} style={styles.img}/>
+            ):(
+                <Image source={require('../../../assets/promotion.png')} style={styles.img}/>
+            )}
             <View style={{width: width/2.5,marginLeft:8}}>
                 <Text style={styles.title}>{item.title}</Text>
                 <Text style={styles.desc}>{item.short_description}</Text>
