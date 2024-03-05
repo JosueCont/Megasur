@@ -14,7 +14,7 @@ import StationList from "../../components/StationsList";
 import { useSelector, useDispatch } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import { MaterialIcons } from '@expo/vector-icons'; 
-import { onChangeModalLoc } from "../../store/ducks/locationsDuck";
+import { onChangeModalLoc, setLocationStation } from "../../store/ducks/locationsDuck";
 import ModalLocation from "../../components/modals/ModalLocationStation";
 import AccordionItem from "../../components/profile/AccordionItem";
 
@@ -37,6 +37,7 @@ const LocationScreen = () => {
     const stations = useSelector(state => state.locationDuck.nearBranches)
     const zones = useSelector(state => state.locationDuck.branchesZones)
     const modalActive = useSelector(state => state.locationDuck.modalLocation)
+    const locationStation = useSelector(state => state.locationDuck.locationStation)
 
     const sheetMaxHeight = height - 200;
     const sheetMinHeight = 75;
@@ -55,26 +56,30 @@ const LocationScreen = () => {
     const animatedMapSize = useRef(new Animated.Value(MIN_FLEX)).current;
     const animatedMapOpacity = useRef(new Animated.Value(1)).current;
 
+    //const { locationStation,  } = route?.params
     useEffect(() => {
       setIsOpen(true)
       
     },[isFocused])
  
     useEffect(() => {
-      (async() => {
-          const location = await getPermissionLocation()
-          console.log('location', Platform.OS, location)
-          setRegion({
-              latitude: location?.coords?.latitude,
-              longitude: location?.coords?.longitude
-          })
-          setNewRegion({
-              latitude: location?.coords?.latitude,
-              longitude: location?.coords?.longitude
-          })
-      })();
-      getByZone()
-    },[])
+        if(isFocused){
+            (async() => {
+                const location = await getPermissionLocation()
+                console.log('location', Platform.OS, location)
+                setRegion({
+                    latitude: location?.coords?.latitude,
+                    longitude: location?.coords?.longitude
+                })
+                setNewRegion({
+                    latitude: locationStation != null ? locationStation.lat : location?.coords?.latitude,
+                    longitude: locationStation != null ? locationStation.lng : location?.coords?.longitude
+                })
+            })();
+            getByZone()
+
+        }
+    },[isFocused])
 
     const panResponder = useRef(
         PanResponder.create({
@@ -277,7 +282,7 @@ const LocationScreen = () => {
                     )}
                 </Animated.View>
                 <Animated.View style={[animatedStyles,{flex:1, position:'absolute', bottom:0, width: width, backgroundColor: Colors.lightGray }]} >
-                    <View {...panResponder.panHandlers} >
+                    <View {...panResponder.panHandlers} style={{borderBottomWidth:0.8, borderBottomColor: Colors.grayBorders,}}>
                         <View style={styles.dragBar}/>
 
                     </View>

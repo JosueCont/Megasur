@@ -23,12 +23,16 @@ const VerifyEmail = () => {
         <View style={styles.container}>
             <TouchableOpacity 
                 onPress={() => navigation.navigate('FormProfile')}
-                style={{height:120, width:120, borderRadius:60, backgroundColor: Colors.grayBorders}}>
+                style={{}}>
+                    <Image source={require('../../../assets/profile.png')} style={{height:120, width:120, borderRadius:60, resizeMode:'contain'}}/>
                 
             </TouchableOpacity>
             <View style={{flex:2, marginLeft:10}}>
-                <Text style={styles.title}>{user?.first_name}</Text>
-                <Text style={[styles.title,{fontWeight:'400'}]}>{user?.last_name}</Text>
+                <TouchableOpacity onPress={() => navigation.navigate('FormProfile')}>
+                    <Text style={styles.title}>{user?.first_name}</Text>
+                    <Text style={[styles.title,{fontWeight:'400'}]}>{user?.last_name}</Text>
+
+                </TouchableOpacity>
                 <View style={styles.contMail}>
                     {isValid && <AntDesign name="checkcircle" size={16} color={Colors.green} /> }
                     <Text style={[styles.lblMail,{color: isValid ? Colors.darkGray : Colors.red, }]}>{user?.email}</Text>

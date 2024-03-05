@@ -1,5 +1,5 @@
 import React,{useEffect,} from "react";
-import { View, Text, TouchableOpacity, Dimensions, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, Dimensions, StyleSheet, Image} from "react-native";
 import { Colors } from "../../utils/Colors";
 import { getFontSize } from "../../utils/functions";
 import { useNavigation } from "@react-navigation/native";
@@ -13,12 +13,12 @@ const ListActionsProfile = () => {
     const navigation = useNavigation();
 
     const options =[
-        {name:'Mi auto', icon:'car', route:'MyCar'},
-        {name:'Vincular', icon:'credit-card-alt', route:'Link'},
-        {name:'Facturación', icon:'file', route:'CheckIn'},
-        {name:'Encuestas contestadas', icon:'file-text', route:'AnsweredSurvey'},
-        {name:'Información legal', icon:'signature', route:'InfoLegal'},
-        {name:'Acerca de la app', icon:'info-circle', route:'About'}
+        {name:'Mi auto', icon: require('../../../assets/car-icon.png'), route:'MyCar'},
+        {name:'Vincular', icon: require('../../../assets/card-icon.png'), route:'Link'},
+        {name:'Facturación', icon: require('../../../assets/file-icon.png'), route:'CheckIn'},
+        {name:'Encuestas contestadas', icon: require('../../../assets/poll-icon.png'), route:'AnsweredSurvey'},
+        {name:'Información legal', icon: require('../../../assets/signature-icon.png'), route:'InfoLegal'},
+        {name:'Acerca de la app', icon: require('../../../assets/info-icon.png'), route:'About'}
     ]
 
     return(
@@ -28,7 +28,10 @@ const ListActionsProfile = () => {
                     key={index}
                     onPress={() => navigation.navigate(item?.route)}
                     style={styles.contSection}>
-                    {item.icon === 'signature' ? (
+                        <View style={{width:30}}>
+                            <Image source={item?.icon} style={{width:20, height:20, resizeMode:'contain'}}/>
+                        </View>
+                    {/*item.icon === 'signature' ? (
                         <View style={{width:30}}>
                             <FontAwesome5 name="signature" size={20} color="black" />
 
@@ -38,7 +41,7 @@ const ListActionsProfile = () => {
 
                             <FontAwesome name={item.icon} size={20} color="black" />
                         </View>
-                    )}
+                    )*/}
                     <Text style={styles.lblSection}>{item?.name}</Text>
                 </TouchableOpacity>
             ))}
@@ -55,7 +58,7 @@ const styles = StyleSheet.create({
     contSection:{
         flexDirection:'row', 
         alignItems:'center', 
-        marginBottom:25
+        marginBottom:40
     },
     lblSection:{
         marginLeft:15, 

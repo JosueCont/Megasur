@@ -9,7 +9,7 @@ const Input = ({value, setValue, background = Colors.white,isLogged=false, ...pr
         <TextInput 
             onChangeText={setValue} 
             value={value} 
-            style={[styles.input,{backgroundColor: background,width: isLogged ? width/1.05 : width/1.13,}]} 
+            style={[styles.input,{backgroundColor: background,width: isLogged ? width * .9 : width/1.13,}]} 
             {...props}
         />
     )

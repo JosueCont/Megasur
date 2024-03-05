@@ -4,10 +4,12 @@ import { getFontSize } from "../../utils/functions";
 import { Colors } from "../../utils/Colors";
 import RateComponent from "./Rate";
 import moment from "moment";
+import { useSelector } from "react-redux";
 
 const {height, width} = Dimensions.get('window');
 
 const ChargesItem = ({charge, index, lastItem, openModal}) => {
+    const availableHours = useSelector(state => state.homeDuck.setupData?.hours_available_to_rate)
     
     const getTypeFuel = (type) => {
         let types = {
@@ -22,6 +24,15 @@ const ChargesItem = ({charge, index, lastItem, openModal}) => {
             </View>
         )
     }
+
+    const validateDates = (dateTime) => {
+        const parsedDate = moment.utc(dateTime);
+        const now = moment.utc();
+
+        const diferenciaHoras = now.diff(parsedDate, 'hours');
+        return diferenciaHoras >= availableHours;
+    }
+
     return(
         <View key={charge?.id.toString()} style={[styles.container,{borderBottomWidth: lastItem != index ? 0.5 : 0,}]}>
             <View style={{flexDirection:'row'}}>
@@ -31,7 +42,7 @@ const ChargesItem = ({charge, index, lastItem, openModal}) => {
                     <Text style={styles.lblPrice}>${charge?.unit_price} /lt</Text>
                 </View>
                 <View>
-                    <Text style={styles.lblName}>{charge?.name}</Text>
+                    <Text style={styles.lblName}>{charge?.branch?.name}</Text>
                     <Text style={styles.lblDate}>{moment(charge?.fuel_datetime).format('MMMM DD')} • {moment(charge?.fuel_datetime).format('hh:mm A')}</Text>
                     <View style={{flexDirection:'row', alignItems:'center'}}>
                         {getTypeFuel(charge?.product_code)}
@@ -45,12 +56,20 @@ const ChargesItem = ({charge, index, lastItem, openModal}) => {
             <View style={styles.contRate}>
                 {charge?.score != null ? (
                     <RateComponent rate={charge?.score}/>
-                ) : (
-                    <TouchableOpacity style={styles.btnRate} onPress={() => openModal(charge)}>
-                        <Text style={styles.lblBtn}>Calificar</Text>
-                    </TouchableOpacity>)}
+                ) : validateDates(charge?.fuel_datetime) ? (
+                    <View style={[styles.btnRate,{backgroundColor: Colors.borders}]}>
+                        <Text style={{color: Colors.grayStrong, fontSize: getFontSize(13)}}>Expirado</Text>
+                    </View>
+                ):(
+                    <>
+                        <TouchableOpacity style={styles.btnRate} onPress={() => openModal(charge)}>
+                            <Text style={styles.lblBtn}>Calificar</Text>
+                        </TouchableOpacity>
+                        <Text style={styles.lblPoints}>+{charge?.score_points}</Text>
+                    </>
+                )}
                 {/*<Text style={styles.lblPoints}>+{charge?.points || 10}</Text>*/}
-
+                { validateDates(charge?.fuel_datetime) && charge?.score !=null && <Text style={styles.lblPoints}>+{charge?.score_points}</Text>}
             </View>
         </View>
     )
@@ -100,6 +119,7 @@ const styles = StyleSheet.create({
     lblName:{
         color: Colors.grayStrong, 
         fontSize: getFontSize(16), 
+        width: 180,
         fontWeight:'700'
     },
     lblDate:{

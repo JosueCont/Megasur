@@ -76,6 +76,7 @@ const DetailProduct = () => {
                 <Text style={styles.lblDesc}>Lorem ipsum dolor sit amet. Ut dolorem rerum quo molestias praesentium sit soluta fugiat ut maxime necessitatibus sed.
 Lorem ipsum dolor sit amet. Ut dolorem rerum quo molestias praesentium sit soluta fugiat ut maxime necessitatibus sed.</Text>
                         </View>*/}
+            {product?.is_active ? (
             <TouchableOpacity 
                 disabled={count === 0}
                 style={[styles.btnOk,{backgroundColor: count === 0 ? Colors.grayStrong : Colors.blueGreen,}]} 
@@ -100,8 +101,13 @@ Lorem ipsum dolor sit amet. Ut dolorem rerum quo molestias praesentium sit solut
                     }, 500)
                     /*navigation.navigate('Confirm')*/
                 }}>
-                <Text style={styles.lblBtn}>Canjear por {product?.price_in_points}ptos. C/U</Text>
+                <Text style={styles.lblBtn}>Agregar al carrito</Text>
             </TouchableOpacity>
+            ):(
+                <View style={[styles.btnOk,{backgroundColor: Colors.grayStrong}]}>
+                    <Text style={styles.lblBtn}>Producto no disponible</Text>
+                </View>
+            )}
         </HeaderLogged>
     )
 }

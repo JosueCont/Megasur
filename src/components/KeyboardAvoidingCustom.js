@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from "react";
-import { KeyboardAvoidingView, Keyboard, Platform, StyleSheet, Dimensions, TouchableHighlight } from "react-native";
+import { KeyboardAvoidingView, Keyboard, Platform, StyleSheet, Dimensions, TouchableHighlight, View } from "react-native";
 import { Colors } from "../utils/Colors";
 
 const {height, width} = Dimensions.get('window');
 
 
-const KeyboardAvoidingCustom = ({children,iosOffset=0, isModal=false, bottomModal=false}) => {
+const KeyboardAvoidingCustom = ({children,iosOffset=0, isModal=false, bottomModal=false, isRegister=false}) => {
     const [keyboardOpen, setKeyboardOpen] = useState(false);
 
     useEffect(() => {
@@ -29,9 +29,16 @@ const KeyboardAvoidingCustom = ({children,iosOffset=0, isModal=false, bottomModa
             style={bottomModal ? styles.contAvoidinBottom :styles.contKeyAvoiding}  
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
             keyboardVerticalOffset={Platform.select({ios: iosOffset }) }>
-                <TouchableHighlight onPress={() =>   Keyboard.dismiss() } underlayColor={Colors.white} style={isModal ? bottomModal ? styles.contentBottom : styles.contBtn : {}}>
-                    {children}
-                </TouchableHighlight>
+                {isRegister ? (
+                    <View style={{flex:1}} onTouchEnd={() => keyboardOpen &&  Keyboard.dismiss()}>
+                        {children}
+
+                    </View>
+                ):(
+                    <TouchableHighlight onPress={() =>   Keyboard.dismiss() } underlayColor={Colors.white} style={isModal ? bottomModal ? styles.contentBottom : styles.contBtn : {}}>
+                        {children}
+                    </TouchableHighlight>
+                )}
 
         </KeyboardAvoidingView>
     )
