@@ -43,24 +43,35 @@ APIKit.interceptors.request.use(async(config) => {
 APIKit.interceptors.response.use((config)  => config,
     async(error) => {
         const originalRequest = error.config;
-        if (error.response.status === 401 && !originalRequest._retry){
-            const expoToken = await getExpoToken();
-            //store.dispatch(await logoutAction(expoToken))
-        //    const dataUser = await AsyncStorage.getItem('user');
-        //    let user = JSON.parse(dataUser)
-        //    if(user){
-        //        const newToken = await postRefreshToken({});
-        //        console.log('newToken',newToken)
-        //        if (newToken?.data && !originalRequest._retry){
-        //            originalRequest._retry = true;
-        //            await AsyncStorage.setItem('user',JSON.stringify(newToken?.data));
-        //            return APIKit(originalRequest);
-        //        }
-        //    }else{
-        //        return Promise.reject(error)
-        //    }
+        if (error?.response?.status === 401 && !originalRequest._retry){
+            //originalRequest._retry = true;
+            try {
+                
+                const newToken = await postRefreshToken();
+                console.log('newToken', newToken)
+                if (newToken?.status === 200){
+                    await AsyncStorage.setItem('user',JSON.stringify(newToken?.data));
+                    await AsyncStorage.setItem('accessToken',JSON.stringify(newToken?.data?.access_token))
+                    APIKit.defaults.headers.Authorization = `Bearer ${newToken?.data?.access_token}`;
+                    originalRequest._retry = false
+
+                    return APIKit(originalRequest);
+                }
+            } catch (e) {
+                console.log('error newToken',e)
+
+                //const expotoken = getExpoToken();
+                store.dispatch(logoutAction(null))
+                //if(e?.response && e?.response.data) {
+                    //return Promise.reject(e?.response.data);
+                //}
+                //return Promise.reject(e);
+            }
+            
         }
         return Promise.reject(error);
+
+        
     }
 )
 
