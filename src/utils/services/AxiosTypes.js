@@ -3,6 +3,7 @@ export const axiosTypes = {
     VALIDATE_CODE: '/security/users/verify-sms/',
     REGISTER_USER: '/security/users/register/',
     SECURITY_USER_DATA: '/security/users/mobile/',
+    SECURITY_USER_VEHICLE: '/security/users/vehicle/',
     REFRESH_TOKEN: '/security/users/refresh-token/',
     SECURITY_USER:'/security/users/',
     DELETE_ACCOUNT: 'security/deletion-request/',
