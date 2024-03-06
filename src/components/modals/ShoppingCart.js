@@ -157,7 +157,7 @@ const ModalShoppingCart = ({visible, setVisible, branches, points, onSubmit}) =>
                                     onPress={() => validateCar()}>
                                     {loading ? <Spinner size={'sm'} color={'white'} /> : <Text style={styles.lblBtn}>Realizar pedido</Text>}
                                 </TouchableOpacity>
-                                {getTotal() >= points && <Text style={{alignSelf:'center', color: Colors.pink, fontSize: getFontSize(16), fontWeight:'400'}}>Sin puntos suficientes</Text>}
+                                {getTotal() > points && <Text style={{alignSelf:'center', color: Colors.pink, fontSize: getFontSize(16), fontWeight:'400'}}>Sin puntos suficientes</Text>}
                                 </>
 
                             ):(

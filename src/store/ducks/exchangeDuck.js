@@ -30,6 +30,7 @@ const UPDATE_CAR = 'update_car_exchange'
 const ORDER_EXCHANGE_SUCCESS = 'order_exchange_success'
 const ORDER_EXCHANGE_FAILED = 'order_exchange_failed'
 const RESET_ORDER_EXCHANGE = 'reset_order_exchange'
+const REFRESH = 'refresh_exchange'
 
 const initialState = {
     loading:false,
@@ -52,6 +53,7 @@ const initialState = {
     branchId:null,
     exchangeDone:false,
     alertFailed: false,
+    refresh: false
 }
 
 const exchangeDuck = (state = initialState, action) => {
@@ -85,7 +87,7 @@ const exchangeDuck = (state = initialState, action) => {
         case RESET_DELIVERED_DATA:
             return{ ...state, deliveredData: null}
         case ORDERS_SUCCESS:
-            return{ ...state, receivedList: action.payload.received, pendingList: action.payload.pending}
+            return{ ...state, receivedList: action.payload.received, pendingList: action.payload.pending, refresh: false}
         case SET_CODE:
             return{ ...state, code: action.payload, loading: false, isRunning: true}
         case SET_TIME:
@@ -110,6 +112,8 @@ const exchangeDuck = (state = initialState, action) => {
             return{ ...state, loading:false, modalShoppingCart: false, alertFailed: true}
         case RESET_ORDER_EXCHANGE:
             return{ ...state, alertFailed: false, exchangeDone: false}
+        case REFRESH:
+            return{ ...state, refresh: true}
         default:
             return state;
     }
@@ -363,6 +367,12 @@ export const onUpdateCart = (data) => {
 export const resetExchangeOrder = () => {
     return{
         type: RESET_ORDER_EXCHANGE
+    }
+}
+
+export const refreshAction = () => {
+    return{
+        type: REFRESH
     }
 }
 export default exchangeDuck;

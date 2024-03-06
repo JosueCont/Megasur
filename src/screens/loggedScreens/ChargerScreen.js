@@ -21,7 +21,7 @@ const ChargerScreen = () => {
     const navigation = useNavigation()
     const modalRate = useSelector(state => state.chargesDuck.modalActive)
     const charges = useSelector(state => state.chargesDuck.fuelCharges)
-    const typeFuel = useSelector(state => state.chargesDuck.type)
+    const typeFuel = useSelector(state => state.chargesDuck.typeFuel)
     const branchName = useSelector(state => state.chargesDuck.branchName)
     const branchesOptions = useSelector(state => state.chargesDuck.branches)
     const comment = useSelector(state => state.chargesDuck.comment)
@@ -31,11 +31,13 @@ const ChargerScreen = () => {
     const refresh = useSelector(state => state.chargesDuck.refresh)
     const modalFailed = useSelector(state => state.chargesDuck.modalFailed)
     const infoCharge = useSelector(state => state.chargesDuck.infoCharge)
+    const userId = useSelector(state => state.authDuck.dataUser?.id)
+
     const toast = useToast();
 
     useEffect(() => {
         (async() => {
-            dispatch(await getCharges())
+            dispatch(await getCharges(`?page=1&per_page=100&user_id=${userId}`,[], true))
         })();
         if(toasUpdate){
             toast.show({
@@ -59,16 +61,18 @@ const ChargerScreen = () => {
 
     const onFilter = async() => {
         const filters = buildUrlPath(typeFuel,branchName)
-        await dispatch(getCharges(filters, branchesOptions))
+        console.log('filters',filters)
+        await dispatch(getCharges(filters, branchesOptions, false))
     }
 
     const buildUrlPath = (type, branchName) => {
-        let filter = ''
+        console.log('type',type)
+        let filter = `?page=1&per_page=100&user_id=${userId}`
         if (type) {
-            filter += `?product_code=${encodeURIComponent(type)}`;
+            filter += `&product_code=${encodeURIComponent(type)}`;
         }
         if (branchName) {
-            filter += filter.includes('?') ? `&branch_id=${encodeURIComponent(branchName)}` : `?branch_id=${encodeURIComponent(branchName)}`;
+            filter += `&branch_id=${encodeURIComponent(branchName)}`
         }
         return filter
     }
@@ -81,7 +85,7 @@ const ChargerScreen = () => {
     const onRefresh = async() => {
         dispatch(refreshAction())
         setTimeout(() => {
-            dispatch(getCharges())
+            dispatch(getCharges(`?page=1&per_page=100&user_id=${userId}`, branchesOptions, false))
 
         },1000)
     }
