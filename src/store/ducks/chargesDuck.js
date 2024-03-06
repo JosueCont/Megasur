@@ -10,6 +10,7 @@ const GET_CHARGES_FUEL = 'get_charges_fuel'
 const REFRESH_FILTERS = 'refresh_filters_charges'
 const RATE_CHARGE_SUCCESS = 'rate_charge_success'
 const RATE_CHARGE_FAILED = 'rate_charge_failed'
+const RESET_RATE = 'reset_israte'
 
 const REFRESH = 'refresh_charge'
 
@@ -52,6 +53,8 @@ const chargesDuck = (state = initialState, action) => {
             return{ ...state, isRate: action.payload, modalSuccess: true, message: 'Se ha calificado la carga'}
         case RATE_CHARGE_FAILED:
             return{ ...state, modalFailed: true, message: action.payload}
+        case RESET_RATE:
+            return{ ...state, isRate: false, modalSuccess: false, }
         default:
             return state;
     }
@@ -79,12 +82,12 @@ export const updateInfoCharge = (data) => {
     }
 }
 
-export const getCharges = (filters='', options) => async(dispatch) => {
+export const getCharges = (filters='', options, isInitial=false) => async(dispatch) => {
     try {
         dispatch({type: LOADING})
         const response = await getTransactions(filters);
         let chargesMonth = []
-        let branches = filters != '' ? options: []
+        let branches = !isInitial ? options: []
         const uniqueBranches = new Set();
         if(response?.data?.items.length > 0 ){
             response?.data?.items.forEach((charge,index) => {
@@ -100,10 +103,10 @@ export const getCharges = (filters='', options) => async(dispatch) => {
                     existMonth?.charges?.push(charge)
                 }
 
-                if(filters === ''){
+                if(isInitial){
                     if (!uniqueBranches.has(charge.branch_id)) {
                         uniqueBranches.add(charge.branch_id);
-                        branches.push({ value: charge.branch_id, label: charge.name });
+                        branches.push({ value: charge.branch_id, label: charge.branch?.name });
                     }
                 }
             })
@@ -152,6 +155,12 @@ export const onRateCharge = (data) => async(dispatch) => {
 export const refreshAction = () => {
     return{
         type: REFRESH
+    }
+}
+
+export const onResetRate = () => {
+    return{
+        type: RESET_RATE,
     }
 }
 export default chargesDuck
