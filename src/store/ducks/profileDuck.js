@@ -1,5 +1,5 @@
 import moment from "moment"
-import { getAnsweredSurveys, getDataUser, postDeleteAccount, postVerifyCodeMail, postverifyEmail, putUserData } from "../../utils/services/ApiApp"
+import { getAnsweredSurveys, getDataUser, postDeleteAccount, postVerifyCodeMail, postverifyEmail, putUserData, getDataVehicle, updateDataVehicle } from "../../utils/services/ApiApp"
 
 const CHANGE_INPUT = 'change_input_profile'
 const CHANGE_MODAL = 'change_modal_profile'
@@ -220,6 +220,54 @@ export const getAllAnsweredSurveys = (userId) => async(dispatch) => {
         console.log('answered surveys',sortSurveys)
     } catch (e) {
         console.log('error answ sur',e)
+    }
+}
+
+export const getVehicleData = async (userId) => {
+    try {
+        let response = {
+            success: false,
+            data: {}
+        }
+        // alert(JSON.stringify(userId))
+        const responses = await getDataVehicle(userId)
+        
+        if(responses?.data){
+            // alert(JSON.stringify(responses.data))
+            return {
+                success: true,
+                data: responses?.data
+            }
+             
+        }
+        console.log('dataUser', response?.data)
+    } catch (e) {
+        console.log('error datos user',e)
+        // dispatch({type: DATA_PROFILE__FAILED})
+        return response
+    }
+}
+
+export const updateVehicleData = async (userId, data) => {
+    let response = {
+        success: false,
+        data: {}
+    }
+    try {
+         
+        const responses = await updateDataVehicle(userId, data) 
+        if(responses?.data){ 
+            return {
+                success: true,
+                data: responses?.data
+            }
+             
+        }
+        console.log('dataUser', response?.data)
+    } catch (e) {
+        console.log('error datos user',e)
+        // dispatch({type: DATA_PROFILE__FAILED})
+        return response
     }
 }
 

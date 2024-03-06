@@ -17,6 +17,8 @@ export const postverifyEmail = async(data) => await axiosPost(`${axiosTypes.SECU
 export const postVerifyCodeMail = async(id,code) => await axiosPost(`${axiosTypes.SECURITY_USER}${id}/confirm-verify-email/${code}/`)
 export const putUserData = async(data) => await axiosPut(axiosTypes.SECURITY_USER_DATA, data,{headers: {'Content-Type': 'multipart/form-data',}})
 export const postDeleteAccount = async(data) => await axiosPost(axiosTypes.DELETE_ACCOUNT, data)
+export const getDataVehicle = async(id) => await axiosGet(`${axiosTypes.SECURITY_USER_VEHICLE}${id}/`)
+export const updateDataVehicle = async(id, data) => await axiosPut(`${axiosTypes.SECURITY_USER_VEHICLE}${id}/`, data)
 
 /*Home */
 
