@@ -233,11 +233,12 @@ const styles = StyleSheet.create({
     fontWeight: "400",
   },
   btnSave: {
-    width: width / 1.7,
+    width: width * 0.9,
     paddingVertical: 12,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 8,
+    
   },
   lblBtnSave: {
     color: Colors.white,
