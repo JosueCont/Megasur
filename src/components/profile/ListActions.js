@@ -26,7 +26,7 @@ const ListActionsProfile = () => {
             {options.map((item,index) => (
                 <TouchableOpacity 
                     key={index}
-                    onPress={() => navigation.navigate(item?.route)}
+                    onPress={() => navigation.navigate(item?.route, {route: item?.route === 'Link' ? 'Profile' : ''})}
                     style={styles.contSection}>
                         <View style={{width:30}}>
                             <Image source={item?.icon} style={{width:20, height:20, resizeMode:'contain'}}/>

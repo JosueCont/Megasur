@@ -22,6 +22,8 @@ import LinkScreen from "../screens/loggedScreens/Profile/LinkScreen";
 import AnsweredSurveyScreen from "../screens/loggedScreens/Profile/AnswerSurveyScreen";
 import CheckInScreen from "../screens/loggedScreens/Profile/CheckInScree";
 import ConfirmRateScreen from "../screens/loggedScreens/Charges/ConfirmRateScreen";
+import DetailCardScreen from "../screens/loggedScreens/Profile/DetailCardScreen";
+import RedeemPointsDone from "../screens/loggedScreens/Profile/RedeemPointsScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -44,6 +46,10 @@ const HomeNavigator = () => {
             <Stack.Screen name="ConfirmFuel" component={ConfirmFuelExchange}/>
             <Stack.Screen name="AnnouncementDetail" component={AnnouncementDetail}/>
             <Stack.Screen name="Surveys" component={SurveysScreen} />
+            <Stack.Screen name="LinkUp" component={LinkScreen}/>
+            {/*<Stack.Screen name="DetailCard" component={DetailCardScreen}/>
+            <Stack.Screen name="RedemPoints" component={RedeemPointsDone}/>*/}
+
         </Stack.Navigator>
 
     )
@@ -66,6 +72,8 @@ const ProfileNavigator = () => {
             <Stack.Screen name="CheckIn" component={CheckInScreen}/>
             <Stack.Screen name="AnsweredSurvey" component={AnsweredSurveyScreen}/>
             <Stack.Screen name="InfoLegal" component={LegalInfoScreen}/>
+            <Stack.Screen name="DetailCard" component={DetailCardScreen}/>
+            <Stack.Screen name="RedemPoints" component={RedeemPointsDone}/>
             
         </Stack.Navigator>
     )
