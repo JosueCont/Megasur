@@ -6,6 +6,7 @@ import profileDuck from "./ducks/profileDuck";
 import locationDuck from "./ducks/locationsDuck";
 import chargesDuck from "./ducks/chargesDuck";
 import exchangeDuck from "./ducks/exchangeDuck";
+import notificationsDuck from "./ducks/NotificationsDuck";
 
 const rootReducer = combineReducers({
     authDuck: authDuck,
@@ -13,7 +14,8 @@ const rootReducer = combineReducers({
     profileDuck: profileDuck,
     locationDuck: locationDuck,
     chargesDuck: chargesDuck,
-    exchangeDuck: exchangeDuck
+    exchangeDuck: exchangeDuck,
+    notificationsDuck: notificationsDuck
 });
 
 export const store = legacy_createStore(rootReducer, applyMiddleware(thunk));

@@ -24,6 +24,7 @@ const ADD_NEW_SCREEN = 'add_new_screen'
 const CLEAN_SURVEY = 'clean_survey'
 const ANSWER_SURVEY_SUCCESS = 'answer_survey_success'
 const ANSWER_SURVEY_FAILED = 'answer_survey_failed'
+const CLEAN_AFTER_NAVIGATION = 'clean_after_navigation'
 
 
 const initialState = {
@@ -74,13 +75,15 @@ const homeDuck = (state = initialState, action) => {
         case ADD_RESPONSES:
             return{ ...state, responses:[...state.responses, action.payload]}
         case SET_CURRENT_QUESTION_INDEX:
-            return{ ...state, currentQuestionIndex: action.payload}
+            return{ ...state, currentQuestionIndex: action.payload,}
         case ADD_NEW_SCREEN:
             return{ ...state, isFinish: true}
         case CLEAN_SURVEY:
-            return{ ...state, currentQuestionIndex:1, isFinish: false, responses:[], answerSuccess: false }
+            return{ ...state, currentQuestionIndex:1, isFinish: false, responses:[] }
+        case CLEAN_AFTER_NAVIGATION:
+            return{ ...state,  answerSuccess: false}
         case ANSWER_SURVEY_SUCCESS:
-            return{ ...state, answerSuccess: true, loading: false}
+            return{ ...state, answerSuccess: true, loading: false, modalQuizz:false,}
         case ANSWER_SURVEY_FAILED:
             return{ ...state, answerSuccess: false, loading: false, isFinish: false, modalQuizz: false, modalFailed: true, message: action.payload }
         default:
@@ -211,7 +214,7 @@ export const getAllSurveys = () => async(dispatch) => {
 export const getTotalSurveys = () => async(dispatch) => {
     try {
         const response = await getSurveysTotal();
-        console.log('response stotalurveys',response?.data)
+        //console.log('response stotalurveys',response?.data)
         dispatch({type: SET_TOTAL_SURVEYS, payload: response?.data})
 
     } catch (e) {
@@ -227,18 +230,19 @@ export const getListSurveys = () => async(dispatch) => {
         dispatch({type: LOADING})
         const response = await getSurveys();
         dispatch({type: SET_SURVEYS, payload: response?.data})
-        console.log('surveys',response?.data)
     } catch (e) {
         console.log('err',e)
         dispatch({type: ERROR_SURVEYS})
     }
 }
 
-export const addResponsesData = (data) => {
-    return{
-        type: ADD_RESPONSES,
-        payload: data
-    }
+export const addResponsesData = (data, currentIndex, totalQuestions, quiz_id, isFinish) => dispatch => {
+    dispatch(setCurrentQuestionIndex(currentIndex, totalQuestions, data, quiz_id, isFinish))
+    //console.log('response',data)
+    //return{
+    //    type: ADD_RESPONSES,
+    //    payload: data
+    //}
 }
 
 export const saveResponsesSurvey = (quizz_id, responses) => async(dispatch) => {
@@ -248,32 +252,32 @@ export const saveResponsesSurvey = (quizz_id, responses) => async(dispatch) => {
             poll_id: quizz_id,
             responses: responses
         }
-        dispatch({type: ANSWER_SURVEY_SUCCESS})
-        console.log('dataSend',dataSend)
         const response = await postSurveys(dataSend)
-        console.log('response survey', response?.data)
+        dispatch({type: ANSWER_SURVEY_SUCCESS})
     } catch (e) {
         dispatch({type: ANSWER_SURVEY_FAILED, payload: 'Ocurrio un error al enviar respuestas, vuelve a intentarlo'})
         console.log('error',e)
     }
 }
 
-export const setCurrentQuestionIndex = (currentIndex, totalQuestions, responses, quiz_id, isFinish) => dispatch => {
+export const setCurrentQuestionIndex = (currentIndex, totalQuestions, responses,) => dispatch => {
+    dispatch({type: ADD_RESPONSES, payload: responses})
     if (currentIndex < totalQuestions) {
         dispatch({ type: SET_CURRENT_QUESTION_INDEX, payload: currentIndex + 1 });
     } else {
         dispatch({type: ADD_NEW_SCREEN})
-        if(isFinish){
-            setTimeout(() => {
-                dispatch(saveResponsesSurvey(quiz_id,responses));
-            }, 500);
-        }
     }
 };
 
 export const cleanSurvey = () => {
     return{
         type: CLEAN_SURVEY
+    }
+}
+
+export const cleanAfterNavigation = () => {
+    return{
+        type: CLEAN_AFTER_NAVIGATION
     }
 }
 
