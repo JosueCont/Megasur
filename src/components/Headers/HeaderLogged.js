@@ -11,7 +11,7 @@ import { useSelector } from "react-redux";
 const {height, width} = Dimensions.get('window');
 
 
-const HeaderLogged = ({children,isBack=false, title='Bienvenidos', onRefresh, refresh=false, goBack, noPadding=false, showSubtitle=false, bgColor=Colors.lightGray}) => {
+const HeaderLogged = ({children,isBack=false, title='Bienvenidos', onRefresh, refresh=false, goBack, noPadding=false, showSubtitle=false, bgColor=Colors.white}) => {
     const navigation = useNavigation()
     const badge = useSelector(state => state.notificationsDuck.badge)
     return(
