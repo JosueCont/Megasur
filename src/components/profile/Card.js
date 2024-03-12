@@ -27,7 +27,7 @@ const CardItem = ({item,index, cardSelected, showPts=false, disable=false}) => {
         <TouchableOpacity 
             disabled={disable}
             onPress={() => cardSelected(item)}
-            style={styles.btn} key={index}>
+            style={styles.btn} key={index+1}>
             <ImageBackground 
                 source={require('../../../assets/megacardClub.png')} 
                 resizeMode='contain'

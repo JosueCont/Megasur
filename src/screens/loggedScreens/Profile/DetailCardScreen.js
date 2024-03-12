@@ -6,7 +6,7 @@ import { Colors } from "../../../utils/Colors";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import CardItem from "../../../components/profile/Card";
-import { onChangeValueRedeem, setCardSelected } from "../../../store/ducks/redeemPointsDuck";
+import { getPhysicCardsExchange, onChangeValueRedeem, setCardSelected } from "../../../store/ducks/redeemPointsDuck";
 import ModalPhysicalCard from "../../../components/modals/ModalAddPhysicalCard";
 
 const {height, width} = Dimensions.get('window');
@@ -22,6 +22,12 @@ const DetailCardScreen = () => {
         dispatch(onChangeValueRedeem({prop,value}))
     }
 
+    useEffect(() => {
+        (async() => {
+            await dispatch(getPhysicCardsExchange(cardSelected?.user_card_id))
+        })()
+    },[])
+
     return(
         <HeaderLogged
             title="Redimir puntos"
@@ -30,13 +36,13 @@ const DetailCardScreen = () => {
                 <View style={styles.container}>
                     {cardSelected != null && <CardItem item={cardSelected} index={1} disable={true} showPts={true}/>}
                     <View style={styles.card}>
-                        <Text style={{color: Colors.blueGreen, fontSize: getFontSize(18), fontWeight:'700', marginBottom:10}}>Tarjetas redimidas</Text>
+                        <Text style={styles.lblTitle}>Tarjetas redimidas</Text>
                         <View style={{flexDirection:'row', justifyContent:'space-between',}}>
-                            <Text style={{color: Colors.darkGray, fontSize: getFontSize(16), fontWeight:'400'}}>1028 3783 0323 9993</Text>
-                            <Text style={{color: Colors.darkGray, fontSize: getFontSize(16), fontWeight:'600'}}>270 pts</Text>
+                            <Text style={[styles.lbl16,{ fontWeight:'400'}]}>1028 3783 0323 9993</Text>
+                            <Text style={[styles.lbl16,{ fontWeight:'600'}]}>270 pts</Text>
                         </View>
                     </View>
-                        <Text style={{textAlign:'center', color: Colors.grayStrong, fontSize: getFontSize(16), fontWeight:'700', marginBottom:60}}>Se podrá añadir un máximo de 3 tarjetas.</Text>
+                        <Text style={styles.banner}>Se podrá añadir un máximo de 3 tarjetas.</Text>
                     <TouchableOpacity 
                         onPress={() => changeValue('modalAddCard', true)}
                         style={[styles.btn,]}>
@@ -102,6 +108,23 @@ const styles = StyleSheet.create({
         color: Colors.white, 
         fontSize: getFontSize(14), 
         fontWeight:'400'
+    },
+    lblTitle:{
+        color: Colors.blueGreen, 
+        fontSize: getFontSize(18), 
+        fontWeight:'700', 
+        marginBottom:10
+    },
+    lbl16:{
+        color: Colors.darkGray, 
+        fontSize: getFontSize(16),
+    },
+    banner:{
+        textAlign:'center', 
+        color: Colors.grayStrong, 
+        fontSize: getFontSize(16), 
+        fontWeight:'700', 
+        marginBottom:60
     }
 })
 

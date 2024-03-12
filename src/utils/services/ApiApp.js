@@ -49,3 +49,7 @@ export const getSurveysTotal = async() => await axiosGet(`${axiosTypes.GET_SURVE
 export const getSurveys = async() => await axiosGet(`${axiosTypes.GET_SURVEYS}all/?page=1&per_page=100`)
 export const postSurveys = async(data) => await axiosPost(axiosTypes.SEND_ANSWERS_SURVEY, data)
 export const getAnsweredSurveys = async(userId,filter='?page=1&per_page=20') => await axiosGet(`${axiosTypes.ASWERED_SURVEYS}${userId}/${filter}`)
+
+
+//link cards
+export const getCardsExchange = async(cardId) => await axiosGet(`${axiosTypes.USER_CARDS}${cardId}/redeemed-cards`);

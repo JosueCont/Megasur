@@ -21,5 +21,6 @@ export const axiosTypes = {
     LOGOUT: '/security/users/logout/',
     GET_SURVEYS:'/marketing/pending-poll/',
     SEND_ANSWERS_SURVEY:'/marketing/poll/response/',
-    ASWERED_SURVEYS:'/marketing/poll/response/polls/'
+    ASWERED_SURVEYS:'/marketing/poll/response/polls/',
+    USER_CARDS:'/membership/user-cards/'
 }
