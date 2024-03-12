@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 
 const {height, width} = Dimensions.get('window');
 
-const CardItem = ({item,index, cardSelected, showPts=false, disable=false}) => {
+const CardItem = ({item,index, cardSelected, showPts=false, disable=false, points=0}) => {
     const card = useSelector(state => state.redeemDuck.cardSelected)
 
     const separateText = (texto, longitudBloque) => {
@@ -33,7 +33,7 @@ const CardItem = ({item,index, cardSelected, showPts=false, disable=false}) => {
                 resizeMode='contain'
                 style={styles.img}>
                     <View style={styles.container}>
-                        {showPts && <Text style={styles.lblPts}>200 pts</Text>}
+                        {showPts && <Text style={styles.lblPts}>{points.toString()} pts</Text>}
                         {!showPts && <AntDesign name="checkcircle" size={24} color={card?.card_id === item?.card_id ? Colors.green : Colors.gray} style={{alignSelf:'flex-end', marginRight:20}}/>}
                         <View style={styles.contNumber}>
                             <Text style={styles.lblTitle}>Número de tarjeta</Text>

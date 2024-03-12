@@ -6,13 +6,15 @@ import { Colors } from "../../../utils/Colors";
 import { CommonActions, useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { Video } from "expo-av";
-import { setCardSelected } from "../../../store/ducks/redeemPointsDuck";
+import { cleanRedeems, setCardSelected } from "../../../store/ducks/redeemPointsDuck";
 
 const {height, width} = Dimensions.get('window');
 
 const RedeemPointsDone = () => {
     const dispatch = useDispatch()
     const navigation = useNavigation();
+    const message = useSelector(state => state.redeemDuck.message)
+
 
     return(
         <HeaderLogged
@@ -34,7 +36,7 @@ const RedeemPointsDone = () => {
                     />
                 </View>
                 <Text style={styles.title}>¡Felicidades!</Text>
-                <Text style={styles.subtitle}>Añadimos 200 pts a tu cuenta</Text>
+                <Text style={styles.subtitle}>{message}</Text>
                 <View style={styles.contBtn}>
                     <TouchableOpacity 
                         style={styles.btn}
@@ -45,6 +47,7 @@ const RedeemPointsDone = () => {
                             }))
                             //navigation.navigate('Home',{screen:'House'})
                             dispatch(setCardSelected(null))
+                            dispatch(cleanRedeems())
                             }}>
                         <Text style={styles.lblBtn}>Continuar</Text>
                     </TouchableOpacity>

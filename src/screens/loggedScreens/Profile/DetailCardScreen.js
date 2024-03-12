@@ -6,17 +6,29 @@ import { Colors } from "../../../utils/Colors";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import CardItem from "../../../components/profile/Card";
-import { getPhysicCardsExchange, onChangeValueRedeem, setCardSelected } from "../../../store/ducks/redeemPointsDuck";
+import { exchangeCard, getPhysicCardsExchange, onChangeValueRedeem, setCardSelected } from "../../../store/ducks/redeemPointsDuck";
 import ModalPhysicalCard from "../../../components/modals/ModalAddPhysicalCard";
+import { Skeleton, useToast, Alert, VStack, HStack } from "native-base";
+import ModalAlertFailed from '../../../components/modals/ModalAlertFail'
+import ModalAlertSuccess from '../../../components/modals/AlertModalSucces'
 
 const {height, width} = Dimensions.get('window');
 
 const DetailCardScreen = () => {
     const dispatch = useDispatch()
     const navigation = useNavigation();
+    const toast = useToast();
     const cardSelected = useSelector(state => state.redeemDuck.cardSelected)
     const modalAddCard = useSelector(state => state.redeemDuck.modalAddCard)
-    console.log('cardSelected', cardSelected)
+    const loading = useSelector(state => state.redeemDuck.loading)
+    const exchangeCards = useSelector(state => state.redeemDuck.exchangeCards)
+    const exchanged = useSelector(state => state.redeemDuck.exchanged)
+    const modalSuccess = useSelector(state => state.redeemDuck.modalSuccess)
+    const modalFailed = useSelector(state => state.redeemDuck.modalFailed)
+    const message = useSelector(state => state.redeemDuck.message)
+    const cardNumber = useSelector(state => state.redeemDuck.cardNumber)
+
+
 
     const changeValue = (prop,value) => {
         dispatch(onChangeValueRedeem({prop,value}))
@@ -26,34 +38,61 @@ const DetailCardScreen = () => {
         (async() => {
             await dispatch(getPhysicCardsExchange(cardSelected?.user_card_id))
         })()
-    },[])
+        if(exchanged){
+            navigation.navigate('RedemPoints')
+        }
+    },[exchanged])
+
+    const getPoints = () => {
+        return exchangeCards.reduce((total, item) => {
+            return total + item?.points
+        },0)
+    }
 
     return(
         <HeaderLogged
             title="Redimir puntos"
             isBack={true}
-            goBack={() => navigation.goBack()}>
+            goBack={() => {
+                dispatch(setCardSelected(null))
+                navigation.goBack()
+            }}>
                 <View style={styles.container}>
-                    {cardSelected != null && <CardItem item={cardSelected} index={1} disable={true} showPts={true}/>}
-                    <View style={styles.card}>
-                        <Text style={styles.lblTitle}>Tarjetas redimidas</Text>
-                        <View style={{flexDirection:'row', justifyContent:'space-between',}}>
-                            <Text style={[styles.lbl16,{ fontWeight:'400'}]}>1028 3783 0323 9993</Text>
-                            <Text style={[styles.lbl16,{ fontWeight:'600'}]}>270 pts</Text>
+                    {cardSelected != null && <CardItem item={cardSelected} index={1} disable={true} showPts={true} points={getPoints()}/>}
+                    {loading ? (
+                        <Skeleton lines={1} width={width * .93} height={100} mt={4} borderRadius={13} backgroundColor={'gray.200'}/>
+                    ): (
+                        <View style={styles.card}>
+                            <Text style={styles.lblTitle}>Tarjetas redimidas</Text>
+                            {exchangeCards.length > 0 ? exchangeCards.map((item,index) => (
+                                <View style={{flexDirection:'row', justifyContent:'space-between', marginBottom:7}} key={index+1}>
+                                    <Text style={[styles.lbl16,{ fontWeight:'400'}]}>{item?.card_number.toString()}</Text>
+                                    <Text style={[styles.lbl16,{ fontWeight:'600'}]}>{item?.points} pts</Text>
+                                </View>
+
+                            )):(
+                                <Text style={{color: Colors.grayStrong, fontSize: getFontSize(13), fontWeight:'400', textAlign:'center'}}>No has agregado tarjetas</Text>
+                            )}
                         </View>
-                    </View>
+
+                    )}
+                    {loading ? (
+                        <Skeleton.Text px="10" lines={1} mb={2} mt={2} backgroundColor={'gray.100'}/>
+                    ):(
+
                         <Text style={styles.banner}>Se podrá añadir un máximo de 3 tarjetas.</Text>
-                    <TouchableOpacity 
-                        onPress={() => changeValue('modalAddCard', true)}
-                        style={[styles.btn,]}>
-                        <Text style={styles.lbl}>Redimir puntos</Text>
-                    </TouchableOpacity>
+                    )}
+                    {exchangeCards.length <3 && (
+                        <TouchableOpacity 
+                            onPress={() => changeValue('modalAddCard', true)}
+                            style={[styles.btn,]}>
+                            <Text style={styles.lbl}>Redimir puntos</Text>
+                        </TouchableOpacity>
+                    )}
                     <TouchableOpacity 
                         onPress={() => {
+                            navigation.goBack();
                             dispatch(setCardSelected(null))
-                            setTimeout(() => {
-                                navigation.goBack();
-                            },200)
                         }}
                         style={[styles.btn,]}>
                         <Text style={styles.lbl}>Cambiar tarjeta</Text>
@@ -64,12 +103,15 @@ const DetailCardScreen = () => {
                     setVisible={() => changeValue('modalAddCard', false)}
                     onChange={(value) => changeValue('cardNumber', value)}
                     onSubmit={() => {
-                        changeValue('modalAddCard', false)
-                        setTimeout(() => {
-                            navigation.navigate('RedemPoints')
-                        },500)
+                        dispatch(exchangeCard({userCardId:cardSelected?.user_card_id, cardNumber}))
                     }}
                 />
+                <ModalAlertFailed 
+                    visible={modalFailed}
+                    setVisible={() => changeValue('modalFailed',false)}
+                    message={message}
+                />
+                
         </HeaderLogged>
     )
 }

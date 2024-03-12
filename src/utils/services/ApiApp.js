@@ -53,3 +53,4 @@ export const getAnsweredSurveys = async(userId,filter='?page=1&per_page=20') => 
 
 //link cards
 export const getCardsExchange = async(cardId) => await axiosGet(`${axiosTypes.USER_CARDS}${cardId}/redeemed-cards`);
+export const postAddPhysicCard = async(data) => await axiosPost(axiosTypes.ADD_PHYSIC_CARD,data)

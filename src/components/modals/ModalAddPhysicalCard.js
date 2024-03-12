@@ -6,12 +6,15 @@ import { getFontSize } from "../../utils/functions";
 import { Colors } from "../../utils/Colors";
 import KeyboardAvoidingCustom from "../KeyboardAvoidingCustom";
 import { AntDesign } from '@expo/vector-icons'; 
+import { Spinner } from "native-base";
 
 
 const {height, width} = Dimensions.get('window');
 
 const ModalPhysicalCard = ({visible, setVisible, onSubmit, onChange}) => {
     const cardNumber = useSelector(state => state.redeemDuck.cardNumber)
+    const loading = useSelector(state => state.redeemDuck.loading)
+
 
     const separateText = (cardText) => {
         const cleanedNumber = cardText.replace(/\D/g, '');
@@ -35,6 +38,7 @@ const ModalPhysicalCard = ({visible, setVisible, onSubmit, onChange}) => {
                             <Text style={styles.lblDesc}>Para agregar puntos a su cuenta dígital, introduzca los dígitos al reverso de la tarjeta física</Text>
                             <Input 
                                 placeholder='Ingresa el número'
+                                maxLength={19}
                                 autoCorrect={false}
                                 keyboardType='number-pad'
                                 returnKeyType='done'
@@ -47,9 +51,10 @@ const ModalPhysicalCard = ({visible, setVisible, onSubmit, onChange}) => {
                                 style={styles.input}
                             />
                             <TouchableOpacity
+                                disabled={!cardNumber != ''}
                                 onPress={onSubmit} 
-                                style={styles.btn}>
-                                <Text style={styles.lblBtn}>Canjear</Text>
+                                style={[styles.btn,{ backgroundColor: !cardNumber != ''  ? Colors.gray : Colors.blueGreen}]}>
+                                {loading ? <Spinner size={'sm'} color={'white'} /> :<Text style={styles.lblBtn}>Canjear</Text>}
                             </TouchableOpacity>
                         </View>
                     </View>
