@@ -55,3 +55,7 @@ export const getNotifications = async(filter='') => await axiosGet(`${axiosTypes
 export const getBadgeNotifications = async() => await axiosGet(axiosTypes.GET_COUNT_NOTIFICATIONS)
 export const deleteNotifications = async(id) => await axiosPost(`${axiosTypes.GET_NOTIFICATIONS}${id}/delete/`)
 export const postReadNotification = async(id) => await axiosPost(`${axiosTypes.GET_NOTIFICATIONS}${id}/read/`)
+
+//link cards
+export const getCardsExchange = async(cardId) => await axiosGet(`${axiosTypes.USER_CARDS}${cardId}/redeemed-cards`);
+export const postAddPhysicCard = async(data) => await axiosPost(axiosTypes.ADD_PHYSIC_CARD,data)

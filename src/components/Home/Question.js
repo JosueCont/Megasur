@@ -5,10 +5,12 @@ import { StatusBar } from 'expo-status-bar';
 import { getFontSize } from "../../utils/functions";
 import { Colors } from "../../utils/Colors";
 import Animated,{useSharedValue, useAnimatedStyle, Easing, interpolate, Extrapolate, withSpring, withTiming} from "react-native-reanimated";
+import { useNavigation } from "@react-navigation/native";
 
 const {height, width} = Dimensions.get('window');
 
 const Question = () => {
+    const navigation = useNavigation();
     const [isAnswered, setAnswer] = useState(false)
     const isAnimated = useSharedValue(false)
     const animationValue = useSharedValue(0);
@@ -47,7 +49,9 @@ const Question = () => {
                             <TouchableOpacity onPress={() => {setAnswer(true); setTimeout(() => {startAnimation()},1000);}}style={[styles.btnQuestion,{backgroundColor: Colors.blueGreen,}]}>
                                 <Text style={styles.lblQuestion}>No</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={[styles.btnQuestion,{backgroundColor: Colors.pink,}]}>
+                            <TouchableOpacity 
+                                onPress={() => navigation.navigate('Profile',{screen: 'Link', params: {route:'House'}})}
+                                style={[styles.btnQuestion,{backgroundColor: Colors.pink,}]}>
                                 <Text style={styles.lblQuestion}>Si</Text>
                             </TouchableOpacity>
                         </View>
