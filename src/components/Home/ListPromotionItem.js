@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
         marginTop:8,
         flexDirection:'row',
         alignItems:'center',
-        paddingHorizontal:20,
+        paddingRight:20,
         marginBottom:5,
         elevation:4,
         shadowColor: '#000', // Color de la sombra
@@ -62,9 +62,11 @@ const styles = StyleSheet.create({
         color: Colors.grayStrong
     },
     img:{
-        width:120, 
-        height:130, 
-        resizeMode:'contain'
+        width:140, 
+        height:160, 
+        resizeMode:'cover',
+        borderTopLeftRadius:8,
+        borderBottomLeftRadius:8
     }
 })
 

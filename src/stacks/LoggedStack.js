@@ -22,6 +22,7 @@ import LinkScreen from "../screens/loggedScreens/Profile/LinkScreen";
 import AnsweredSurveyScreen from "../screens/loggedScreens/Profile/AnswerSurveyScreen";
 import CheckInScreen from "../screens/loggedScreens/Profile/CheckInScree";
 import ConfirmRateScreen from "../screens/loggedScreens/Charges/ConfirmRateScreen";
+import SurveyDoneScreen from "../screens/loggedScreens/Home/SurveyDone";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -44,6 +45,7 @@ const HomeNavigator = () => {
             <Stack.Screen name="ConfirmFuel" component={ConfirmFuelExchange}/>
             <Stack.Screen name="AnnouncementDetail" component={AnnouncementDetail}/>
             <Stack.Screen name="Surveys" component={SurveysScreen} />
+            <Stack.Screen name="SurveyDone" component={SurveyDoneScreen}/>
         </Stack.Navigator>
 
     )
@@ -97,7 +99,7 @@ const TabNavigator = () => {
             })}>
             <Tab.Screen name="Home" component={HomeNavigator} />
             <Tab.Screen name="Charges" component={ChargesNavigator}/>
-            {/*<Tab.Screen name="Scan" component={ScanScreen}/>*/}
+            <Tab.Screen name="Store" component={ProductsScreen}/>
             <Tab.Screen name="Stations" component={LocationScreen}/>
             <Tab.Screen name="Profile" component={ProfileNavigator}/>
         </Tab.Navigator>

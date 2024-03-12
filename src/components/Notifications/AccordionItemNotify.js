@@ -12,7 +12,7 @@ import { Gesture, GestureHandlerRootView, GestureDetector } from "react-native-g
 const {height, width} = Dimensions.get('window');
 
 
-const AccordionNotifications = ({item, index, onDeleted}) => {
+const AccordionNotifications = ({item, index, onDeleted, onRead}) => {
     const dispatch = useDispatch();
     const isExpanded = useSharedValue(false)
     const listRef = useAnimatedRef();
@@ -139,15 +139,16 @@ const AccordionNotifications = ({item, index, onDeleted}) => {
                                     })()
                                 }
                                 isExpanded.value = !isExpanded.value
+                                if(!item?.is_read && !isExpanded.value) onRead(item)
                             }}>
-                            <Text style={[styles.lbl,{width: width/1.9, fontWeight:'700'}]} numberOfLines={1}>{item.title}</Text>
-                            <Text>{moment(item.date,'DD/MM/YYYY').format('DD/MM/YYYY')}</Text>
+                            <Text style={[styles.lbl,{width: width/1.9, fontWeight:'700'}]} numberOfLines={1}>{!item?.is_read && <Text style={{fontWeight:'700', color: Colors.red}}>*</Text>}{item.title}</Text>
+                            <Text>{moment(item.created_at).format('DD/MM/YYYY')}</Text>
                             <Animated.View style={rotateRow}>
                                 <MaterialIcons name="keyboard-arrow-right" size={24} color={Colors.blueGreen} />            
                             </Animated.View>
                         </TouchableOpacity>
                         <Animated.View style={[heightExpanded,{ marginLeft:20}]}>
-                            <Animated.Text ref={listRef} style={[styles.lblDesc]}>{item?.description}</Animated.Text>
+                            <Animated.Text ref={listRef} style={[styles.lblDesc]}>{item?.content}</Animated.Text>
 
                         </Animated.View>
                     </Animated.View>

@@ -4,8 +4,11 @@ import { Ionicons, MaterialIcons, MaterialCommunityIcons } from "@expo/vector-ic
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { Colors } from "../utils/Colors";
 import { getFontSize } from "../utils/functions";
+import { useDispatch } from "react-redux";
+import { onChangeType } from "../store/ducks/exchangeDuck";
 
 const CustomBottomTabBar = ({state, navigation}) => {
+    const dispatch = useDispatch();
     return(
         <View style={styles.tabBarContainer}>
             {state.routes.map(( route, index ) => {
@@ -19,6 +22,7 @@ const CustomBottomTabBar = ({state, navigation}) => {
                         canPreventDefault: true,
                     });
                     if (!focused && !event.defaultPrevented) {
+                        if(route.name === 'Store') dispatch(onChangeType(1))
                         navigation.navigate(route.name);
                     }
                 } 
@@ -34,9 +38,9 @@ const CustomBottomTabBar = ({state, navigation}) => {
                         iconName = focused ? "gas-station" : 'gas-station-outline';
                         label = 'Cargas'
                         break;
-                    case "Scan":
-                        iconName = 'qrcode-scan';
-                        label = 'Escanea'
+                    case "Store":
+                        iconName = focused ? 'storefront' :'storefront-outline';
+                        label = 'Tienda'
                         break;
                     case 'Stations':
                         iconName = focused ? 'location-sharp' : 'location-outline';
@@ -77,7 +81,7 @@ const CustomBottomTabBar = ({state, navigation}) => {
                                 onPressOut={onPressOut}
                             >
                                 <View style={{ alignItems: "center"}}>
-                                    {route.name === 'Scan' ? (
+                                    {route.name === 'Store' ? (
                                         <View style={styles.scanItem}>
                                             <MaterialCommunityIcons name={iconName} size={20} color={itemColor} style={{ marginBottom: 2}}/>
                                             <Text style={[{color: itemColor }, styles.tabBarText]}>{label}</Text>

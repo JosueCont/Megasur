@@ -19,7 +19,7 @@ const ListDiscountItem = ({item,index}) => {
         >
             <View style={{width: width/2.8,}}>
                 {/* <Text style={styles.discount}>{item.discount.toString()}%</Text> */}
-                <Text style={styles.discount}>{item.title}</Text>
+                <Text style={styles.discount} numberOfLines={2}>{item.title}</Text>
                 <Text style={styles.desc}>{item.short_description}</Text>
                 {/* <Text style={styles.vigency}>Vigencia del {moment(item.valityStart,'DD/MM/YYYY').format('DD MMMM YYYY')} al {moment(item.valityEnd,'DD/MM/YYYY').format('DD MMMM YYYY')}</Text> */}
             </View>
@@ -30,7 +30,8 @@ const ListDiscountItem = ({item,index}) => {
 
 const styles = StyleSheet.create({
     card:{
-        width: width/1.4, 
+        width: width/1.35,
+        justifyContent:'space-between',
         height:130, 
         backgroundColor: Colors.white, 
         borderRadius:8, 
@@ -52,7 +53,8 @@ const styles = StyleSheet.create({
     discount:{
         color: Colors.blueGreen, 
         fontSize: getFontSize(24), 
-        fontWeight:'700'
+        fontWeight:'700',
+        lineHeight: 25,
     },
     desc:{
         color: Colors.blueGreen, 
@@ -66,11 +68,11 @@ const styles = StyleSheet.create({
         fontWeight:'400'
     },
     img:{
-        width:120, 
-        height:125, 
+        width:110, 
+        height:110, 
         resizeMode:'contain',
         alignSelf:'center',
-        borderRadius: 80
+        borderRadius: 55
     }
 })
 

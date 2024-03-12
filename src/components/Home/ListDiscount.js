@@ -16,8 +16,8 @@ const ListDiscount = ({dataDisconunt}) => {
                 keyExtractor={item => item.id.toString()}
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                snapToOffsets={[...Array(dataDisconunt.length)].map((x, i) =>  width * i + width/1.37)}
-                decelerationRate={0}
+                //snapToOffsets={[...Array(dataDisconunt.length)].map((x, i) =>  width * i + width/1.37)}
+                //decelerationRate={0}
                 snapToAlignment="center"
                 renderItem={({item,index}) => (
                     <ListDiscountItem item={item} index={index}/>

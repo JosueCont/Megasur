@@ -29,7 +29,7 @@ const DetailProduct = () => {
             isBack={true} 
             goBack={() => {
                 dispatch(resetCount())
-                navigation.goBack()
+                navigation.navigate('Home',{screen:'Exchange'})
             }}>
             <View style={styles.contHeader}>
                 <View style={[styles.contNew,{ backgroundColor: product?.isNewProduct ? Colors.yellowStrong: Colors.lightGray}]}>
