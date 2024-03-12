@@ -6,6 +6,7 @@ import profileDuck from "./ducks/profileDuck";
 import locationDuck from "./ducks/locationsDuck";
 import chargesDuck from "./ducks/chargesDuck";
 import exchangeDuck from "./ducks/exchangeDuck";
+import notificationsDuck from "./ducks/NotificationsDuck";
 import redeemDuck from "./ducks/redeemPointsDuck";
 
 const rootReducer = combineReducers({
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
     locationDuck: locationDuck,
     chargesDuck: chargesDuck,
     exchangeDuck: exchangeDuck,
+    notificationsDuck: notificationsDuck,
     redeemDuck: redeemDuck
 });
 

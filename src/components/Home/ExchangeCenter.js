@@ -27,7 +27,7 @@ const ExchangeCenter = () => {
                 <TouchableOpacity 
                     onPress={() => {
                         dispatch(onChangeType(0));
-                        navigation.navigate('Exchange')
+                        navigation.navigate('Exchange',{allowBack: true})
                     }}
                     style={styles.btn}>
                     <Text style={styles.lbl}>Canjear combustible</Text>
@@ -35,7 +35,7 @@ const ExchangeCenter = () => {
                 <TouchableOpacity 
                     onPress={() => {
                         dispatch(onChangeType(1))
-                        navigation.navigate('Exchange')}}
+                        navigation.navigate('Exchange', {allowBack: true})}}
                     style={styles.btn}>
                     <Text style={styles.lbl} >Canjear artículos</Text>
                 </TouchableOpacity>

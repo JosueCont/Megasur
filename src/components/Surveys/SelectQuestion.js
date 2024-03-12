@@ -10,16 +10,16 @@ const SelectQuestion = ({question, value,setGroupValues }) => {
         <View>
             <Text style={styles.question}>{question?.question}</Text>
             <View style={{marginHorizontal:25, marginTop:15}}>
-                <Checkbox.Group
-                    onChange={setGroupValues} 
-                    value={value}
-                    accessibilityLabel="choose numbers">
                     {question?.responses.map((item,index) => (
-                        <Checkbox value={item.response} my={2} key={index}>
+                        <Checkbox 
+                            onChange={(val) => setGroupValues(item)}
+                            value={item.response} 
+                            my={2} 
+                            key={index}>
                             {item.response}
                         </Checkbox>
                     ))}
-                </Checkbox.Group>
+               
             </View>
         </View>
     )

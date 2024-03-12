@@ -5,7 +5,7 @@ import { getFontSize, getPermissionLocation } from "../../../utils/functions";
 import { Colors } from "../../../utils/Colors";
 import HeaderLogged from "../../../components/Headers/HeaderLogged";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { useIsFocused } from "@react-navigation/native";
 import TypeExchange from "../../../components/Exchanges/TypeExchange";
 import Filters from "../../../components/Exchanges/Filters";
@@ -34,6 +34,7 @@ const ProductsScreen = () => {
     const navigation = useNavigation();
     const toast = useToast();
     const isfocused = useIsFocused()
+    const route = useRoute();
     //const [selectedType, setSelected] = useState(0)
     const [selectedFilter, setFilter] = useState(null)
     const [exchangedFilter, setExchanged] = useState(true)
@@ -146,7 +147,7 @@ const ProductsScreen = () => {
         <>
             <HeaderLogged 
                 title="Centro de Canje" 
-                isBack={true} 
+                isBack={route?.params?.allowBack ? true : false} 
                 goBack={() => {
                     if(selectedType === 2 && orderData != null){
                         dispatch(resetOrderData())

@@ -6,22 +6,32 @@ import { getFontSize } from "../../utils/functions";
 
 
 const MultipleQuestion = ({question, value, setValue}) => {
+    
     return(
         <View style={{flex:1, marginTop:10}}>
             <Text style={styles.question}>{question?.question}</Text>
             <View style={{marginHorizontal:25, marginTop:15}}>
-                <Radio.Group
-                    value={value}
-                    onChange={(val) => {
-                      setValue(val);
-                    }}
-                 name="optionMultiple">
-                    {question?.responses.map((item,index) => (
-                        <Radio key={index} value={item.response} my={2} >
-                            {item?.response}
-                        </Radio>
-                    ))}
-                </Radio.Group>
+                {question?.responses.map((item,index) => (
+                    <TouchableOpacity 
+                        key={index+1}
+                        onPress={() => setValue(item.response)}
+                        style={styles.btn}>
+                            <View 
+                                style={[styles.content,{
+                                    borderColor: item?.response === value ? Colors.blueGreen : Colors.gray,
+                                }]}
+                            >
+
+                                {item?.response === value && (
+                                    <View
+                                        style={styles.indicator}
+                                    />
+                                )}
+                            </View>
+                                <Text style={styles.lbl}>{item.response}</Text>
+                    </TouchableOpacity>
+
+                ))}
             </View>
         </View>
     )
@@ -33,6 +43,30 @@ const styles = StyleSheet.create({
         fontSize: getFontSize(17), 
         color: Colors.blueGreen
     },
+    btn:{
+        flexDirection:'row', 
+        marginBottom:10, 
+        alignItems:'center'
+    },
+    content:{
+        width: 25,
+        height: 25,
+        borderRadius: 12.5,
+        borderWidth: 2,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    indicator:{
+        width: 15,
+        height: 15,
+        borderRadius: 7.5,
+        backgroundColor: Colors.blueGreen,
+    },
+    lbl:{
+        marginLeft: 8, 
+        fontSize: getFontSize(14), 
+        fontWeight:'400'
+    }
 })
 
 export default MultipleQuestion;

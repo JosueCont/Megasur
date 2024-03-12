@@ -7,42 +7,57 @@ import HeaderLogged from "../../components/Headers/HeaderLogged";
 import { useNavigation } from "@react-navigation/native";
 import AccordionNotifications from "../../components/Notifications/AccordionItemNotify";
 import AccordionItem from "../../components/profile/AccordionItem";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteNotification, getCountNotifications, getUserNotifications, onDeleteNotification, onNotificationAsRead, refreshNotificationScreen } from "../../store/ducks/NotificationsDuck";
 
 const NotificationScreen = () => {
+    const dispatch = useDispatch();
     const navigation = useNavigation()
-    const [notifications, setNotifications] = useState([
-        {
-            id:1,
-            title:'Gracias por sus respuestas',
-            date:'20/01/2024',
-            description:'Por responder a la encuesta te hemos dado 100 puntos'
-        },
-        {
-            id:2,
-            title: 'Aprovecha los ultimos descuentos',
-            date:'30/01/2024',
-            description:'Ultimos días de enero con increibles descuentos en sucursales'
-        },
-        {
-            id:3,
-            title:'Bienvenido febrero',
-            date:'01/02/2024',
-            description:'Carga con nosotros y obten 300 puntos extra como regalo'
+    const notifications = useSelector(state => state.notificationsDuck.notifications)
+    const refresh = useSelector(state => state.notificationsDuck.refresh)
+
+    const [firstRender, setFirstRender] = useState(true);
+    const [fetchNotifications, setFetchNotifications] = useState(true);
+
+
+    useEffect(() => {
+        if (firstRender) {
+          setFirstRender(false);
+          return;
+        }else{
+            (async() => {
+                if(fetchNotifications){
+                    try {
+                        await dispatch(getUserNotifications('?page=1&per_page=50&is_read=true'))
+                        dispatch(getCountNotifications())
+    
+                    } catch (e) {
+                        console.log('eeror local',e)
+                    }finally {
+                        setFetchNotifications(false);
+                    }
+                }
+            })()
         }
-    ])
+      }, [notifications]);
 
     useEffect(() => {
         //setNotifications()
     },[notifications])
 
-    const onDeleteItem = (notification) => {
-        setNotifications( prev => prev.filter(item => item.id !== notification))
+    const onRefresh = () => {
+        dispatch(refreshNotificationScreen())
+        setTimeout(() => {
+            dispatch(getUserNotifications('?page=1&per_page=50&is_read=true'))
+        },500)
     }
 
     return(
         <HeaderLogged 
             title="Notificaciones"
             showSubtitle={true} 
+            refresh={refresh}
+            onRefresh={() => onRefresh()}
             isBack={true} 
             goBack={() => navigation.goBack()}>
                 <View style={{marginHorizontal:20, backgroundColor: Colors.white, borderRadius:8}}>
@@ -51,7 +66,13 @@ const NotificationScreen = () => {
                             index={index} 
                             item={item}
                             onDeleted={(item) => {
-                                onDeleteItem(item.id)
+                                dispatch(onDeleteNotification(item?.id))
+                                setFetchNotifications(true); 
+                                //onDeleteItem(item.id)
+                            }}
+                            onRead={(item) => {
+                                dispatch(onNotificationAsRead(item?.id))
+                                setFetchNotifications(true); 
                             }}
                         />
                     ))}

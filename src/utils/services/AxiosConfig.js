@@ -44,16 +44,17 @@ APIKit.interceptors.response.use((config)  => config,
     async(error) => {
         const originalRequest = error.config;
         if (error?.response?.status === 401 && !originalRequest._retry){
-            //originalRequest._retry = true;
+            originalRequest._retry = true;
             try {
-                
-                const newToken = await postRefreshToken();
+                let oldToken = await AsyncStorage.getItem('user');
+                let user = JSON.parse(oldToken)
+                const newToken = await postRefreshToken({refresh_token: user?.refresh_token});
                 console.log('newToken', newToken)
                 if (newToken?.status === 200){
                     await AsyncStorage.setItem('user',JSON.stringify(newToken?.data));
                     await AsyncStorage.setItem('accessToken',JSON.stringify(newToken?.data?.access_token))
                     APIKit.defaults.headers.Authorization = `Bearer ${newToken?.data?.access_token}`;
-                    originalRequest._retry = false
+                    //originalRequest._retry = false
 
                     return APIKit(originalRequest);
                 }
@@ -87,3 +88,7 @@ export const axiosGet = async (url, params = '') => {
 export const axiosPut = async(url, data, config={}) => {
     return await APIKit.put(`${url}`, data, config)
 }
+
+export const axiosDelete = async(url, data, config={}) => {
+    return await APIKit.delete(url)
+} 

@@ -23,5 +23,8 @@ export const axiosTypes = {
     SEND_ANSWERS_SURVEY:'/marketing/poll/response/',
     ASWERED_SURVEYS:'/marketing/poll/response/polls/',
     USER_CARDS:'/membership/user-cards/',
-    ADD_PHYSIC_CARD: '/membership/physical-card/redeem/'
+    ADD_PHYSIC_CARD: '/membership/physical-card/redeem/',
+    GET_NOTIFICATIONS:'/security/notifications/',
+    GET_COUNT_NOTIFICATIONS:'/security/notifications/not-read/',
+    
 }
