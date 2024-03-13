@@ -5,7 +5,7 @@ import { getFontSize, getPermissionLocation } from "../../../utils/functions";
 import { Colors } from "../../../utils/Colors";
 import HeaderLogged from "../../../components/Headers/HeaderLogged";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { useIsFocused } from "@react-navigation/native";
 import TypeExchange from "../../../components/Exchanges/TypeExchange";
 import Filters from "../../../components/Exchanges/Filters";
@@ -13,7 +13,7 @@ import ExchangeList from "../../../components/Exchanges/ExchangesList";
 import { 
     addCartItem,
     changeModalEx, getCategories, getListCloseBranches, getOrdersList, 
-    getProducts, onChangeType, onExchangeProducts, resetDeliveredData, 
+    getProducts, onChangeType, onExchangeProducts, refreshAction, resetDeliveredData, 
     resetExchangeOrder, 
     resetOrderData, setOrderData, updateProductQuantity 
 } from "../../../store/ducks/exchangeDuck";
@@ -34,6 +34,7 @@ const ProductsScreen = () => {
     const navigation = useNavigation();
     const toast = useToast();
     const isfocused = useIsFocused()
+    const route = useRoute();
     //const [selectedType, setSelected] = useState(0)
     const [selectedFilter, setFilter] = useState(null)
     const [exchangedFilter, setExchanged] = useState(true)
@@ -51,6 +52,7 @@ const ProductsScreen = () => {
     const deliveredData = useSelector(state => state.exchangeDuck.deliveredData)
     const alertFailed = useSelector(state => state.exchangeDuck.alertFailed)
     const exchangeDone = useSelector(state => state.exchangeDuck.exchangeDone)
+    const refresh = useSelector(state => state.exchangeDuck.refresh)
     const points = 600
 
     useEffect(() => {
@@ -106,7 +108,7 @@ const ProductsScreen = () => {
     },[exchangeDone])
 
     const getFiltersOrders = () => {
-        let path = `?per_page=10&sort=desc`//&user_id=${userId?.id}`//user_id=userId agregar userId
+        let path = `?per_page=10&sort=desc&user_id=${userId?.id}`//&user_id=${userId?.id}`//user_id=userId agregar userId
         return path;        
     }
 
@@ -132,18 +134,29 @@ const ProductsScreen = () => {
         }, 0);
     }
 
+    const onRefresh = () => {
+        dispatch(refreshAction())
+        setTimeout(() => {
+             dispatch(getCategories())      
+            dispatch(getOrdersList(getFiltersOrders()))
+            dispatch(getProducts(''))
+        },1000)
+    }
+
     return(
         <>
             <HeaderLogged 
                 title="Centro de Canje" 
-                isBack={true} 
+                isBack={route?.params?.allowBack ? true : false} 
                 goBack={() => {
                     if(selectedType === 2 && orderData != null){
                         dispatch(resetOrderData())
                     }else if(selectedType === 2 && deliveredData != null){
                         dispatch(resetDeliveredData())
                     }else navigation.goBack()
-                }}>
+                }}
+                refresh={refresh}
+                onRefresh={() => onRefresh()}>
                 <Text style={styles.title}>Tienes disponibles:<Text style={{fontWeight:'700'}}>{points.toString()} pts</Text></Text>
                 <View style={styles.header}>
                     <TypeExchange selected={selectedType} setSelected={(val) => dispatch(onChangeType(val))}/>
@@ -180,23 +193,19 @@ const ProductsScreen = () => {
                     ): (
                         exchangedFilter ? orderData != null ? (
                             <OrderSelected orderData={orderData} products={orderData?.detail}/>
-                        ): pending.length > 0 ? (
+                        ):(
                             <PendingList 
                                 pendingList={pending} 
                                 changeOrder={(data) => dispatch(setOrderData({prop:'orderData',data}))}
                             />
 
-                        ) : (
-                            <EmptyList message='No hay paquetes pendientes por mostrar'/>
                         ) : deliveredData != null ? (
                             <DeliveredSelected products={deliveredData.detail} delivered={deliveredData}/>
-                        ):delivered.length > 0 ? (
-                                <DeliveredList 
-                                    deliveredList={delivered} 
-                                    changeOrder={(data) => dispatch(setOrderData({prop:'deliveredData',data}))}
-                                />
-                        ): (
-                            <EmptyList message='No has recibido paquetes'/>
+                        ):(
+                            <DeliveredList 
+                                deliveredList={delivered} 
+                                changeOrder={(data) => dispatch(setOrderData({prop:'deliveredData',data}))}
+                            />
                         )
                     )}
                 </View>

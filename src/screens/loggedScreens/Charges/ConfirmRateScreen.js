@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import PersonalInfoForm from "../../../components/profile/PersonalInfo";
 import { onChangeModalProf, requestDeleteAccount } from "../../../store/ducks/profileDuck";
 import { Video } from "expo-av";
+import { onResetRate } from "../../../store/ducks/chargesDuck";
 
 const {height, width} = Dimensions.get('window');
 
@@ -16,15 +17,23 @@ const ConfirmRateScreen = () => {
     const navigation = useNavigation();
     const route = useRoute()
 
-    const {points} = route.params;
+    const points = useSelector(state => state.homeDuck.setupData)
+
+
+    //const {points} = route.params;
+
+    const onContinue = () => {
+        dispatch(onResetRate())
+        navigation.goBack()
+    }
 
     return(
         <HeaderLogged
             title="Redención de puntos"
             isBack={true}
-            goBack={() => navigation.goBack()}
+            goBack={() => onContinue()}
             bgColor={Colors.white}>
-                <View>
+                <View style={{alignItems:'center'}}>
                     <View style={{height: height/3, width: width}}>
                         <Video  
                             source={require('../../../../assets/confeti.mp4')}
@@ -36,11 +45,11 @@ const ConfirmRateScreen = () => {
                         />
                     </View>
                     <Text style={styles.title}>¡Felicidades!</Text>
-                    <Text style={styles.subtitle}>Añadimos {points || 10} a tu cuenta</Text>
+                    <Text style={styles.subtitle}>Añadimos {points?.points_bonification_by_transaction} pts a tu cuenta</Text>
                     <View style={styles.contBtn}>
                         <TouchableOpacity 
                             style={styles.btn}
-                            onPress={() => navigation.goBack()}>
+                            onPress={() => onContinue()}>
                             <Text style={styles.lblBtn}>Continuar</Text>
                         </TouchableOpacity>
 
@@ -62,7 +71,7 @@ const styles = StyleSheet.create({
         textAlign:'center', 
         width: width/1.8,
         color: Colors.darkGray,
-        fontSize: getFontSize(14),
+        fontSize: getFontSize(18),
         fontWeight:'400', 
         marginBottom:28
     },

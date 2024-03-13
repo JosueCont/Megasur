@@ -10,6 +10,8 @@ const {height, width} = Dimensions.get('window');
 
 const ChargesItem = ({charge, index, lastItem, openModal}) => {
     const availableHours = useSelector(state => state.homeDuck.setupData?.hours_available_to_rate)
+    const points = useSelector(state => state.homeDuck.setupData?.points_bonification_by_transaction)
+
     
     const getTypeFuel = (type) => {
         let types = {
@@ -65,11 +67,11 @@ const ChargesItem = ({charge, index, lastItem, openModal}) => {
                         <TouchableOpacity style={styles.btnRate} onPress={() => openModal(charge)}>
                             <Text style={styles.lblBtn}>Calificar</Text>
                         </TouchableOpacity>
-                        <Text style={styles.lblPoints}>+{charge?.score_points}</Text>
+                        <Text style={styles.lblPoints}>+{points}</Text>
                     </>
                 )}
                 {/*<Text style={styles.lblPoints}>+{charge?.points || 10}</Text>*/}
-                { validateDates(charge?.fuel_datetime) && charge?.score !=null && <Text style={styles.lblPoints}>+{charge?.score_points}</Text>}
+                { charge?.score !=null && <Text style={styles.lblPoints}>+{points}</Text>}
             </View>
         </View>
     )

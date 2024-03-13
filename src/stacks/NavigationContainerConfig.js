@@ -9,6 +9,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { createSession } from "../store/ducks/authDuck";
 import { injectStore } from "../utils/services/AxiosConfig";
 import { store } from "../store/store";
+import { getCountNotifications, getUserNotifications } from "../store/ducks/NotificationsDuck";
 
 preventAutoHideAsync();
 
@@ -24,6 +25,7 @@ const NavigationContainerConfig = () => {
         getSession()
         if (status) {
             setLoggedIn(true)
+            getDataNotifications()
         } else {
             setLoggedIn(false)
         }
@@ -32,7 +34,17 @@ const NavigationContainerConfig = () => {
         //}, 300)
     },[status])
 
+
     const getSession = async() => dispatch(await createSession())
+
+    const getDataNotifications = async() => {
+        try {
+            dispatch(getUserNotifications('?page=1&per_page=50&is_read=true'))
+            dispatch(getCountNotifications())
+        } catch (e) {
+            console.log('e',e)
+        }
+    }
 
     return(
         <NavigationContainer>

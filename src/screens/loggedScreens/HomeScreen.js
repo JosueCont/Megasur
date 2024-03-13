@@ -76,9 +76,15 @@ const HomeScreen = () => {
     }
 
     const getDataPromotions = async()=>{
-        const result = await getAdvertisements('?page=1&per_page=1000&type=2')
-        if (result.status == 200){
-            setDataPromotions(result.data?.items ? result.data.items : [])
+        try {
+            const result = await getAdvertisements('?page=1&per_page=1000&type=2')
+            console.log('promotions',result)
+            if (result.status == 200){
+                setDataPromotions(result.data?.items ? result.data.items : [])
+            }
+            
+        } catch (e) {
+            console.log('error promotions',e)
         }
     }
 

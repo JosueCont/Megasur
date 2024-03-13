@@ -17,8 +17,8 @@ const ListPromotions = ({dataPromotion}) => {
                 keyExtractor={item => item.id.toString()}
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                snapToOffsets={[...Array(dataPromotion.length)].map((x, i) =>  width * i + width/1.2)}
-                decelerationRate={0}
+                //snapToOffsets={[...Array(dataPromotion.length)].map((x, i) =>  width * i + width/1.2)}
+                //decelerationRate={0}
                 snapToAlignment="center"
                 renderItem={({item,index}) => (
                     <ListPromotionItem item={item} index={index}/>

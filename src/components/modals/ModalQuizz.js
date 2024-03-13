@@ -1,4 +1,4 @@
-import React,{useEffect,useState, useRef} from "react";
+import React,{useEffect,useState, useRef, useCallback} from "react";
 import { Modal, Text, View, TouchableOpacity, StyleSheet, Dimensions, Image, ScrollView } from "react-native";
 import { Spinner } from "native-base";
 import { Colors } from "../../utils/Colors";
@@ -18,7 +18,7 @@ import SelectQuestion from "../Surveys/SelectQuestion";
 
 const {height, width} = Dimensions.get('window');
 
-const ModalQuizz = ({visible, setVisible, quizz}) => {
+const ModalQuizz = ({visible, setVisible, quizz,}) => {
     const dispatch = useDispatch();
     const [starRating, setStarRating] = useState(null);
     const [isComment, setComment] = useState(false)
@@ -50,6 +50,16 @@ const ModalQuizz = ({visible, setVisible, quizz}) => {
     },[visible])
 
     useEffect(() => {
+        setCheck([])
+        setRadio(null)
+        setStarRating(null)
+        dispatch(changeModalHome({prop:'comment', val:''}))
+    },[quizz?.questions[currentQuestionIndex-1].id, currentQuestionIndex])
+
+
+   
+
+    useEffect(() => {
         const conditions = {
             1: comment !== '',
             2: starRating !== null,
@@ -66,21 +76,24 @@ const ModalQuizz = ({visible, setVisible, quizz}) => {
         }
     })
 
-    const onValueChanges = (name) => {
-        const newValues = values.filter(n=>n !== name);
-        if(value) {
-          setValues([...newValues, name]);
-        } else {
-          setValues(newValues);
-        }
-    }
+    const handleCheckboxChange = (item) => {
+        const isSelected = checks.includes(item.response);
+        // Si está seleccionado, lo removemos; si no, lo agregamos
+        setCheck((prevSelected) => {
+          if (isSelected) {
+            return prevSelected.filter((resp) => resp !== item.response);
+          } else {
+            return [...prevSelected, item?.response];
+          }
+        });
+      };
 
     const renderComponent = (question) => {
         let typeQustion = {
             1: <OpenQuestion question={question}/>,
             2: <StarQuestion question={question} starRating={starRating} setStar={(val) => setStarRating(val)}/>,
             3: <MultipleQuestion question={question} value={radio} setValue={(val) => setRadio(val)}/>,
-            4: <SelectQuestion question={question} value={checks} setGroupValues={setCheck}/>
+            4: <SelectQuestion question={question} value={checks} setGroupValues={(item) => handleCheckboxChange(item)}/>
         }
 
         return typeQustion[question?.type];
@@ -88,31 +101,31 @@ const ModalQuizz = ({visible, setVisible, quizz}) => {
     }
 
     const onChangeComponent = async() => {
-        await validateData()
-        dispatch(setCurrentQuestionIndex(currentQuestionIndex,quizz?.questions.length, responses,quizz?.id, isFinish))
+         let selectedResponse;
+         if (checks.length > 0) {
+             setCheck([]);
+             selectedResponse = checks;
+         }else if (radio !== null) {
+             setRadio(null);
+             selectedResponse = radio;
+         }else if(starRating !==null){
+             setStarRating(null)
+             selectedResponse = starRating
+         }else{
+             dispatch(changeModalHome({prop:'comment', val:''}))
+             selectedResponse = comment
+         }
         
+        dispatch(setCurrentQuestionIndex(
+            currentQuestionIndex,quizz?.questions.length,{ 
+            question_id: quizz.questions[currentQuestionIndex-1].id, 
+            response: {response: selectedResponse}, 
+        }))
+
     }
 
-    const validateData = async() => {
-        let selectedResponse;
-        if (checks.length > 0) {
-            selectedResponse = checks;
-            setCheck([]);
-        }else if (radio !== null) {
-            selectedResponse = radio;
-            setRadio(null);
-        }else if(starRating !==null){
-            selectedResponse = starRating
-            setStarRating(null)
-        }else{
-            selectedResponse = comment
-            dispatch(changeModalHome({prop:'comment', val:''}))
-        }
-
-        setTimeout(() => {
-            dispatch(addResponsesData({ question_id: quizz.questions[currentQuestionIndex-1].id, response: {response: selectedResponse} }))
-        },500)
-
+    const onSendResponse = async() => {
+        await dispatch(saveResponsesSurvey(quizz?.id, responses))
     }
 
     return(
@@ -146,14 +159,7 @@ const ModalQuizz = ({visible, setVisible, quizz}) => {
                                 {!isFinish ? (
                                     renderComponent(quizz?.questions[currentQuestionIndex-1])
 
-                                ): answerSuccess ? (
-                                    <View style={styles.contSuccess}>
-                                        <Text style={styles.lblFinish}>¡Felicidades!</Text>
-                                        <Text style={styles.lblPoints}>+100<Text style={{fontWeight:'400'}}>pts</Text></Text>
-                                        <Text style={[styles.lblDesc,{fontSize: getFontSize(15)}]}>Muchas gracias, tu opinion nos importa.</Text>
-                                        <Text style={[styles.lblDesc,{fontSize: getFontSize(12)}]}>¡Tus puntos han sido agregados a tu cuenta!</Text>
-                                    </View>
-                                ) :(
+                                ): !answerSuccess && (
                                     <View style={styles.contSuccess}>
                                         <Text style={styles.lblFinish}>¡Haz finalizado la encuesta!</Text>
                                         <Text style={styles.lblBanner}>No olvides enviar tus respuestas para obtener la recompenza</Text>
@@ -166,8 +172,8 @@ const ModalQuizz = ({visible, setVisible, quizz}) => {
                             <TouchableOpacity 
                                 disabled={isFinish ? false : disableBottom}
                                 style={[styles.btnStart, {marginBottom:20, backgroundColor: isFinish ? Colors.blueGreen : disableBottom ? Colors.gray : Colors.blueGreen}]} 
-                                onPress={() =>  answerSuccess ? setVisible() : onChangeComponent()}>
-                                {loading ? <Spinner size={'sm'} color={'white'} /> : <Text style={styles.lblBtn}>{answerSuccess ? 'Finalizar': !isFinish ? 'Siguiente'  :'Enviar respuestas'}</Text>}
+                                onPress={() =>  isFinish ? onSendResponse() :onChangeComponent()}>
+                                {loading ? <Spinner size={'sm'} color={'white'} /> : <Text style={styles.lblBtn}>{!isFinish ? 'Siguiente'  :'Enviar respuestas'}</Text>}
                             </TouchableOpacity>
                         )}
                                 

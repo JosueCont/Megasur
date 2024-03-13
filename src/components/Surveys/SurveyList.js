@@ -14,7 +14,7 @@ const SurveyList = ({surveys, onSelectedSurvey}) => {
             <View style={[styles.line,]}/>
             {!loader ? 
                 surveys.length > 0 && surveys.map((item,index) => (
-                    <SurveyItem item={item} index={index} onSelectedSurvey={(val) => onSelectedSurvey(val)}/>
+                    item?.questions.length > 0 && <SurveyItem item={item} index={index} onSelectedSurvey={(val) => onSelectedSurvey(val)}/>
                 ))
             :(
                 <View><Text>Cargando</Text></View>

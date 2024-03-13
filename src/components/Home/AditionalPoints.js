@@ -16,7 +16,7 @@ const ProvitionalPoints = ({pressed, showSurvey, totalSurveys}) => {
         {totalSurveys >=1 && (
             <TouchableOpacity onPress={showSurvey}>
                 {(banner?.banner != null && banner?.banner != '') ? (
-                    <Image source={{uri: banner.banner}} style={{width: width/1.1, height: 160, resizeMode:'contain', alignSelf:'center'}}/>
+                    <Image source={{uri: banner.banner}} style={styles.img}/>
                 ):(
                     <View style={styles.container}>
                         <GainPoint />
@@ -51,6 +51,13 @@ const styles = StyleSheet.create({
         transform: [{ rotate: '-4.591deg' }],
         fontWeight:'400',
 
+    },
+    img:{
+        width: width/1.1, 
+        height: 160, 
+        resizeMode:'contain', 
+        alignSelf:'center', 
+        marginBottom:10
     }
 })
 

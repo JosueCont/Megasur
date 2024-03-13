@@ -22,6 +22,9 @@ import LinkScreen from "../screens/loggedScreens/Profile/LinkScreen";
 import AnsweredSurveyScreen from "../screens/loggedScreens/Profile/AnswerSurveyScreen";
 import CheckInScreen from "../screens/loggedScreens/Profile/CheckInScree";
 import ConfirmRateScreen from "../screens/loggedScreens/Charges/ConfirmRateScreen";
+import SurveyDoneScreen from "../screens/loggedScreens/Home/SurveyDone";
+import DetailCardScreen from "../screens/loggedScreens/Profile/DetailCardScreen";
+import RedeemPointsDone from "../screens/loggedScreens/Profile/RedeemPointsScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -44,6 +47,11 @@ const HomeNavigator = () => {
             <Stack.Screen name="ConfirmFuel" component={ConfirmFuelExchange}/>
             <Stack.Screen name="AnnouncementDetail" component={AnnouncementDetail}/>
             <Stack.Screen name="Surveys" component={SurveysScreen} />
+            <Stack.Screen name="SurveyDone" component={SurveyDoneScreen}/>
+            <Stack.Screen name="LinkUp" component={LinkScreen}/>
+            {/*<Stack.Screen name="DetailCard" component={DetailCardScreen}/>
+            <Stack.Screen name="RedemPoints" component={RedeemPointsDone}/>*/}
+
         </Stack.Navigator>
 
     )
@@ -66,6 +74,8 @@ const ProfileNavigator = () => {
             <Stack.Screen name="CheckIn" component={CheckInScreen}/>
             <Stack.Screen name="AnsweredSurvey" component={AnsweredSurveyScreen}/>
             <Stack.Screen name="InfoLegal" component={LegalInfoScreen}/>
+            <Stack.Screen name="DetailCard" component={DetailCardScreen}/>
+            <Stack.Screen name="RedemPoints" component={RedeemPointsDone}/>
             
         </Stack.Navigator>
     )
@@ -97,7 +107,7 @@ const TabNavigator = () => {
             })}>
             <Tab.Screen name="Home" component={HomeNavigator} />
             <Tab.Screen name="Charges" component={ChargesNavigator}/>
-            {/*<Tab.Screen name="Scan" component={ScanScreen}/>*/}
+            <Tab.Screen name="Store" component={ProductsScreen}/>
             <Tab.Screen name="Stations" component={LocationScreen}/>
             <Tab.Screen name="Profile" component={ProfileNavigator}/>
         </Tab.Navigator>

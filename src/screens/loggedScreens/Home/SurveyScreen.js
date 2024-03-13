@@ -4,9 +4,9 @@ import { getFontSize } from "../../../utils/functions";
 import { Colors } from "../../../utils/Colors";
 import HeaderLogged from "../../../components/Headers/HeaderLogged";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 import SurveyList from "../../../components/Surveys/SurveyList";
-import { getListSurveys, changeModalHome, getAllSurveys } from "../../../store/ducks/homeDuck";
+import { getListSurveys, changeModalHome, getAllSurveys, cleanAfterNavigation, addResponsesData } from "../../../store/ducks/homeDuck";
 import ModalQuizz from "../../../components/modals/ModalQuizz";
 import { Skeleton } from "native-base";
 import ModalAlertFailed from "../../../components/modals/ModalAlertFail";
@@ -15,6 +15,7 @@ const {height, width} = Dimensions.get('window');
 
 const SurveysScreen = () => {
     const navigation = useNavigation();
+    const isFocused = useIsFocused()
     const dispatch = useDispatch()
     const surveys = useSelector(state => state.homeDuck.surveys)
     const modalQuizz = useSelector(state => state.homeDuck.modalQuizz)
@@ -30,6 +31,15 @@ const SurveysScreen = () => {
         (async() => {
             dispatch(await getAllSurveys())
         })();
+    },[answerSuccess])
+
+    useEffect(() => {
+        if(answerSuccess){
+            navigation.navigate('SurveyDone',{points: selectedSurver?.bonus_points || 0})
+            setTimeout(() => {
+                dispatch(cleanAfterNavigation())
+            },500)
+        }
     },[answerSuccess])
 
     const setQuizz = (item) => {

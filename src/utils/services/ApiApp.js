@@ -1,12 +1,12 @@
 import { axiosTypes } from "./AxiosTypes";
-import { axiosGet, axiosPost, axiosPut } from "./AxiosConfig";
+import { axiosDelete, axiosGet, axiosPost, axiosPut } from "./AxiosConfig";
 
 //Login
 
 export const postVerifyPhone = async(data) => await axiosPost(axiosTypes.VERIFY_PHONE, data);
 export const postValidateCode = async(data) => await axiosPost(axiosTypes.VALIDATE_CODE, data)
 export const postRegisterUser = async(data) => await axiosPost(axiosTypes.REGISTER_USER,data);
-export const postRefreshToken = async(data) => await axiosPost(axiosTypes.REFRESH_TOKEN)
+export const postRefreshToken = async(data) => await axiosPost(axiosTypes.REFRESH_TOKEN, data)
 export const postLogout = async(data) => await axiosPost(axiosTypes.LOGOUT, data);
 
 //logged
@@ -49,3 +49,13 @@ export const getSurveysTotal = async() => await axiosGet(`${axiosTypes.GET_SURVE
 export const getSurveys = async() => await axiosGet(`${axiosTypes.GET_SURVEYS}all/?page=1&per_page=100`)
 export const postSurveys = async(data) => await axiosPost(axiosTypes.SEND_ANSWERS_SURVEY, data)
 export const getAnsweredSurveys = async(userId,filter='?page=1&per_page=20') => await axiosGet(`${axiosTypes.ASWERED_SURVEYS}${userId}/${filter}`)
+
+//Notifications
+export const getNotifications = async(filter='') => await axiosGet(`${axiosTypes.GET_NOTIFICATIONS}${filter}`)
+export const getBadgeNotifications = async() => await axiosGet(axiosTypes.GET_COUNT_NOTIFICATIONS)
+export const deleteNotifications = async(id) => await axiosPost(`${axiosTypes.GET_NOTIFICATIONS}${id}/delete/`)
+export const postReadNotification = async(id) => await axiosPost(`${axiosTypes.GET_NOTIFICATIONS}${id}/read/`)
+
+//link cards
+export const getCardsExchange = async(cardId) => await axiosGet(`${axiosTypes.USER_CARDS}${cardId}/redeemed-cards`);
+export const postAddPhysicCard = async(data) => await axiosPost(axiosTypes.ADD_PHYSIC_CARD,data)
