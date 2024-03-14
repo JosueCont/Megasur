@@ -12,7 +12,7 @@ import { useNavigation } from "@react-navigation/native";
 
 const {height, width} = Dimensions.get('window');
 
-const ExchangeFuel = ({availablePoints=1200}) => {
+const ExchangeFuel = ({availablePoints=0}) => {
     const dispatch = useDispatch();
     const navigation = useNavigation();
     const showModal = useSelector(state => state.exchangeDuck.modalFuel)
@@ -26,7 +26,7 @@ const ExchangeFuel = ({availablePoints=1200}) => {
 
     return(
         <View style={{marginTop:10}}>
-            <View style={{ marginBottom:30}}>
+            <View style={{ marginBottom:30, marginHorizontal:10}}>
                 <Text style={styles.lblTitle}>Puntos a redimir:</Text>
                 <View style={{flex:1}}>
                     <Slider 

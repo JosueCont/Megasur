@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Image} from "react-native";
+import { Skeleton } from "native-base";
 import { getFontSize } from "../../utils/functions";
 import { Colors } from "../../utils/Colors";
 import LogoMega from "../../../assets/svg/LogoMega";
@@ -18,6 +19,7 @@ const VerifyEmail = () => {
     const user = useSelector(state => state.profileDuck.dataUser)
     const isValid = useSelector(state => state.profileDuck.isEmailVerified)
     const code = useSelector(state => state.profileDuck.code)
+    const loader = useSelector(state => state.profileDuck.loading)
     
     return(
         <View style={styles.container}>
@@ -29,8 +31,8 @@ const VerifyEmail = () => {
             </TouchableOpacity>
             <View style={{flex:2, marginLeft:10}}>
                 <TouchableOpacity onPress={() => navigation.navigate('FormProfile')}>
-                    <Text style={styles.title}>{user?.first_name}</Text>
-                    <Text style={[styles.title,{fontWeight:'400'}]}>{user?.last_name}</Text>
+                    {loader ? <Skeleton.Text px="10" lines={1} mb={2} mt={2} backgroundColor={'gray.100'}/> :<Text style={styles.title}>{user?.first_name}</Text>}
+                    {loader ? <Skeleton.Text px="10" lines={1} mb={2} mt={2} backgroundColor={'gray.100'}/> :<Text style={[styles.title,{fontWeight:'400'}]}>{user?.last_name}</Text>}
 
                 </TouchableOpacity>
                 <View style={styles.contMail}>

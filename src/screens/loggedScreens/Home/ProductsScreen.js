@@ -28,6 +28,7 @@ import DeliveredSelected from "../../../components/Exchanges/DeliveredSelected";
 import EmptyList from "../../../components/Exchanges/EmptyList";
 import ExchangeFuel from "../../../components/Exchanges/ExchangeFuel";
 import ModalAlertFailed from "../../../components/modals/ModalAlertFail";
+import { getPointsCard } from "../../../store/ducks/homeDuck";
 
 const ProductsScreen = () => {
     const dispatch = useDispatch();
@@ -53,7 +54,10 @@ const ProductsScreen = () => {
     const alertFailed = useSelector(state => state.exchangeDuck.alertFailed)
     const exchangeDone = useSelector(state => state.exchangeDuck.exchangeDone)
     const refresh = useSelector(state => state.exchangeDuck.refresh)
-    const points = 600
+    const points = useSelector(state => state.homeDuck.points)
+    const userCard = useSelector(state => state.homeDuck.cardsStorage)
+
+
 
     useEffect(() => {
         if(isfocused){
@@ -99,6 +103,7 @@ const ProductsScreen = () => {
 
     useEffect(() => {
         if(exchangeDone){
+            dispatch(getPointsCard(userCard[0]?.user_card_id))
             navigation.navigate('Confirm')
             setTimeout(() => {
                 console.log('reseteado')
@@ -172,7 +177,7 @@ const ProductsScreen = () => {
                 </View>
                 <View style={styles.content}>
                     {selectedType === 0 ? (
-                        <ExchangeFuel />
+                        <ExchangeFuel availablePoints={points}/>
                     ) : selectedType === 1 ? (
                         <ExchangeList 
                             data={products}

@@ -23,7 +23,7 @@ const LinkScreen = () => {
 
 
     useEffect(() => {
-        console.log('route',route)
+        console.log('route',cardSelected)
     },[])
 
     return(

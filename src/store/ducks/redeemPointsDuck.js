@@ -61,7 +61,6 @@ export const getPhysicCardsExchange = (cardId) => async(dispatch) => {
         dispatch({type: LOADING})
         const response = await getCardsExchange(cardId)
         dispatch({type: EXCHANGE_CARDS, payload: response?.data || []})
-        console.log('cards', response?.data)
     } catch (e) {
         console.log('error',e)
     }
@@ -74,9 +73,7 @@ export const exchangeCard = (data) => async(dispatch) => {
             "user_card_id": data.userCardId,
             "card_number": data.cardNumber.replace(/\s+/g,'')
         }
-        console.log('dataSend',dataSend)
         const response = await postAddPhysicCard(dataSend)
-        console.log('response',response?.data)
         dispatch({type: EXCHANGE_CARD_SUCCESS, payload: `Se han agregado ${response?.data?.points} pts a tu tarjeta dígital`})
 
     } catch (e) {

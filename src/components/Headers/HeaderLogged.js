@@ -35,7 +35,7 @@ const HeaderLogged = ({children,isBack=false, title='Bienvenidos', onRefresh, re
                     <>
                         <MaterialCommunityIcons name="bell" size={24} color="black" />
                         {badge > 0 && <View style={styles.counterNotify}>
-                            <Text style={styles.lblCount}>{badge > 20 ? '20+' : badge}</Text>
+                            <Text style={styles.lblCount}>{badge > 9 ? '9+' : badge}</Text>
                         </View>}
                     
                     </>

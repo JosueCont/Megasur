@@ -16,7 +16,7 @@ import ModalAlertFailed from "../../components/modals/ModalAlertFail";
 import ModalDeleteAccount from "../../components/modals/DeleteAccount";
 import ModalTerms from "../../components/modals/ModalTerms";
 import PersonalInfoForm from "../../components/profile/PersonalInfo";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { getExpoToken } from "../../utils/functions";
 import ListActionsProfile from "../../components/profile/ListActions";
 
@@ -25,6 +25,7 @@ const {height, width} = Dimensions.get('window');
 const ProfileScreen = () => {
     const dispatch = useDispatch();
     const isFocused = useIsFocused();
+    const navigation = useNavigation()
     const userId = useSelector(state => state.authDuck.dataUser?.id)
     const modalSession = useSelector(state => state.profileDuck.modalActive)
     const modalSuccess = useSelector(state => state.profileDuck.modalSuccess)
@@ -125,7 +126,7 @@ const ProfileScreen = () => {
                     setVisible={() => dispatch(onChangeModalProf({prop:'modalTerms', value:false}))}
                 />
             </HeaderLogged>
-            <Help />
+            <Help pressed={() => navigation.navigate('Contact',{route:'Profile'})}/>
         
         </>
     )

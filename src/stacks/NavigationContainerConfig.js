@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from "react";
 import { NavigationContainer } from "@react-navigation/native";
+import { BackHandler } from "react-native";
 import {Spinner, View} from "native-base";
 import LoggedStack from "./LoggedStack";
 import AuthStack from "./AuthStack";
@@ -33,6 +34,18 @@ const NavigationContainerConfig = () => {
         //    setLoading(false)
         //}, 300)
     },[status])
+
+    useEffect(() => {
+        const handleBackButton = () => {
+            console.log('bloquadeo')
+            return true
+        }
+        BackHandler.addEventListener('hardwareBackPress', handleBackButton);
+
+        return () => {
+          BackHandler.removeEventListener('hardwareBackPress', handleBackButton);
+    };
+    },[])
 
 
     const getSession = async() => dispatch(await createSession())
