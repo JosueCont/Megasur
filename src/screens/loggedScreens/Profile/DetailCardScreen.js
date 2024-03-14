@@ -60,7 +60,7 @@ const DetailCardScreen = () => {
                 <View style={styles.container}>
                     {cardSelected != null && <CardItem item={cardSelected} index={1} disable={true} showPts={true} points={getPoints()}/>}
                     {loading ? (
-                        <Skeleton lines={1} width={width * .93} height={100} mt={4} borderRadius={13} backgroundColor={'gray.200'}/>
+                        <Skeleton lines={1} width={width * .93} height={100} mt={4} borderRadius={13} backgroundColor={'gray.100'}/>
                     ): (
                         <View style={styles.card}>
                             <Text style={styles.lblTitle}>Tarjetas redimidas</Text>

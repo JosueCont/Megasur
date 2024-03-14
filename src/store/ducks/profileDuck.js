@@ -117,7 +117,7 @@ export const onChangeImage = ({prop, image}) => {
 
 export const getProfileData = () => async(dispatch) => {
     try {
-        //dispatch({type: REFRESH})
+        dispatch({type: LOADING})
         const response = await getDataUser()
         if(response?.data?.id){
             dispatch({type: GET_DATA_PROFILE, payload: response?.data})

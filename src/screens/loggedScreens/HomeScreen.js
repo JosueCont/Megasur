@@ -14,7 +14,7 @@ import ListPromotions from "../../components/Home/ListPromotions";
 import ListDiscount from "../../components/Home/ListDiscount";
 import CloseStations from "../../components/Home/CloseStations";
 import ModalQuizz from "../../components/modals/ModalQuizz";
-import { changeModalHome, getDataConfi, getAllCards, saveDataLocalStorage, getAllSurveys, getTotalSurveys } from "../../store/ducks/homeDuck";
+import { changeModalHome, getDataConfi, getAllCards, saveDataLocalStorage, getAllSurveys, getTotalSurveys, getPointsCard } from "../../store/ducks/homeDuck";
 import { getCloseStations } from "../../store/ducks/locationsDuck";
 import { getProfileData } from "../../store/ducks/profileDuck";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -64,6 +64,10 @@ const HomeScreen = () => {
     },[userId])
 
     useEffect(() => {
+        if(userCard && userCard != undefined && userCard[0]?.user_card_id ) dispatch(getPointsCard(userCard[0]?.user_card_id))
+    },[userCard])
+
+    useEffect(() => {
         getDataAdvertisements()
         getDataPromotions()
     },[isFocused])
@@ -78,7 +82,6 @@ const HomeScreen = () => {
     const getDataPromotions = async()=>{
         try {
             const result = await getAdvertisements('?page=1&per_page=1000&type=2')
-            console.log('promotions',result)
             if (result.status == 200){
                 setDataPromotions(result.data?.items ? result.data.items : [])
             }

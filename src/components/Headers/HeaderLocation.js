@@ -6,12 +6,15 @@ import { getFontSize } from "../../utils/functions";
 import { Colors } from "../../utils/Colors";
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons'; 
 import { useNavigation } from "@react-navigation/native";
+import { useSelector } from "react-redux";
 
 const {height, width} = Dimensions.get('window');
 
 
 const HeaderLocation = ({children,isBack=false, title='Bienvenidos', onRefresh, refresh=false, goBack, noPadding=false}) => {
     const navigation = useNavigation()
+    const badge = useSelector(state => state.notificationsDuck.badge)
+
     return(
         <View style={styles.container}>
             <StatusBar
@@ -29,9 +32,9 @@ const HeaderLocation = ({children,isBack=false, title='Bienvenidos', onRefresh, 
                 <TouchableOpacity style={styles.btnNotify} onPress={() => navigation.navigate('Notification')}>
                     <>
                         <MaterialCommunityIcons name="bell" size={24} color="black" />
-                        <View style={styles.counterNotify}>
-                            <Text style={styles.lblCount}>3</Text>
-                        </View>
+                        {badge > 0 && <View style={styles.counterNotify}>
+                            <Text style={styles.lblCount}>{badge > 9 ? '9+' : badge}</Text>
+                        </View>}
                     
                     </>
                 </TouchableOpacity>

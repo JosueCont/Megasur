@@ -87,17 +87,33 @@ const VehicleInfoForm = () => {
       const currentDate = selectedDate || date;
 
       setDate(currentDate);
-      setVehicleData({
-        ...vehicleData,
-        insurance_validity_date: moment(currentDate.toDateString()).format(
-          "DD/MM/YYYY"
-        ),
-      });
-      setShowDatePicker(false);
+      if(Platform.OS === 'android'){
+        setVehicleData({
+          ...vehicleData,
+          insurance_validity_date: moment(currentDate.toDateString()).format(
+            "DD/MM/YYYY"
+          ),
+        });
+        setShowDatePicker(false);
+
+      }
     } else {
+      onShowDatepicker()
       console.log("entro aqui");
     }
   };
+
+  const confirmIOSDate = () => {
+    setVehicleData({
+      ...vehicleData,
+      insurance_validity_date: moment(date.toDateString()).format(
+        "DD/MM/YYYY"
+      ),
+    });
+    //setBirthdayDate(moment(date.toDateString()).format('DD/MM/YYYY'))
+    onShowDatepicker()
+
+  }
 
   return (
     <View style={styles.container}>
@@ -143,7 +159,18 @@ const VehicleInfoForm = () => {
         />
       )}
 
-      <Pressable onPress={onShowDatepicker}>
+      {showDatePicker && Platform.OS === 'ios' && (
+          <View style={{flexDirection:'row',justifyContent:'space-between', width: width/2}}>
+              <TouchableOpacity onPress={onShowDatepicker} style={{padding:7, backgroundColor:Colors.red, borderRadius:7}}>
+                  <Text style={{color:Colors.white}}>Cancelar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={confirmIOSDate} style={{padding:7, backgroundColor:Colors.orange, borderRadius:7}}>
+                  <Text style={{color:Colors.white}}>Confirmar</Text>
+              </TouchableOpacity>
+          </View>
+      )}
+
+      {!showDatePicker && <Pressable onPress={onShowDatepicker}>
         <Input
           placeholder="DD/MM/YYYY"
           editable={false}
@@ -153,7 +180,7 @@ const VehicleInfoForm = () => {
           value={vehicleData.insurance_validity_date}
           //onChange={(val) => se}
         />
-      </Pressable>
+      </Pressable>}
 
       {/* <Input
         isLogged={true}

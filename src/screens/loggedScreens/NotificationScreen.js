@@ -15,6 +15,8 @@ const NotificationScreen = () => {
     const navigation = useNavigation()
     const notifications = useSelector(state => state.notificationsDuck.notifications)
     const refresh = useSelector(state => state.notificationsDuck.refresh)
+    const userId = useSelector(state => state.authDuck.dataUser?.id)
+
 
     const [firstRender, setFirstRender] = useState(true);
     const [fetchNotifications, setFetchNotifications] = useState(true);
@@ -28,7 +30,7 @@ const NotificationScreen = () => {
             (async() => {
                 if(fetchNotifications){
                     try {
-                        await dispatch(getUserNotifications('?page=1&per_page=50&is_read=true'))
+                        await dispatch(getUserNotifications(`?page=1&per_page=50&is_read=true`))
                         dispatch(getCountNotifications())
     
                     } catch (e) {
@@ -48,7 +50,7 @@ const NotificationScreen = () => {
     const onRefresh = () => {
         dispatch(refreshNotificationScreen())
         setTimeout(() => {
-            dispatch(getUserNotifications('?page=1&per_page=50&is_read=true'))
+            dispatch(getUserNotifications(`?page=1&per_page=50&is_read=true`))
         },500)
     }
 
