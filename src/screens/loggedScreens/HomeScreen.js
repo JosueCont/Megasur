@@ -22,6 +22,7 @@ import { getAdvertisements } from "../../utils/services/ApiApp";
 import { useIsFocused } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
 import ModalAlertFailed from "../../components/modals/ModalAlertFail";
+import ModalScreenShot from "../../components/modals/ModalScreenShot";
 
 const {height, width} = Dimensions.get('window');
 
@@ -40,6 +41,8 @@ const HomeScreen = () => {
     const modalFailed = useSelector(state => state.homeDuck.modalFailed)
     const message = useSelector(state => state.homeDuck.message)
     const [selectedSurver, setSelectedSurvey] = useState(null)
+    const points = useSelector(state => state.homeDuck.points)
+    const modalScreenShot = useSelector(state => state.homeDuck.modalScreenShot)
 
 
     const [dataAdvertisements, setDataAdvertisements] = useState([])
@@ -112,7 +115,7 @@ const HomeScreen = () => {
     //]
     return(
         <HeaderLogged onRefresh={() => console.log('refreshPAge')}>
-            <FlipCard cards={userCard}/>
+            <FlipCard cards={userCard} points={points}/>
             <Question />
             <ProvitionalPoints 
                 showSurvey={() => {
@@ -139,6 +142,10 @@ const HomeScreen = () => {
                 setVisible={() => dispatch(changeModalHome({prop:'modalFailed', val:false}))}
                 message={message}
                 titleBtn="Entendido"
+            />
+            <ModalScreenShot 
+                visible={modalScreenShot}
+                setVisible={() => dispatch(changeModalHome({prop:'modalScreenShot', val: false}))}
             />
         </HeaderLogged>
     )

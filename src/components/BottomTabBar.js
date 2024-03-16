@@ -1,16 +1,19 @@
 import React from "react";
-import { Text, View, TouchableOpacity, StyleSheet, Animated } from "react-native";
+import { Text, View, TouchableOpacity, StyleSheet, Animated, Platform, Dimensions } from "react-native";
 import { Ionicons, MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { Colors } from "../utils/Colors";
 import { getFontSize } from "../utils/functions";
 import { useDispatch } from "react-redux";
 import { onChangeType } from "../store/ducks/exchangeDuck";
+import { Shadow } from 'react-native-shadow-2';
+const {height, width} = Dimensions.get('window');
 
 const CustomBottomTabBar = ({state, navigation}) => {
     const dispatch = useDispatch();
     return(
-        <View style={styles.tabBarContainer}>
+        <Shadow>
+        <View style={[styles.tabBarContainer,]}>
             {state.routes.map(( route, index ) => {
                 const focused = state.index === index;
                 const itemColor = focused ? Colors.blueGreen : Colors.blackInit;
@@ -100,11 +103,13 @@ const CustomBottomTabBar = ({state, navigation}) => {
 
             })}
         </View>
+        </Shadow>
     )
 }
 
 const styles = StyleSheet.create({
     tabBarContainer:{
+        width: width,
         flexDirection: 'row',
         height: 60,
         borderColor: 'white',
@@ -112,14 +117,21 @@ const styles = StyleSheet.create({
         //borderTopColor: Colors.grayBorders,
         borderWidth: 1,
         justifyContent: 'space-evenly',
-        elevation:4,
+    },
+    shadow:{
+        
         shadowColor: '#000', // Color de la sombra
         shadowOffset: {
-          width: 0,  
-          height: -2
+            width: 0,  
+            height: -2
         },
         shadowOpacity: 0.25, 
         shadowRadius: 4, 
+    },
+    androidShadow:{
+        //shadowColor:'#333',
+        elevation:11,
+
     },
     tabItem: {
         width: 60,

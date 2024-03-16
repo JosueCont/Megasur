@@ -57,7 +57,7 @@ const Filters = ({onFilter}) => {
 
                 </View>
                 <Text style={styles.lbl}>Tipo de combustible</Text>
-                <View style={[styles.input,{ width: width/2.5}]}>
+                <View style={[styles.input,{ }]}>
                     <Select
                         selectedValue={typeFuel}
                         onValueChange={(value) => dispatch(changeInputCharges({prop:'typeFuel', value}))}

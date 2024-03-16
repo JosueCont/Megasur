@@ -9,6 +9,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { changeModalEx } from "../../store/ducks/exchangeDuck";
 import ModalExchangeFuel from "../modals/ModalQrExchange";
 import { useNavigation } from "@react-navigation/native";
+import * as ScreenCapture from 'expo-screen-capture'
+import * as MediaLibrary from 'expo-media-library';
+import { changeModalHome } from "../../store/ducks/homeDuck";
+import ModalScreenShot from "../modals/ModalScreenShot";
 
 const {height, width} = Dimensions.get('window');
 
@@ -19,6 +23,30 @@ const ExchangeFuel = ({availablePoints=0}) => {
     const [valueSlider, setSlider] = useState(0)
     const [typeFuel, setType] = useState(null)
     const types = ['Magna','Premium','Diesel']
+    const modalScreenShot = useSelector(state => state.homeDuck.modalScreenShot)
+
+
+    useEffect(() => {
+        if(showModal){
+            if(hasPermissions()){
+                const subscription = ScreenCapture.addScreenshotListener(() => {
+                    onChangeModal('modalFuel', false)
+                    setTimeout(() => {
+                        dispatch(changeModalHome({prop:'modalScreenShot', val: true}))
+                    },500)
+                    //setModal(true)
+                });
+                return () => subscription.remove();
+    
+            }
+        }
+    },[showModal])
+
+    const hasPermissions = async () => {
+        const { status } = await MediaLibrary.requestPermissionsAsync();
+        return status === 'granted';
+    };
+
 
     const onChangeModal = (prop, val) => {
         dispatch(changeModalEx({prop, val}))
@@ -91,6 +119,10 @@ const ExchangeFuel = ({availablePoints=0}) => {
                         navigation.navigate('ConfirmFuel')
                     })
                 }}
+            />
+            <ModalScreenShot 
+                visible={modalScreenShot}
+                setVisible={() =>  dispatch(changeModalHome({prop:'modalScreenShot', val: false}))}
             />
         </View>
     )
