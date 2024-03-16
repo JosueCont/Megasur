@@ -31,11 +31,25 @@ const commonConfig = {
           }
         ],
         [
-            "expo-location",
-            {
-              "locationAlwaysAndWhenInUsePermission": "Allow megasur to use your location."
-            }
-          ]
+          "expo-location",
+          {
+            "locationAlwaysAndWhenInUsePermission": "Allow megasur to use your location."
+          }
+        ],
+        [
+          "expo-image-picker",
+          {
+            "photosPermission": "La aplicación accede a tu galeria."
+          }
+        ],
+        [
+          "expo-media-library",
+          {
+            "photosPermission": "Permitir a Megasur acceder a tus fotos.",
+            "savePhotosPermission": "Permitir a Megasur guardar fotos.",
+            "isAccessMediaLocationEnabled": true
+          }
+        ]
     ],
     
     "extra": {

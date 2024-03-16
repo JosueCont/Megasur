@@ -124,7 +124,7 @@ const ChargerScreen = () => {
                     message={message}
                 />
             </HeaderLogged>
-            <Help />
+            <Help pressed={() => navigation.navigate('Profile',{screen:'Contact', params: {route:'Charges'}})}/>
 
         </>
     )

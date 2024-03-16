@@ -14,7 +14,7 @@ import ListPromotions from "../../components/Home/ListPromotions";
 import ListDiscount from "../../components/Home/ListDiscount";
 import CloseStations from "../../components/Home/CloseStations";
 import ModalQuizz from "../../components/modals/ModalQuizz";
-import { changeModalHome, getDataConfi, getAllCards, saveDataLocalStorage, getAllSurveys, getTotalSurveys } from "../../store/ducks/homeDuck";
+import { changeModalHome, getDataConfi, getAllCards, saveDataLocalStorage, getAllSurveys, getTotalSurveys, getPointsCard } from "../../store/ducks/homeDuck";
 import { getCloseStations } from "../../store/ducks/locationsDuck";
 import { getProfileData } from "../../store/ducks/profileDuck";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -22,6 +22,7 @@ import { getAdvertisements } from "../../utils/services/ApiApp";
 import { useIsFocused } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
 import ModalAlertFailed from "../../components/modals/ModalAlertFail";
+import ModalScreenShot from "../../components/modals/ModalScreenShot";
 
 const {height, width} = Dimensions.get('window');
 
@@ -40,6 +41,8 @@ const HomeScreen = () => {
     const modalFailed = useSelector(state => state.homeDuck.modalFailed)
     const message = useSelector(state => state.homeDuck.message)
     const [selectedSurver, setSelectedSurvey] = useState(null)
+    const points = useSelector(state => state.homeDuck.points)
+    const modalScreenShot = useSelector(state => state.homeDuck.modalScreenShot)
 
 
     const [dataAdvertisements, setDataAdvertisements] = useState([])
@@ -64,6 +67,10 @@ const HomeScreen = () => {
     },[userId])
 
     useEffect(() => {
+        if(userCard && userCard != undefined && userCard[0]?.user_card_id ) dispatch(getPointsCard(userCard[0]?.user_card_id))
+    },[userCard])
+
+    useEffect(() => {
         getDataAdvertisements()
         getDataPromotions()
     },[isFocused])
@@ -78,7 +85,6 @@ const HomeScreen = () => {
     const getDataPromotions = async()=>{
         try {
             const result = await getAdvertisements('?page=1&per_page=1000&type=2')
-            console.log('promotions',result)
             if (result.status == 200){
                 setDataPromotions(result.data?.items ? result.data.items : [])
             }
@@ -109,7 +115,7 @@ const HomeScreen = () => {
     //]
     return(
         <HeaderLogged onRefresh={() => console.log('refreshPAge')}>
-            <FlipCard cards={userCard}/>
+            <FlipCard cards={userCard} points={points}/>
             <Question />
             <ProvitionalPoints 
                 showSurvey={() => {
@@ -136,6 +142,10 @@ const HomeScreen = () => {
                 setVisible={() => dispatch(changeModalHome({prop:'modalFailed', val:false}))}
                 message={message}
                 titleBtn="Entendido"
+            />
+            <ModalScreenShot 
+                visible={modalScreenShot}
+                setVisible={() => dispatch(changeModalHome({prop:'modalScreenShot', val: false}))}
             />
         </HeaderLogged>
     )

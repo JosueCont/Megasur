@@ -1,4 +1,4 @@
-import { getCards, getSiteConfig, getSurveys, getSurveysTotal, postSurveys, postValidateOTP } from "../../utils/services/ApiApp"
+import { getCards, getCardsExchange, getSiteConfig, getSurveys, getSurveysTotal, getTotalPoints, postSurveys, postValidateOTP } from "../../utils/services/ApiApp"
 import { createDigest, createRandomBytes } from "@otplib/plugin-crypto-js"
 import { keyDecoder, keyEncoder } from "@otplib/plugin-base32-enc-dec"
 import { totpToken, totpOptions, KeyEncodings } from "@otplib/core" 
@@ -25,6 +25,7 @@ const CLEAN_SURVEY = 'clean_survey'
 const ANSWER_SURVEY_SUCCESS = 'answer_survey_success'
 const ANSWER_SURVEY_FAILED = 'answer_survey_failed'
 const CLEAN_AFTER_NAVIGATION = 'clean_after_navigation'
+const SET_POINTS = 'set_points'
 
 
 const initialState = {
@@ -45,7 +46,9 @@ const initialState = {
     isFinish:false,
     answerSuccess:false,
     modalFailed:false,
-    message:''
+    message:'',
+    points:0,
+    modalScreenShot: false
 }
 
 const homeDuck = (state = initialState, action) => {
@@ -86,6 +89,8 @@ const homeDuck = (state = initialState, action) => {
             return{ ...state, answerSuccess: true, loading: false, modalQuizz:false,}
         case ANSWER_SURVEY_FAILED:
             return{ ...state, answerSuccess: false, loading: false, isFinish: false, modalQuizz: false, modalFailed: true, message: action.payload }
+        case SET_POINTS:
+            return{ ...state, points: action.payload}
         default:
             return state;
     }
@@ -278,6 +283,16 @@ export const cleanSurvey = () => {
 export const cleanAfterNavigation = () => {
     return{
         type: CLEAN_AFTER_NAVIGATION
+    }
+}
+
+export const getPointsCard = (cardId) => async(dispatch) => {
+    try {
+        const response = await getTotalPoints(cardId)
+        
+        dispatch({type: SET_POINTS, payload: response?.data?.total })
+    } catch (e) {
+        console.log('error points',e)
     }
 }
 

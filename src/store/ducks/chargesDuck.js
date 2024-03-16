@@ -1,5 +1,5 @@
 import moment from "moment"
-import { getInfoBranch, getTransactions, putRateCharge } from "../../utils/services/ApiApp"
+import { getBranches, getInfoBranch, getTransactions, putRateCharge } from "../../utils/services/ApiApp"
 
 const LOADING = 'loading_char'
 const LOADING_MODAL = 'loading_modal'
@@ -116,6 +116,18 @@ export const getCharges = (filters='', options, isInitial=false) => async(dispat
                 const dateB = moment(b.title, 'MMMM YYYY');
                 return dateB - dateA; 
             })
+        }else{
+            if(isInitial){
+                const response = await getBranches('?page=1&per_page=10')
+                if(response?.data?.items?.length > 0){
+                    response?.data?.items.forEach((charge) => {
+                        if (!uniqueBranches.has(charge.id)) {
+                            uniqueBranches.add(charge.name);
+                            branches.push({ value: charge.id, label: charge.name });
+                        }
+                    })
+                }
+            }
         }
         dispatch({type: GET_CHARGES_FUEL, payload: {chargesMonth, branches}})
     } catch (e) {

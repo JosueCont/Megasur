@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from "react";
 import { NavigationContainer } from "@react-navigation/native";
+import { BackHandler } from "react-native";
 import {Spinner, View} from "native-base";
 import LoggedStack from "./LoggedStack";
 import AuthStack from "./AuthStack";
@@ -20,6 +21,8 @@ const NavigationContainerConfig = () => {
     const [loggedIn, setLoggedIn] = useState(null)
     const [loading, setLoading] = useState(true)
     const status = useSelector(state => state.authDuck.isLogged);
+    const userId = useSelector(state => state.authDuck.dataUser?.id)
+
 
     useEffect(() => {
         getSession()
@@ -34,12 +37,24 @@ const NavigationContainerConfig = () => {
         //}, 300)
     },[status])
 
+    useEffect(() => {
+        const handleBackButton = () => {
+            console.log('bloquadeo')
+            return true
+        }
+        BackHandler.addEventListener('hardwareBackPress', handleBackButton);
+
+        return () => {
+          BackHandler.removeEventListener('hardwareBackPress', handleBackButton);
+    };
+    },[])
+
 
     const getSession = async() => dispatch(await createSession())
 
     const getDataNotifications = async() => {
         try {
-            dispatch(getUserNotifications('?page=1&per_page=50&is_read=true'))
+            dispatch(getUserNotifications(`?page=1&per_page=50&is_read=true&user_id=${userId}`))
             dispatch(getCountNotifications())
         } catch (e) {
             console.log('e',e)

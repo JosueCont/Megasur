@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, Dimensions, StyleSheet, Image, FlatList }
 import { getFontSize } from "../../../utils/functions";
 import { Colors } from "../../../utils/Colors";
 import HeaderLogged from "../../../components/Headers/HeaderLogged";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute, CommonActions } from "@react-navigation/native";
 import SliderGallery from "../../../components/SliderGalleryCustom";
 import { useDispatch, useSelector } from "react-redux";
 import { addCartItem, onActionCount, onUpdateCart, resetCount } from "../../../store/ducks/exchangeDuck";
@@ -21,7 +21,7 @@ const DetailProduct = () => {
         console.log('route',route)
     },[route])
 
-    const {product} = route?.params;
+    const {product, isFromHome} = route?.params;
 
     return(
         <HeaderLogged 
@@ -32,7 +32,7 @@ const DetailProduct = () => {
                 navigation.navigate('Home',{screen:'Exchange'})
             }}>
             <View style={styles.contHeader}>
-                <View style={[styles.contNew,{ backgroundColor: product?.isNewProduct ? Colors.yellowStrong: Colors.lightGray}]}>
+                <View style={[styles.contNew,{ backgroundColor: product?.isNewProduct ? Colors.yellowStrong: Colors.white}]}>
                     {product?.isNewProduct && <Text style={[styles.lbl,{ fontSize: getFontSize(25) }]}>Nuevo</Text>}
                 </View>
                 <Text style={[styles.lbl,{ fontSize: getFontSize(24)}]}>{product.price_in_points}pts</Text>
@@ -97,7 +97,12 @@ Lorem ipsum dolor sit amet. Ut dolorem rerum quo molestias praesentium sit solut
                         dispatch(addCartItem(product))
                     }
                     setTimeout(() => {
-                        navigation.goBack()
+                        isFromHome ? 
+                        navigation.goBack() :
+                        navigation.dispatch(CommonActions.reset({
+                            index:0,
+                            routes:[{name:'TabNavigator', params:{screen:'Store'}}]
+                        }))
                     }, 500)
                     /*navigation.navigate('Confirm')*/
                 }}>

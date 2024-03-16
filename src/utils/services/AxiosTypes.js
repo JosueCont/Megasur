@@ -26,5 +26,8 @@ export const axiosTypes = {
     ADD_PHYSIC_CARD: '/membership/physical-card/redeem/',
     GET_NOTIFICATIONS:'/security/notifications/',
     GET_COUNT_NOTIFICATIONS:'/security/notifications/not-read/',
+    GET_FREQUEST_QUESTIONS:'/utilities/faq/',
+    SEND_MAIL:'/email/contact/send/',
+    GET_POINTS: '/membership/user-card-points/'
     
 }

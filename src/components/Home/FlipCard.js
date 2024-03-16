@@ -8,13 +8,15 @@ import { GestureHandlerRootView, GestureDetector, Gesture} from 'react-native-ge
 import LogoMega from "../../../assets/svg/LogoMega";
 import { MaterialCommunityIcons, AntDesign } from '@expo/vector-icons'; 
 import { useDispatch, useSelector } from "react-redux";
-import { getQrCode, autoGenerateQr } from "../../store/ducks/homeDuck";
+import { getQrCode, autoGenerateQr, changeModalHome } from "../../store/ducks/homeDuck";
 import QRCode from "react-native-qrcode-svg";
+import * as ScreenCapture from 'expo-screen-capture'
+import * as MediaLibrary from 'expo-media-library';
 
 
 const {height, width} = Dimensions.get('window');
 
-const FlipCard = ({cards}) => {
+const FlipCard = ({cards, points =0}) => {
     const dispatch = useDispatch();
     const [isFlipped, setFlip] = useState(false)
     const [showInfo, setShowInfo] = useState(false)
@@ -38,6 +40,24 @@ const FlipCard = ({cards}) => {
         }
     },[seconds, isRunning, isFlipped, minutes])
 
+    useEffect(() => {
+        if(isFlipped){
+            if(hasPermissions()){
+                const subscription = ScreenCapture.addScreenshotListener(() => {
+                    console.log('Mostrar modal de captuta de pantalla')
+                    dispatch(changeModalHome({prop:'modalScreenShot', val: true}))
+                    //setModal(true)
+                });
+                return () => subscription.remove();
+    
+            }
+        }
+    },[isFlipped])
+
+    const hasPermissions = async () => {
+        const { status } = await MediaLibrary.requestPermissionsAsync();
+        return status === 'granted';
+    };
 
     const toggleFilp = () => {
         if(user?.id && cards != null){
@@ -144,7 +164,7 @@ const FlipCard = ({cards}) => {
                                     <View style={styles.contDes}>
                                         <View style={{width: width/1.5,}}>
                                             <Text style={styles.lblname}>{user?.first_name} {user?.last_name}</Text>
-                                            <Text style={styles.lbl}>Cuentas con: <Text style={styles.lblPoints}>1200 pts</Text></Text>
+                                            <Text style={styles.lbl}>Cuentas con: <Text style={styles.lblPoints}>{points.toString()} pts</Text></Text>
                                         </View>
                                             <GestureHandlerRootView>
                                                 <GestureDetector gesture={tap.onStart(() => toggleFilp())}>

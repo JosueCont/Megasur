@@ -25,6 +25,7 @@ export const updateDataVehicle = async(id, data) => await axiosPut(`${axiosTypes
 export const getSiteConfig = async() => await axiosGet(axiosTypes.SITE_CONFIG)
 export const getCards = async(userId) => await axiosGet(`${axiosTypes.CARDS}${userId}`)
 export const postValidateOTP = async(data) => await axiosPost(axiosTypes.VALIDATE_OTP, data)
+export const getTotalPoints = async(id) => await axiosGet(`${axiosTypes.GET_POINTS}${id}/`)
 
 //exchange center
 export const getListProducts = async(filters) => await axiosGet(`${axiosTypes.LIST_PRODUCTS}${filters}`)
@@ -39,6 +40,7 @@ export const getStations = async(lat, long) => await axiosGet(`${axiosTypes.CLOS
 //charges
 export const getTransactions = async(filters) => await axiosGet(`${axiosTypes.GET_TRANSACTIONS}${filters}`)
 export const getInfoBranch = async(id) => await axiosGet(`${axiosTypes.GET_INFO_BRANCH}${id}`)
+export const getBranches = async(filter) => await axiosGet(`${axiosTypes.GET_INFO_BRANCH}${filter}`)
 export const putRateCharge = async(data,id) => await axiosPut(`${axiosTypes.GET_TRANSACTIONS}${id}/`, data)
 
 //promotions
@@ -59,3 +61,7 @@ export const postReadNotification = async(id) => await axiosPost(`${axiosTypes.G
 //link cards
 export const getCardsExchange = async(cardId) => await axiosGet(`${axiosTypes.USER_CARDS}${cardId}/redeemed-cards`);
 export const postAddPhysicCard = async(data) => await axiosPost(axiosTypes.ADD_PHYSIC_CARD,data)
+
+//contact
+export const getFrecuentQuestion = async() => await axiosGet(axiosTypes.GET_FREQUEST_QUESTIONS)
+export const postSendEmail = async(data) => await axiosPost(axiosTypes.SEND_MAIL, data)

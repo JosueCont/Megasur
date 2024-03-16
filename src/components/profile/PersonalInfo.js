@@ -12,6 +12,7 @@ import { onChangeImage, onChangeInputProf, onUpdateDataUser } from "../../store/
 import { useDispatch, useSelector } from "react-redux";
 import DateTimePicker from '@react-native-community/datetimepicker'
 import moment from "moment";
+import * as ImagePicker from 'expo-image-picker';
 
 
 const {height, width} = Dimensions.get('window');
@@ -29,10 +30,18 @@ const PersonalInfoForm = () => {
     const gender = useSelector(state => state.profileDuck.gender)
     const birthDay = useSelector(state => state.profileDuck.birthDay)
     const loader = useSelector(state => state.profileDuck.loading)
+    const profile_picture = useSelector(state => state.profileDuck.userImage)
+    const [image64, setImage ] = useState('')
 
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [date, setDate] = useState(null);
 
+
+    const mimes = {
+        'jpg': 'image/jpeg',
+        'jpeg': 'image/jpeg',
+        'png': 'image/png'
+    }
 
     useEffect(() => {
         if(birthDay != undefined && birthDay != '') setDate(new Date(birthDay))
@@ -60,6 +69,7 @@ const PersonalInfoForm = () => {
             //setShowDatePicker(false);
 
         }else{
+            onShowDatepicker()
             console.log('entro aqui')
         }
     };
@@ -69,10 +79,45 @@ const PersonalInfoForm = () => {
         //setBirthdayDate(moment(date.toDateString()).format('DD/MM/YYYY'))
         onShowDatepicker()
     }
+
+    const onPickImage = async () => {
+        // No permissions request is necessary for launching the image library
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.All,
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 1,
+          base64: true
+        });
+        
+        if(!result.canceled) {
+            const selectedAsset = result.assets[0];
+            const { uri, width, height, base64 } = selectedAsset;
+            let extension = uri.split('.').pop();
+            let mime = mimes[extension]
+            let imageBinary = `data:${mime};base64,`
+            console.log('img a mandar', imageBinary+base64, uri.split('/').reverse()[0])
+            setImage({
+                name: uri.split('/').reverse()[0],
+                type: mimes[extension],
+                uri: uri
+            })
+            dispatch(onChangeInputProf({prop:'userImage', value: result.assets[0].uri}))
+        }
+        
+        console.log(result);
+    }
+    
+
     return(
         <View style={styles.container}>
-            <TouchableOpacity style={{marginVertical:20,}}>
-                <Image source={require('../../../assets/profile.png')}style={{width:140, height:140, borderRadius:70, resizeMode:'contain'}}/>
+            <TouchableOpacity style={styles.btnImgProf} onPress={onPickImage}>
+                {profile_picture != null && profile_picture != '' ? (
+                    <Image source={{uri: profile_picture}} style={styles.imgProfile}/>
+                ):(
+                    <Image source={require('../../../assets/profile.png')}style={styles.imgProfile}/>
+                        
+                )}
             </TouchableOpacity>
             <Text style={styles.lbl}>Nombre(s)</Text>
             <Input 
@@ -194,7 +239,7 @@ const PersonalInfoForm = () => {
                 <TouchableOpacity 
                     onPress={() => { dispatch(onUpdateDataUser({
                         first_name, last_name, email, phone, 
-                        birthDay, gender, imageBack, imageFront
+                        birthDay, gender, imageBack, imageFront, profile_picture: image64 != '' ? image64 : profile_picture
                     }))}}
                     disabled={!(email !='' && phone != '')}
                     style={[styles.btnSave,{backgroundColor: !(email != '' && phone != '') ? Colors.gray :Colors.blueGreen}]}>
@@ -276,6 +321,23 @@ const styles = StyleSheet.create({
         height: 60, 
         //aspectRatio:2,
         resizeMode:'cover'
+    },
+    imgProfile:{
+        width:140, 
+        height:140, 
+        borderRadius:70, 
+        resizeMode:'cover',
+    },
+    btnImgProf:{
+        marginVertical:20,
+        elevation:4,
+        shadowColor: '#000', // Color de la sombra
+        shadowOffset: {
+          width: 0,  
+          height: 4,
+        },
+        shadowOpacity: 0.25, 
+        shadowRadius: 4, 
     }
 })
 
