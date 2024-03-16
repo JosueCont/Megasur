@@ -188,6 +188,7 @@ const ProductsScreen = () => {
                     ) : selectedType === 1 ? (
                         <ExchangeList 
                             data={products}
+                            isFromHome={route?.params?.allowBack}
                             onMinus={(id, action) => dispatch(updateProductQuantity(id, action))}
                             onPlus={(id, action) => {
                                 const newTotalPoints = validateAddCar(id)

@@ -10,7 +10,7 @@ import EmptyList from "./EmptyList";
 const {height, width} = Dimensions.get('window');
 
 
-const ExchangeList = ({data, showTitle=true, showActions=true, onMinus, onPlus, onAddCar}) => {
+const ExchangeList = ({data, showTitle=true, showActions=true, onMinus, onPlus, onAddCar, isFromHome=false}) => {
     const loader = useSelector(state => state.exchangeDuck.loading)
 
     return(
@@ -31,6 +31,7 @@ const ExchangeList = ({data, showTitle=true, showActions=true, onMinus, onPlus, 
                         setMinus={(id, action) => onMinus(id, action)}
                         setPlus={(id,action) => onPlus(id,action)}
                         addCarITem={(item, action) => onAddCar(item,action)}
+                        isFromHome={isFromHome}
                     />
                 )):(
                     <EmptyList message='No se encontraron artículos'/>

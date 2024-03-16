@@ -11,7 +11,7 @@ import { Entypo } from '@expo/vector-icons';
 const {height, width} = Dimensions.get('window');
 
 
-const ExchangeItem = ({item, index, showActions=true, setMinus, setPlus, addCarITem}) => {
+const ExchangeItem = ({item, index, showActions=true, setMinus, setPlus, addCarITem, isFromHome}) => {
     const navigation = useNavigation()
     const dispatch = useDispatch()
     const shoppingCart = useSelector(state => state.exchangeDuck.cart)
@@ -45,7 +45,7 @@ const ExchangeItem = ({item, index, showActions=true, setMinus, setPlus, addCarI
             <TouchableOpacity 
                 disabled={!showActions} 
                 style={[styles.btnImage,{borderBottomColor: showActions ? Colors.white : Colors.white}]} 
-                onPress={() => navigation.navigate('DetailProduct',{product:item})}>
+                onPress={() => navigation.navigate('DetailProduct',{product:item, isFromHome})}>
                 <Image source={{uri: item.image}} style={[styles.img,{
                     borderTopLeftRadius: showActions ? 0 :0,
                     borderTopRightRadius: showActions ? 0 :0
