@@ -37,7 +37,13 @@ const ProductsScreen = () => {
     const isfocused = useIsFocused()
     const route = useRoute();
     //const [selectedType, setSelected] = useState(0)
-    const [selectedFilter, setFilter] = useState(null)
+    const [selectedFilter, setFilter] = useState({
+        "id": 0,
+        "is_active": true,
+        "name": "Todos",
+        "num_products": 0,
+      
+    })
     const [exchangedFilter, setExchanged] = useState(true)
     const [modalAlert, setModalAlert] = useState(false)
     const orderData = useSelector(state => state.exchangeDuck.orderData)
@@ -152,6 +158,7 @@ const ProductsScreen = () => {
         <>
             <HeaderLogged 
                 title="Centro de Canje" 
+                bgColor={Colors.lightGray}
                 isBack={route?.params?.allowBack ? true : false} 
                 goBack={() => {
                     if(selectedType === 2 && orderData != null){
@@ -197,7 +204,15 @@ const ProductsScreen = () => {
 
                     ): (
                         exchangedFilter ? orderData != null ? (
-                            <OrderSelected orderData={orderData} products={orderData?.detail}/>
+                            <>
+                                {!route?.params?.allowBack && (
+                                    <TouchableOpacity onPress={() => dispatch(resetOrderData())}>
+                                        <Text style={styles.lbl}>Ver pendientes</Text>
+                                    </TouchableOpacity>
+                                )}
+                                <OrderSelected orderData={orderData} products={orderData?.detail}/>
+                            
+                            </>
                         ):(
                             <PendingList 
                                 pendingList={pending} 
@@ -205,7 +220,14 @@ const ProductsScreen = () => {
                             />
 
                         ) : deliveredData != null ? (
+                            <>
+                                {!route?.params?.allowBack && (
+                                    <TouchableOpacity onPress={() => dispatch(resetDeliveredData())}>
+                                        <Text style={styles.lbl}>Ver recibidos</Text>
+                                    </TouchableOpacity>
+                                )}
                             <DeliveredSelected products={deliveredData.detail} delivered={deliveredData}/>
+                            </>
                         ):(
                             <DeliveredList 
                                 deliveredList={delivered} 
@@ -256,6 +278,12 @@ const styles = StyleSheet.create({
     },
     content:{
         marginHorizontal:20
+    },
+    lbl:{
+        color: Colors.blueGreen, 
+        fontSize: getFontSize(13), 
+        fontWeight:'500', 
+        marginBottom:10
     }
 })
 

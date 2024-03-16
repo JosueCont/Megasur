@@ -15,7 +15,7 @@ const ExchangeItem = ({item, index, showActions=true, setMinus, setPlus, addCarI
     const navigation = useNavigation()
     const dispatch = useDispatch()
     const shoppingCart = useSelector(state => state.exchangeDuck.cart)
-    const points = 600
+    const points = useSelector(state => state.homeDuck.points)
 
     const findShoppingCart = (item) => {
         return shoppingCart.find(product => product?.id == item?.id )
@@ -35,27 +35,42 @@ const ExchangeItem = ({item, index, showActions=true, setMinus, setPlus, addCarI
     }
 
     return(
-        <View style={[styles.card, {height: showActions ? 260 : 180,}]}>
+        <View style={[styles.card, {
+            height: showActions ? 200 : 180, 
+            width: showActions ?'50%' : width/2.36,
+            marginBottom: showActions ? 0 :15, 
+            borderRadius: showActions ? 0 :13,
+            borderWidth: showActions ? 0 : 1,
+        }]}>
             <TouchableOpacity 
                 disabled={!showActions} 
-                style={[styles.btnImage,{borderBottomColor: showActions ? Colors.grayStrong : Colors.white}]} 
+                style={[styles.btnImage,{borderBottomColor: showActions ? Colors.white : Colors.white}]} 
                 onPress={() => navigation.navigate('DetailProduct',{product:item})}>
-                <Image source={{uri: item.image}} style={styles.img}/>
+                <Image source={{uri: item.image}} style={[styles.img,{
+                    borderTopLeftRadius: showActions ? 0 :0,
+                    borderTopRightRadius: showActions ? 0 :0
+                }]}/>
             </TouchableOpacity>
             <View style={[styles.content, {justifyContent: showActions ?'flex-start' : 'flex-end'}]}>
-                <TouchableOpacity 
-                    disabled={!showActions} 
-                    style={[styles.btnName,{height: showActions ? 40 : 20,}]} 
-                    onPress={() => navigation.navigate('DetailProduct',{product:item})}>
-                    <Text style={[styles.lbl,{fontSize: getFontSize(18),}]}>{item?.name}</Text>
-                </TouchableOpacity>
-               {showActions && (
-                    <View style={[styles.contNew,{backgroundColor: item?.isNewProduct ? Colors.yellowStrong : Colors.white}]}>
-                        {item?.isNewProduct && <Text style={[styles.lbl,{fontSize: getFontSize(10),}]}>Nuevo</Text>}
+                <View style={{ }}>
+                    <TouchableOpacity 
+                        disabled={!showActions} 
+                        style={[styles.btnName,{/*height: showActions ? 40 : 20,*/}]} 
+                        onPress={() => navigation.navigate('DetailProduct',{product:item})}>
+                        <Text style={[styles.lbl,{fontSize: getFontSize(18),}]} numberOfLines={1}>{item?.name}</Text>
+                    </TouchableOpacity>
+                    {item?.quantity && <Text style={[styles.lbl, {fontSize: getFontSize(13), marginBottom:13}]}>Cantidad: {item.quantity.toString()}</Text>}
+                    <View style={{flexDirection:'row'}}>
+                        <Text style={[styles.lbl, {fontSize: getFontSize(16), marginBottom: item?.quantity ? 0 : 10}]}>{item?.price_in_points?.toString()}pts</Text>
+                        {showActions && (
+                            <View style={[styles.contNew,{backgroundColor: item?.isNewProduct ? Colors.yellowStrong : Colors.white}]}>
+                                {item?.isNewProduct && <Text style={[styles.lbl,{fontSize: getFontSize(10)}]}>Nuevo</Text>}
+                            </View>
+                        )}
+
                     </View>
-                )}
-                {item?.quantity && <Text style={[styles.lbl, {fontSize: getFontSize(13), marginBottom:13}]}>Cantidad: {item.quantity.toString()}</Text>}
-                <Text style={[styles.lbl, {fontSize: getFontSize(16), marginBottom:item?.quantity ? 0 : 13}]}>{item?.price_in_points?.toString()}pts</Text>
+
+                </View>
                 {showActions ? (
                     item?.price_in_points > points ? (
                         <View style={[styles.contFooter, {backgroundColor: Colors.grayBorders, borderColor: Colors.grayBorders}]}>
@@ -96,18 +111,18 @@ const ExchangeItem = ({item, index, showActions=true, setMinus, setPlus, addCarI
 }
 
 const styles = StyleSheet.create({
-    card:{
-        width: width/2.36, 
+    card:{ 
         backgroundColor: Colors.white, 
-        marginBottom:15, 
-        borderRadius:13,
+        //borderRadius:13,
         paddingBottom:5,
+        //paddingTop:5,
         borderColor: Colors.grayBorders,
-        borderWidth:1
     },
     btnImage:{
         flex:1,  
-        borderBottomWidth:0.5
+        //borderBottomWidth:0.5,
+        //backgroundColor:Colors.white,
+        paddingTop:5
     },
     content:{
         flex:1, 
@@ -115,8 +130,9 @@ const styles = StyleSheet.create({
     },
     btnName:{
         marginTop:10, 
-        width:140, 
-        marginBottom:4
+        //width:140, 
+        //marginBottom:4,
+        //paddingRight:5,
     },
     lbl:{
         color: Colors.blueGreen, 
@@ -129,13 +145,11 @@ const styles = StyleSheet.create({
         paddingHorizontal:7, 
         paddingVertical:3, 
         borderRadius:5, 
-        marginBottom:5
+        marginLeft:5,
     },
     img:{
         resizeMode:'contain',
         flex:1,
-        borderTopLeftRadius:13,
-        borderTopRightRadius:13
     },
     contFooter:{
         flex:1,

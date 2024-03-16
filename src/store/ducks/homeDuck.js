@@ -47,7 +47,8 @@ const initialState = {
     answerSuccess:false,
     modalFailed:false,
     message:'',
-    points:0
+    points:0,
+    modalScreenShot: false
 }
 
 const homeDuck = (state = initialState, action) => {

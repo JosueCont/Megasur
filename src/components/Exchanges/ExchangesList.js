@@ -5,6 +5,7 @@ import { getFontSize } from "../../utils/functions";
 import { Colors } from "../../utils/Colors";
 import { useDispatch, useSelector } from "react-redux";
 import ExchangeItem from "./ExchangeItem";
+import EmptyList from "./EmptyList";
 
 const {height, width} = Dimensions.get('window');
 
@@ -14,15 +15,15 @@ const ExchangeList = ({data, showTitle=true, showActions=true, onMinus, onPlus, 
 
     return(
         <View>
-            {showTitle && <Text style={styles.title}>Especiales</Text>}
+            {showTitle && data.length > 0 && <Text style={styles.title}>Especiales</Text>}
             <View style={styles.container}>
                 {loader ? (
                     <View style={{flex:1,flexDirection:'row', justifyContent:'space-between'}}>
-                        <Skeleton lines={1} width={width/2.5} height={260} mt={4} borderRadius={13}/>
-                        <Skeleton lines={1} width={width/2.5} height={260} mt={4} borderRadius={13}/>
+                        <Skeleton lines={1} width={'50%'} height={260} mt={4} mr={1} />
+                        <Skeleton lines={1} width={'50%'} height={260} mt={4} />
 
                     </View>
-                ) : data.map((item,index) => (
+                ) : data.length > 0 ? data.map((item,index) => (
                     <ExchangeItem 
                         index={index}
                         item={item}
@@ -31,7 +32,9 @@ const ExchangeList = ({data, showTitle=true, showActions=true, onMinus, onPlus, 
                         setPlus={(id,action) => onPlus(id,action)}
                         addCarITem={(item, action) => onAddCar(item,action)}
                     />
-                ))}
+                )):(
+                    <EmptyList message='No se encontraron artículos'/>
+                )}
             </View>
         </View>
     )

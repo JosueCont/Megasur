@@ -40,6 +40,7 @@ export const getStations = async(lat, long) => await axiosGet(`${axiosTypes.CLOS
 //charges
 export const getTransactions = async(filters) => await axiosGet(`${axiosTypes.GET_TRANSACTIONS}${filters}`)
 export const getInfoBranch = async(id) => await axiosGet(`${axiosTypes.GET_INFO_BRANCH}${id}`)
+export const getBranches = async(filter) => await axiosGet(`${axiosTypes.GET_INFO_BRANCH}${filter}`)
 export const putRateCharge = async(data,id) => await axiosPut(`${axiosTypes.GET_TRANSACTIONS}${id}/`, data)
 
 //promotions

@@ -20,15 +20,27 @@ const VerifyEmail = () => {
     const isValid = useSelector(state => state.profileDuck.isEmailVerified)
     const code = useSelector(state => state.profileDuck.code)
     const loader = useSelector(state => state.profileDuck.loading)
+    const profile_picture = useSelector(state => state.profileDuck.userImage)
+
     
     return(
         <View style={styles.container}>
-            <TouchableOpacity 
-                onPress={() => navigation.navigate('FormProfile')}
-                style={{}}>
-                    <Image source={require('../../../assets/profile.png')} style={{height:120, width:120, borderRadius:60, resizeMode:'contain'}}/>
-                
-            </TouchableOpacity>
+            {!loader ? (
+                <TouchableOpacity 
+                    onPress={() => navigation.navigate('FormProfile')}
+                    style={{}}>
+                        {profile_picture !=null 
+                            && profile_picture !='' && 
+                            profile_picture?.split('/').pop() !== 'None' ? (
+                            <Image source={{uri: profile_picture}} style={styles.imgProfile}/>
+                        ):(
+                                <Image source={require('../../../assets/profile.png')} style={styles.imgProfile}/>
+                        )}
+
+                </TouchableOpacity>
+            ):(
+                <Skeleton  lines={1} borderRadius={60} height={120} width={120} mb={2} backgroundColor={'gray.100'}/>
+            )}
             <View style={{flex:2, marginLeft:10}}>
                 <TouchableOpacity onPress={() => navigation.navigate('FormProfile')}>
                     {loader ? <Skeleton.Text px="10" lines={1} mb={2} mt={2} backgroundColor={'gray.100'}/> :<Text style={styles.title}>{user?.first_name}</Text>}
@@ -98,6 +110,12 @@ const styles = StyleSheet.create({
     },
     img:{
         width:60, height:60, resizeMode:'contain'
+    },
+    imgProfile:{
+        height:120, 
+        width:120, 
+        borderRadius:60, 
+        resizeMode:'contain'
     }
 })
 

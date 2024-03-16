@@ -34,6 +34,7 @@ const initialState = {
     birthDay:'',
     phone:'',
     email:'',
+    userImage:'',
     code:'',
     message:'',
     isAccountUpdate:false,
@@ -64,6 +65,7 @@ const profileDuck = (state = initialState, action) => {
                 gender: action.payload.gender, 
                 phone: action.payload.phone,
                 dataUser: action.payload,
+                userImage: action.payload.profile_picture,
                 loading:false,
                 refresh:false }
         case CHANGE_IMAGE:
@@ -186,7 +188,7 @@ export const requestDeleteAccount = (id) => async(dispatch) => {
 
     } catch (e) {
         console.log('error dele',e)
-        dispatch({type: DELETE_ACCOUNT_FAILED, message: e?.response?.data?.detail || 'Ocurrio un error al intentar eliminar la cuenta'})
+        dispatch({type: DELETE_ACCOUNT_FAILED, message:e?.response?.status === 404 ? 'Ya existe una solicitud de eliminación de cuenta.' : 'Ocurrio un error al intentar eliminar la cuenta'})
     }
 }
 

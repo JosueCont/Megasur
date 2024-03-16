@@ -9,6 +9,7 @@ import AccordionNotifications from "../../components/Notifications/AccordionItem
 import AccordionItem from "../../components/profile/AccordionItem";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteNotification, getCountNotifications, getUserNotifications, onDeleteNotification, onNotificationAsRead, refreshNotificationScreen } from "../../store/ducks/NotificationsDuck";
+import EmptyList from "../../components/Exchanges/EmptyList";
 
 const NotificationScreen = () => {
     const dispatch = useDispatch();
@@ -30,7 +31,7 @@ const NotificationScreen = () => {
             (async() => {
                 if(fetchNotifications){
                     try {
-                        await dispatch(getUserNotifications(`?page=1&per_page=50&is_read=true`))
+                        await dispatch(getUserNotifications(`?page=1&per_page=50&is_read=true&user_id=${userId}`))
                         dispatch(getCountNotifications())
     
                     } catch (e) {
@@ -50,7 +51,7 @@ const NotificationScreen = () => {
     const onRefresh = () => {
         dispatch(refreshNotificationScreen())
         setTimeout(() => {
-            dispatch(getUserNotifications(`?page=1&per_page=50&is_read=true`))
+            dispatch(getUserNotifications(`?page=1&per_page=50&is_read=true&user_id=${userId}`))
         },500)
     }
 
@@ -63,7 +64,7 @@ const NotificationScreen = () => {
             isBack={true} 
             goBack={() => navigation.goBack()}>
                 <View style={{marginHorizontal:20, backgroundColor: Colors.white, borderRadius:8}}>
-                    {notifications.map((item,index) => (
+                    {notifications.length > 0 ? notifications.map((item,index) => (
                         <AccordionNotifications 
                             index={index} 
                             item={item}
@@ -77,7 +78,7 @@ const NotificationScreen = () => {
                                 setFetchNotifications(true); 
                             }}
                         />
-                    ))}
+                    )): <EmptyList message='No has recibido notificaciones'/>}
 
                 </View>
         </HeaderLogged>

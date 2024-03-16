@@ -21,6 +21,8 @@ const NavigationContainerConfig = () => {
     const [loggedIn, setLoggedIn] = useState(null)
     const [loading, setLoading] = useState(true)
     const status = useSelector(state => state.authDuck.isLogged);
+    const userId = useSelector(state => state.authDuck.dataUser?.id)
+
 
     useEffect(() => {
         getSession()
@@ -52,7 +54,7 @@ const NavigationContainerConfig = () => {
 
     const getDataNotifications = async() => {
         try {
-            dispatch(getUserNotifications('?page=1&per_page=50&is_read=true'))
+            dispatch(getUserNotifications(`?page=1&per_page=50&is_read=true&user_id=${userId}`))
             dispatch(getCountNotifications())
         } catch (e) {
             console.log('e',e)

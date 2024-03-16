@@ -147,6 +147,7 @@ const ValidateCodeScreen = () => {
                     value={verificationCode}
                     onChangeText={setValue}
                     cellCount={CELL_COUNT}
+                    onSubmitEditing={() => Keyboard.dismiss()}
                     //rootStyle={styles.input}
                     keyboardType="number-pad"
                     textContentType="oneTimeCode"
