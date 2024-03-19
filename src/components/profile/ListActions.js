@@ -68,7 +68,8 @@ const styles = StyleSheet.create({
     btnCLose:{
         justifyContent:'center', 
         alignItems:'center', 
-        marginRight:15
+        marginRight:15, 
+        marginBottom:20,
     },
     lblClose:{
         color: Colors.red, 

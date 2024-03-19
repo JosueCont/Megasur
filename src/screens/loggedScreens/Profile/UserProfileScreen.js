@@ -59,7 +59,8 @@ const styles = StyleSheet.create({
     btnDelete:{
         justifyContent:'center', 
         alignItems:'center', 
-        marginTop:25
+        marginTop:25,
+        marginBottom:15
     },
     lblDelete:{
         color: Colors.red, 
