@@ -188,13 +188,27 @@ export const onRegisterUser = (data) => async(dispatch) => {
         if(response?.data?.id){
             dispatch({type: REGISTER_SUCCESS, payload: response?.data})
             dispatch(getCardUser())
-        }else dispatch({type: REGISTER_FAILED, message: 'Ocurrio un error al registrar usuario'})
+        }else{
+            dispatch({type: REGISTER_FAILED, message: 'Ocurrio un error al registrar usuario'})
+        } 
         console.log('dataRegister', response?.data)
     } catch (e) {
-        console.log('error registrr usuario',e)
-        dispatch({type: REGISTER_FAILED, message: 'Ocurrio un error al registrar usuario'})
+        console.log('error registrr usuario',e) 
+        dispatch({type: REGISTER_FAILED, message: _parsedAPIMessageError(e)})
     }
 }
+
+export const _parsedAPIMessageError = (
+    e,
+    defaultMessage = "Ocurrió un error, intente más tarde"
+  ) =>
+    e.response?.data?.detail
+      ? typeof e.response?.data?.detail === "string"
+        ? e.response?.data?.detail
+        : e.response?.data?.detail[0].msg
+      : e.message
+      ? e.message
+      : defaultMessage;
 
 const getCardUser = (id) => async() =>  {
     try {
