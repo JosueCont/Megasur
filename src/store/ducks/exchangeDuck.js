@@ -1,4 +1,4 @@
-import { getCloseBranches, getListCategories, getListProducts, getOrders, postOrders } from "../../utils/services/ApiApp";
+import { getCloseBranches, getListCategories, getListProducts, getOrders, getQrFuel, postOrders } from "../../utils/services/ApiApp";
 import { createDigest, createRandomBytes } from "@otplib/plugin-crypto-js"
 import { keyDecoder, keyEncoder } from "@otplib/plugin-base32-enc-dec"
 import { totpToken, totpOptions, KeyEncodings } from "@otplib/core" 
@@ -32,6 +32,10 @@ const ORDER_EXCHANGE_FAILED = 'order_exchange_failed'
 const RESET_ORDER_EXCHANGE = 'reset_order_exchange'
 const REFRESH = 'refresh_exchange'
 
+const GET_QR_FAILED = 'qr_code_exchange_failed'
+const GET_QR_SUCCESS = 'qr_code_exchange_success'
+const CLEAN_QR_EXCHANGE = 'clean_qr_exchange'
+
 const initialState = {
     loading:false,
     categories:[],
@@ -48,7 +52,8 @@ const initialState = {
     modalFuel:false,
     minutes:0,
     seconds:0,
-    code:'',
+    code: null,
+    message:'',
     isRunning:false,
     branchId:null,
     exchangeDone:false,
@@ -114,6 +119,12 @@ const exchangeDuck = (state = initialState, action) => {
             return{ ...state, alertFailed: false, exchangeDone: false}
         case REFRESH:
             return{ ...state, refresh: true}
+        case GET_QR_FAILED:
+            return{ ...state, loading: false, message: action.payload}
+        case GET_QR_SUCCESS:
+            return{ ...state, loading: false, code: action.payload}
+        case CLEAN_QR_EXCHANGE:
+            return{ ...state, code: null, loading: false}
         default:
             return state;
     }
@@ -373,6 +384,36 @@ export const resetExchangeOrder = () => {
 export const refreshAction = () => {
     return{
         type: REFRESH
+    }
+}
+
+export const getQrExchangeFuel = (data) => async(dispatch) => {
+    try {
+        dispatch({type: LOADING})
+        let dataSend = {
+            user_card_id : data.cardId,
+            latitude: data.latitude,
+            longitude: data.longitude,
+            total_fuel: data?.total_fuel,
+            type: data?.type
+        }
+        const response = await getQrFuel(dataSend)
+        dispatch({type: GET_QR_SUCCESS, payload: JSON.stringify(response?.data)})
+    } catch (e) {
+        console.log('error qr exca', e)
+        dispatch({type: GET_QR_FAILED, payload: e?.response?.data?.detail})
+    }
+}
+
+export const cleanFuelQr = () => {
+    return{
+        type: CLEAN_QR_EXCHANGE
+    }
+}
+
+export const onLoading = () => {
+    return{
+        type: LOADING
     }
 }
 export default exchangeDuck;

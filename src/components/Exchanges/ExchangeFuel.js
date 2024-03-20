@@ -112,6 +112,8 @@ const ExchangeFuel = ({availablePoints=0}) => {
             </TouchableOpacity>
             <ModalExchangeFuel 
                 visible={showModal}
+                typeFuel={typeFuel}
+                totalFuel={valueSlider}
                 setVisible={() => onChangeModal('modalFuel', false)}
                 onConfirm={() => {
                     onChangeModal('modalFuel', false)

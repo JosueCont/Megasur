@@ -33,7 +33,7 @@ export const getListCategories = async() => await axiosGet(axiosTypes.LIST_CATEG
 export const getCloseBranches = async(coords) => await axiosGet(`${axiosTypes.CLOSE_BRANCHES}${coords}`)
 export const getOrders = async(filters) => await axiosGet(`${axiosTypes.GET_ORDERS}${filters}`) 
 export const postOrders = async(data) => await axiosPost(axiosTypes.GET_ORDERS, data)
-
+export const getQrFuel = async(data) => await axiosPost(axiosTypes.GET_QR_EXCHANGE_FUEL, data)
 //stations
 export const getStations = async(lat, long) => await axiosGet(`${axiosTypes.CLOSE_STATIONS}?lat=${lat}&long=${long}`)
 
