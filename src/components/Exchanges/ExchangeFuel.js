@@ -52,6 +52,25 @@ const ExchangeFuel = ({availablePoints=0}) => {
         dispatch(changeModalEx({prop, val}))
     }
 
+
+    const setSteps = () => {
+        const pointsTable = {
+            '0-200': 2,
+            '201-1000': 10,
+            '1001-infinito': 50
+        };
+    
+        let range;
+        if (availablePoints <= 200) {
+            range = '0-200';
+        } else if (availablePoints <= 1000) {
+            range = '201-1000';
+        } else {
+            range = '1001-infinito';
+        }
+    
+        return pointsTable[range];
+    }
     return(
         <View style={{marginTop:10}}>
             <View style={{ marginBottom:30, marginHorizontal:10}}>
@@ -64,7 +83,7 @@ const ExchangeFuel = ({availablePoints=0}) => {
                         w="100%"
                         maxW={width * .9}
                         maxValue={availablePoints}
-                        step={availablePoints <= 200 ? 10 : 50}
+                        step={setSteps()}
                         onChange={(val) => setSlider(val)}>
                         <Slider.Track bg={Colors.grayBorders} size={12}>
                             <Slider.FilledTrack bg={Colors.yellow} size={12}/>

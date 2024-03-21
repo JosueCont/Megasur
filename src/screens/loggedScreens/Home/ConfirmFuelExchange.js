@@ -26,6 +26,7 @@ const ConfirmFuelExchange = () => {
                         resizeMode="cover"
                         isLooping
                         shouldPlay
+                        isMuted
                         
                     />
                 </View>

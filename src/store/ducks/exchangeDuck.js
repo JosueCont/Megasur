@@ -112,7 +112,7 @@ const exchangeDuck = (state = initialState, action) => {
         case UPDATE_CAR:
             return{ ...state, cart: action.payload}
         case ORDER_EXCHANGE_SUCCESS:
-            return{ ...state, loading: false, modalShoppingCart: false, exchangeDone: true, cart:[]}
+            return{ ...state, loading: false, modalShoppingCart: false, exchangeDone: true, cart:[], branchId:null}
         case ORDER_EXCHANGE_FAILED:
             return{ ...state, loading:false, modalShoppingCart: false, alertFailed: true}
         case RESET_ORDER_EXCHANGE:

@@ -1,5 +1,5 @@
 import React,{useEffect,useState} from "react";
-import { View, Text, ImageBackground, Image, Dimensions, TouchableOpacity, StyleSheet, TextInput, KeyboardAvoidingView, Keyboard, Platform } from "react-native";
+import { View, Text, ImageBackground, Image, Dimensions, TouchableOpacity, StyleSheet, TextInput, KeyboardAvoidingView, Keyboard, Platform, ScrollView } from "react-native";
 import { Colors } from "../../utils/Colors";
 import { getFontSize } from "../../utils/functions";
 import HeaderInit from "../../../assets/svg/HeaderInit";
@@ -92,17 +92,20 @@ const InitialScreen = () => {
     return(
         <View style={styles.container}>
             <KeyboardAvoidingView 
-                enabled={keyboardOpen}
+                //enabled={keyboardOpen}
                 style={styles.contKeyAvoiding}  
-                contentContainerStyle={Platform.OS === 'android' &&  keyboardOpen ? styles.contentProc : null}
+                contentContainerStyle={Platform.OS === 'android' &&  keyboardOpen && styles.contentProc}
+                //contentContainerStyle={{backgroundColor:'red', flex:1, zIndex:10}}
                 behavior={Platform.OS === 'ios' ? 'padding' : 'position' }
-                keyboardVerticalOffset={Platform.select({ios: 430, android:50 }) }>
+    keyboardVerticalOffset={Platform.select({ios: 430, android:20 }) }>
+
             <View style={styles.contHeader}>
                 <Image source={require('../../../assets/WaterWaves.png')} style={styles.imgBack}/>
                 {/*<HeaderInit />*/}
                 <View style={styles.contLogo}>
                     <LogoMega />
                 </View>
+
             </View>
                 <Animated.View style={[rStyle,styles.contEmail]}>
                     {isPressed ? (
@@ -115,7 +118,7 @@ const InitialScreen = () => {
                                 maxLength={10}
                                 value={phone}
                                 onChangeText={(value) => dispatch(changeInput({prop:'phone', value}))}
-                            />
+                                />
                         </Animated.View>
                     ): null}
                     <TouchableOpacity 
@@ -126,6 +129,7 @@ const InitialScreen = () => {
                     </TouchableOpacity>
                 </Animated.View>
             </KeyboardAvoidingView>
+
 
             <ModalAlertFailed 
                 visible={isActiveModal} 

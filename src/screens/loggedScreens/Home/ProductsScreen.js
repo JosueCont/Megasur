@@ -169,7 +169,7 @@ const ProductsScreen = () => {
                 }}
                 refresh={refresh}
                 onRefresh={() => onRefresh()}>
-                <Text style={styles.title}>Tienes disponibles:<Text style={{fontWeight:'700'}}>{points.toString()} pts</Text></Text>
+                <Text style={styles.title}>Tienes disponibles: <Text style={{fontWeight:'700'}}>{points.toString()} pts</Text></Text>
                 <View style={styles.header}>
                     <TypeExchange selected={selectedType} setSelected={(val) => dispatch(onChangeType(val))}/>
                     {selectedType === 1 && (<Filters filters={categories} setSelected={(val) => setFilter(val)} selected={selectedFilter}/>)}

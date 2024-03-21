@@ -43,11 +43,11 @@ const HomeNavigator = () => {
             })}
         >
             <Stack.Screen name="House" component={HomeScreen}/>
-            <Stack.Screen name="Exchange" component={ProductsScreen}/>
+            {/*<Stack.Screen name="Exchange" component={ProductsScreen}/>
             <Stack.Screen name="DetailProduct" component={DetailProduct}/>
             <Stack.Screen name="Confirm" component={ConfirmExchange} />
             <Stack.Screen name="LocationBranch" component={LocationBranchScreen} />
-            <Stack.Screen name="ConfirmFuel" component={ConfirmFuelExchange}/>
+        <Stack.Screen name="ConfirmFuel" component={ConfirmFuelExchange}/>*/}
             <Stack.Screen name="AnnouncementDetail" component={AnnouncementDetail}/>
             <Stack.Screen name="Surveys" component={SurveysScreen} />
             <Stack.Screen name="SurveyDone" component={SurveyDoneScreen}/>
@@ -104,6 +104,25 @@ const ChargesNavigator = () => {
     )
 }
 
+const StoreNavigator = () => {
+    return(
+        <Stack.Navigator
+            mode={'card'}
+            backBehavior={'history'}
+            initialRouteName="Exchange"
+            screenOptions={({navigation, route}) =>({
+                headerShown: false
+            })}
+        >
+            <Stack.Screen name="Exchange" component={ProductsScreen}/>
+            <Stack.Screen name="DetailProduct" component={DetailProduct}/>
+            <Stack.Screen name="Confirm" component={ConfirmExchange} />
+            <Stack.Screen name="LocationBranch" component={LocationBranchScreen} />
+            <Stack.Screen name="ConfirmFuel" component={ConfirmFuelExchange}/>
+        </Stack.Navigator>
+    )
+}
+
 const TabNavigator = () => {
     return(
         <Tab.Navigator 
@@ -113,7 +132,7 @@ const TabNavigator = () => {
             })}>
             <Tab.Screen name="Home" component={HomeNavigator} />
             <Tab.Screen name="Charges" component={ChargesNavigator}/>
-            <Tab.Screen name="Store" component={ProductsScreen}/>
+            <Tab.Screen name="Store" component={StoreNavigator}/>
             <Tab.Screen name="Stations" component={LocationScreen}/>
             <Tab.Screen name="Profile" component={ProfileNavigator}/>
         </Tab.Navigator>

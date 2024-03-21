@@ -78,7 +78,7 @@ export const exchangeCard = (data) => async(dispatch) => {
 
     } catch (e) {
         console.log('error ',e)
-        dispatch({type: EXCHANGE_CARD_FAILED, payload: 'Ha ocurrido un error al agregar tarjeta, intentalo de nuevo'})
+        dispatch({type: EXCHANGE_CARD_FAILED, payload: 'Ha ocurrido un error al agregar la tarjeta, inténtalo de nuevo'})
     }
 }
 

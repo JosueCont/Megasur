@@ -118,7 +118,7 @@ const VehicleInfoForm = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.lblTitle}>Datos de tu vehículo</Text>
-      <Text style={styles.lbl}>Numero de placas</Text>
+      <Text style={styles.lbl}>Número de placas</Text>
       <Input
         maxLength={10}
         autoCapitalize="characters"

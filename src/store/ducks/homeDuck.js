@@ -114,7 +114,7 @@ export const getDataConfi = () => async(dispatch) => {
     try {
         const response = await getSiteConfig()
         if(response?.data?.id) dispatch({type: SETUP_DATA_CONFIG, payload: response?.data})
-        console.log('response',response?.data)
+        //console.log('response',response?.data)
     } catch (e) {
         console.log('error',e)
     }
