@@ -28,6 +28,6 @@ export const axiosTypes = {
     GET_COUNT_NOTIFICATIONS:'/security/notifications/not-read/',
     GET_FREQUEST_QUESTIONS:'/utilities/faq/',
     SEND_MAIL:'/email/contact/send/',
-    GET_POINTS: '/membership/user-card-points/'
-    
+    GET_POINTS: '/membership/user-card-points/',
+    GET_QR_EXCHANGE_FUEL: '/membership/get-code-data/'
 }

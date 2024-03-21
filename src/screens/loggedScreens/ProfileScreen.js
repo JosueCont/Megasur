@@ -84,7 +84,7 @@ const ProfileScreen = () => {
                 }} 
                 refresh={refresh}>
                     <Image source={require('../../../assets/waves.png')} style={{width: width, height: 100, resizeMode:'stretch', position:'relative', top:-20 }}/>
-                <View style={{marginHorizontal:10,}}>
+                <View style={{marginHorizontal:10}}>
                     <VerifyEmail />
                     <ListActionsProfile />
                     {/*<SwitchNotification />*/}

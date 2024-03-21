@@ -1,19 +1,21 @@
 import React,{useEffect,useState} from "react";
-import {  Text, View, TouchableOpacity, StyleSheet, Dimensions, Image, ScrollView, Modal } from "react-native";
+import {  Text, View, TouchableOpacity, StyleSheet, Dimensions, Image, ScrollView, Modal, Permission, PermissionsAndroid, Platform, Alert, Linking } from "react-native";
 import { Colors } from "../../utils/Colors";
 import { useSelector, useDispatch } from "react-redux";
 import { getFontSize } from "../../utils/functions";
 import { AntDesign } from '@expo/vector-icons'; 
 import QRCode from "react-native-qrcode-svg";
-import { getQrCodeFuel } from "../../store/ducks/exchangeDuck";
+import { cleanFuelQr, getQrCodeFuel, getQrExchangeFuel, onLoading } from "../../store/ducks/exchangeDuck";
 import { Spinner } from "native-base";
-
+import { getPermissionLocation } from "../../utils/functions";
+import {PermissionStatus} from 'expo-location'
+import * as Location from 'expo-location'
 
 
 const {height, width} = Dimensions.get('window');
 
 
-const ModalExchangeFuel = ({visible, setVisible, onConfirm}) => {
+const ModalExchangeFuel = ({visible, setVisible, onConfirm, typeFuel, totalFuel}) => {
     const dispatch = useDispatch()
     const minutes = useSelector(state => state.exchangeDuck.minutes)
     const seconds = useSelector(state => state.exchangeDuck.seconds)
@@ -21,12 +23,81 @@ const ModalExchangeFuel = ({visible, setVisible, onConfirm}) => {
     const code = useSelector(state => state.exchangeDuck.code)
     const user = useSelector(state => state.authDuck.dataUser)
     const loader = useSelector(state => state.exchangeDuck.loading)
+    const userCard = useSelector(state => state.homeDuck.cardsStorage)
+    const message = useSelector(state => state.exchangeDuck.message)
+    const [isAllowed, setIsAllowed]  = useState(false)
+
+    const types = {
+        0: 'MAGNA',
+        1: 'PREMIUM',
+        2: 'DIESEL'
+    }
 
     useEffect(() => {
-        if(!isRunning && seconds === 0 && minutes === 0 && visible){
-            dispatch(getQrCodeFuel({isRunning, user }))
+        (async() => {
+            if(user?.id && visible){
+                dispatch(onLoading())
+                const location = await getPermissionLocation();
+                if(location?.coords && location != undefined){
+                    await dispatch(getQrExchangeFuel({
+                        cardId: userCard[0]?.user_card_id,
+                        latitude: location?.coords?.latitude,
+                        longitude: location?.coords?.longitude,
+                        total_fuel: totalFuel,
+                        type: types[typeFuel]
+                    }))
+                    setIsAllowed(true)
+                }else{
+                    console.log('sin permisos')
+                    setIsAllowed(false)
+                    dispatch(cleanFuelQr())
+                }
+            } 
+
+        })()
+    },[user?.id, visible])
+
+    const showPermissionsAndroid = async() => {
+        try {          
+            const permision = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+                {
+                    title: 'Megasur solicita permiso para ubicación',
+                    message: 'Los datos proporcionados serán utilizados exclusivamente para validar la sucursal de canje y garantizar la seguridad en la generación de códigos en dicha sucursal.',
+                    //buttonNeutral: 'Ask Me Later',
+                    buttonNegative: 'Cancel',
+                    buttonPositive: 'OK',
+                });
+             if(permision === PermissionsAndroid.RESULTS.GRANTED){
+                setVisible()
+             }
+            //const location = await getPermissionLocation();
+        } catch (e) {
+            console.log('error permisions',e)
         }
-    },[isRunning, seconds, minutes, visible])
+    }
+
+    const showPermissionsIos = async() => {
+        const permisison = await Location.requestForegroundPermissionsAsync()
+        if(permisison.status === 'denied') {
+            setVisible()
+            setTimeout(() => {
+                Alert.alert(
+                    "Permisos denegados",
+                    "Para permitir acceso a tu ubicación, abre configuración y acepta los permisos.",
+                    [
+                      { text: "Cancelar", style: "cancel" },
+                      {
+                        text: "Abrir configuración",
+                        onPress: () => {
+                          Linking.openURL("app-settings:");
+                        }
+                      }
+                    ]
+                  );
+            }, 500)
+        }
+        console.log('permisos ios', permisison)
+    }
 
     return(
         <Modal visible={visible} animationType='slide' transparent>
@@ -36,19 +107,26 @@ const ModalExchangeFuel = ({visible, setVisible, onConfirm}) => {
                         <AntDesign name="close" size={24} color="black" />
                     </TouchableOpacity>
                     <Text style={styles.title}>Muestra este código QR al despachador para pagar con puntos</Text>
-                    {!loader && code != '' ? (
-                        <QRCode
-                            value={code}
-                            color={Colors.blackInit}
-                            size={170}
-                            backgroundColor="transparent"
-                        />
+                    {!loader ?
+                        code != null && isAllowed ? (
+                            <QRCode
+                                value={code}
+                                color={Colors.blackInit}
+                                size={170}
+                                backgroundColor="transparent"
+                            />
 
-                    ) : <Spinner size='sm' color={Colors.blueGreen}/> }
-                    <TouchableOpacity style={styles.btn} onPress={onConfirm}>
-                        <Text style={styles.lblBtn}>Confirmar transacción</Text>
-                    </TouchableOpacity>
-                    <Text style={styles.lblTimer}>Código QR expira en: <Text style={{fontWeight:'700'}}>{minutes < 10 ? `0${minutes}` : minutes}:{seconds < 10 ? `0${seconds}` : seconds} {minutes <= 0 ? 'segundos' : 'minutos'}</Text></Text>
+                        ):(
+                            <Text style={styles.title}>{message}</Text>
+
+                    ): <Spinner size='sm' color={Colors.blueGreen}/> }
+                    {!isAllowed && code === null && !loader &&(
+                        <TouchableOpacity 
+                            style={styles.btn} 
+                            onPress={() => Platform.OS === 'ios' ? showPermissionsIos() : showPermissionsAndroid()}>
+                            <Text style={styles.lblBtn}>Solicitar permisos</Text>
+                        </TouchableOpacity>
+                    )}
                 </View>
             </View>
         </Modal>

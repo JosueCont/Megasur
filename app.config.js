@@ -33,7 +33,8 @@ const commonConfig = {
         [
           "expo-location",
           {
-            "locationAlwaysAndWhenInUsePermission": "Allow megasur to use your location."
+            "locationAlwaysAndWhenInUsePermission": "Allow megasur to use your location.",
+            "NSLocationAlwaysUsageDescription" : 'Los datos proporcionados serán utilizados exclusivamente para validar la sucursal de canje y garantizar la seguridad en la generación de códigos en dicha sucursal.'
           }
         ],
         [
@@ -61,15 +62,21 @@ const commonConfig = {
 }
 
 const android = {
-    "adaptiveIcon": {
-        //"foregroundImage": "./assets/icon.png",
-        "backgroundColor": "#ffffff"
-    }
+  "adaptiveIcon": {
+      //"foregroundImage": "./assets/icon.png",
+      "backgroundColor": "#ffffff"
+  },
+  "permissions": [
+    "'android.permission.ACCESS_FINE_LOCATION"
+  ]
 }
 
 const ios = {
     "supportsTablet": false,
     "usesAppleSignIn": true,
+    "infoPlist": {
+      "NSLocationAlwaysUsageDescription" : 'Los datos proporcionados serán utilizados exclusivamente para validar la sucursal de canje y garantizar la seguridad en la generación de códigos en dicha sucursal.'
+    }
 }
 
 const version = "1.0.0"

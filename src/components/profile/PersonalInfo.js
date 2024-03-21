@@ -107,12 +107,22 @@ const PersonalInfoForm = () => {
         
         console.log(result);
     }
+
+    const onUpdate = async() => {
+        let dataSend = {
+            first_name, last_name, email, phone, 
+            birthDay, gender, imageBack, imageFront,
+        }
+        if(image64 != '') dataSend.profile_picture = image64
+        dispatch(onUpdateDataUser(dataSend))
+    }
     
 
     return(
         <View style={styles.container}>
             <TouchableOpacity style={styles.btnImgProf} onPress={onPickImage}>
-                {profile_picture != null && profile_picture != '' ? (
+                {profile_picture != null && profile_picture != '' && 
+                    profile_picture?.split('/').pop() !== 'None' ? (
                     <Image source={{uri: profile_picture}} style={styles.imgProfile}/>
                 ):(
                     <Image source={require('../../../assets/profile.png')}style={styles.imgProfile}/>
@@ -237,10 +247,7 @@ const PersonalInfoForm = () => {
                     </TouchableOpacity>
                 </View>
                 <TouchableOpacity 
-                    onPress={() => { dispatch(onUpdateDataUser({
-                        first_name, last_name, email, phone, 
-                        birthDay, gender, imageBack, imageFront, profile_picture: image64 != '' ? image64 : profile_picture
-                    }))}}
+                    onPress={() => onUpdate()}
                     disabled={!(email !='' && phone != '')}
                     style={[styles.btnSave,{backgroundColor: !(email != '' && phone != '') ? Colors.gray :Colors.blueGreen}]}>
                     {loader ? <Spinner size={'sm'} color={'white'} /> :<Text style={styles.lblBtnSave}>Guardar</Text> }
