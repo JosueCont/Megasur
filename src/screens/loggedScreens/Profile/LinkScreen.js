@@ -53,7 +53,7 @@ const LinkScreen = () => {
                         disabled={cardSelected != null ? false : true}
                         onPress={() => navigation.navigate('DetailCard')}
                         style={[styles.btn,{backgroundColor: cardSelected != null ? Colors.blueGreen : Colors.gray }]}>
-                        <Text style={styles.lbl}>Vaidar tarjeta</Text>
+                        <Text style={styles.lbl}>Validar tarjeta</Text>
                     </TouchableOpacity>
                 </View>
                 

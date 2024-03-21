@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
         color: Colors.blueGreen, 
         fontSize: getFontSize(24), 
         fontWeight:'700',
-        lineHeight: 25,
+        //lineHeight: 25,
     },
     desc:{
         color: Colors.blueGreen, 

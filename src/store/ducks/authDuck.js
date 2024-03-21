@@ -186,6 +186,7 @@ export const onRegisterUser = (data) => async(dispatch) => {
         console.log('dataSend',dataSend)
         const response = await postRegisterUser(dataSend)
         if(response?.data?.id){
+            await saveTokens(response?.data?.access_token, response?.data)
             dispatch({type: REGISTER_SUCCESS, payload: response?.data})
             dispatch(getCardUser())
         }else{
@@ -223,6 +224,7 @@ const getCardUser = (id) => async() =>  {
 }
 
 export const loginAction = (data) => async(dispatch) => {
+    console.log('login',data)
     dispatch({type: LOADING})
     if(data?.id){
         await saveTokens(data?.access_token, data)

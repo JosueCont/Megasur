@@ -43,18 +43,22 @@ const HomeScreen = () => {
     const [selectedSurver, setSelectedSurvey] = useState(null)
     const points = useSelector(state => state.homeDuck.points)
     const modalScreenShot = useSelector(state => state.homeDuck.modalScreenShot)
-
+    const gender = useSelector(state => state.authDuck.dataUser?.gender)
 
     const [dataAdvertisements, setDataAdvertisements] = useState([])
     const [dataPromotions, setDataPromotions] = useState([])
 
+    const genders = {
+        'MALE':'Bienvenido',
+        'FEMALE':'Bienvenida'
+    }
 
     useEffect(() => {
         (async() => {
-            const cards = await AsyncStorage.getItem('cards')
-            await dispatch(saveDataLocalStorage(JSON.parse(cards)))
-            await dispatch(getDataConfi())
             if(userId && userId != undefined){
+                const cards = await AsyncStorage.getItem('cards')
+                await dispatch(saveDataLocalStorage(JSON.parse(cards)))
+                await dispatch(getDataConfi())
                 const location = await getPermissionLocation()
                 await dispatch(getCloseStations(location?.coords))
                 //await dispatch(getAllCards(userId))
@@ -68,7 +72,7 @@ const HomeScreen = () => {
 
     useEffect(() => {
         if(userCard && userCard != undefined && userCard[0]?.user_card_id ) dispatch(getPointsCard(userCard[0]?.user_card_id))
-    },[userCard])
+    },[userCard, isFocused])
 
     useEffect(() => {
         getDataAdvertisements()
@@ -114,7 +118,9 @@ const HomeScreen = () => {
 //
     //]
     return(
-        <HeaderLogged onRefresh={() => console.log('refreshPAge')}>
+        <HeaderLogged 
+            title={genders[gender]}
+            onRefresh={() => console.log('refreshPAge')}>
             <FlipCard cards={userCard} points={points}/>
             <Question />
             <ProvitionalPoints 

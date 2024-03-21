@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
     },
     input: {
         borderWidth: 1,
-        borderRadius:8,
+        //borderRadius:8,
         borderColor: Colors.gray,
         backgroundColor: Colors.white,
         textAlign: 'center',
@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
         color:Colors.darkGray,
         width: width/7,
         marginRight:5,
-        height:70,
+        height:65,
         elevation:4,
         shadowColor: '#000', // Color de la sombra
         shadowOffset: {

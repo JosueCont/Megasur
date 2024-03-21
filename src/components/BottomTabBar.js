@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View, TouchableOpacity, StyleSheet, Animated, Platform, Dimensions } from "react-native";
+import { Text, View, TouchableOpacity, StyleSheet, Animated, Platform, Dimensions, TouchableHighlight } from "react-native";
 import { Ionicons, MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { Colors } from "../utils/Colors";
@@ -78,7 +78,8 @@ const CustomBottomTabBar = ({state, navigation}) => {
                     <Animated.View
                         style={[styles.tabItem, animatedStyle,]}
                         key={route.name}>
-                            <TouchableOpacity 
+                            <TouchableHighlight 
+                                underlayColor={Colors.white}
                                 onPress={onPress}
                                 onPressIn={onPressIn}
                                 onPressOut={onPressOut}
@@ -86,7 +87,7 @@ const CustomBottomTabBar = ({state, navigation}) => {
                                 <View style={{ alignItems: "center"}}>
                                     {route.name === 'Store' ? (
                                         <View style={styles.scanItem}>
-                                            <MaterialCommunityIcons name={iconName} size={20} color={itemColor} style={{ marginBottom: 2}}/>
+                                            <MaterialCommunityIcons name={iconName} size={20} color={itemColor} style={{ marginBottom: 2,}}/>
                                             <Text style={[{color: itemColor }, styles.tabBarText]}>{label}</Text>
                                         </View>
                                     ):(
@@ -97,7 +98,7 @@ const CustomBottomTabBar = ({state, navigation}) => {
                                         </>
                                     )}
                                 </View>
-                                </TouchableOpacity>
+                                </TouchableHighlight>
                     </Animated.View>
                 )
 

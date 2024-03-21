@@ -28,6 +28,7 @@ const SurveyDoneScreen = () => {
                         resizeMode="cover"
                         isLooping
                         shouldPlay
+                        isMuted
                     />
                 </View>
                 <Text style={styles.title}>¡Felicidades!</Text>

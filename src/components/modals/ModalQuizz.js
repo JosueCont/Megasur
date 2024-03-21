@@ -147,7 +147,7 @@ const ModalQuizz = ({visible, setVisible, quizz,}) => {
                         {!startSurvey ? (
                             <View style={{flex:1}}>
                                 <View style={styles.contDesc}>
-                                    <Text style={styles.lbl}>Contesta está encuesta y gana <Text style={{fontWeight:'700'}}>{quizz?.bonus_points} pts.</Text></Text>
+                                    <Text style={styles.lbl}>Contesta esta encuesta y gana <Text style={{fontWeight:'700'}}>{quizz?.bonus_points} pts.</Text></Text>
                                     <Text style={styles.lblDescription}>{quizz?.description}</Text>
                                 </View>
                                 <TouchableOpacity style={styles.btnStart} onPress={() => setStartSurvey(true)}>

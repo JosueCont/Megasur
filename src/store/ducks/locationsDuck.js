@@ -36,7 +36,7 @@ export const getCloseStations = (data) => async(dispatch) => {
     try {
         dispatch({type: LOADING})
         const response = await getStations(data?.latitude, data?.longitude)
-        console.log('response stations0', response?.data)
+        //console.log('response stations0', response?.data)
         dispatch({
             type: GET_STATIONS_SUCCESS, 
             branches_by_zone: response?.data?.branches_by_zone, 

@@ -10,7 +10,7 @@ const {height, width} = Dimensions.get('window');
 const TypeExchange = ({selected, setSelected}) => {
     const types = [
         {id:'1', title:'Canjear combustible'},
-        {id:'2', title:'Canjear artículos'},
+        {id:'2', title:'Canjear   artículos'},
         {id:'3', title:'Artículos canjeados'},
     ]
     return(
