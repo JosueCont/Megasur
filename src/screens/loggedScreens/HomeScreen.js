@@ -80,7 +80,7 @@ const HomeScreen = () => {
     },[isFocused])
 
     const getDataAdvertisements = async()=>{
-        const result = await getAdvertisements('?page=1&per_page=1000&type=1')
+        const result = await getAdvertisements('?page=1&per_page=1000&type=1&is_active=true')
         if (result.status == 200){
             setDataAdvertisements(result.data?.items ? result.data.items : [])
         }
@@ -88,7 +88,7 @@ const HomeScreen = () => {
 
     const getDataPromotions = async()=>{
         try {
-            const result = await getAdvertisements('?page=1&per_page=1000&type=2')
+            const result = await getAdvertisements('?page=1&per_page=1000&type=2&is_active=true')
             if (result.status == 200){
                 setDataPromotions(result.data?.items ? result.data.items : [])
             }
