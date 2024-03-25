@@ -29,5 +29,6 @@ export const axiosTypes = {
     GET_FREQUEST_QUESTIONS:'/utilities/faq/',
     SEND_MAIL:'/email/contact/send/',
     GET_POINTS: '/membership/user-card-points/',
-    GET_QR_EXCHANGE_FUEL: '/membership/get-code-data/'
+    GET_QR_EXCHANGE_FUEL: '/membership/get-code-data/',
+    SHOW_BANNER: '/security/users/physical-link-banner/'
 }

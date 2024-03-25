@@ -17,7 +17,7 @@ const LinkScreen = () => {
     const dispatch = useDispatch()
     const navigation = useNavigation();
     const route = useRoute();
-    const userCard = useSelector(state => state.homeDuck.cardsStorage)
+    const userCard = useSelector(state => state.authDuck.cardsStorage)
     const loader = false
     const cardSelected = useSelector(state => state.redeemDuck.cardSelected)
 
@@ -53,7 +53,7 @@ const LinkScreen = () => {
                         disabled={cardSelected != null ? false : true}
                         onPress={() => navigation.navigate('DetailCard')}
                         style={[styles.btn,{backgroundColor: cardSelected != null ? Colors.blueGreen : Colors.gray }]}>
-                        <Text style={styles.lbl}>Validar tarjeta</Text>
+                        <Text style={styles.lbl}>Vincular tarjeta física</Text>
                     </TouchableOpacity>
                 </View>
                 

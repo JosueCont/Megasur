@@ -16,13 +16,25 @@ const MyCarScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
+  const types = [
+    {name:'Compacto / Subcompacto: 35-45 litros', value: 1},
+    {name:'Sedán Mediano: 45-60 litros', value: 2},
+    {name:'Sedán Grande: 60-80 litros', value: 3},
+    {name:'Camioneta Pickup Compacta: 60-80 litros', value: 4},
+    {name:'Camioneta Pickup Grande: 80-120 litros', value: 5},
+    {name:'SUV Compacto: 50-70 litros', value: 6},
+    {name:'SUV Mediano: 70-90 litros', value: 7},
+    {name:'SUV Grande / Todoterreno: 80-120 litros', value: 8},
+    {name:'Furgoneta / Minivan: 70-90 litros', value: 9}
+  ]
+
   return (
     <HeaderLogged
       title="Mi auto"
       isBack={true}
       goBack={() => navigation.goBack()}
     >
-      <VehicleInfoForm />
+      <VehicleInfoForm carTypes={types}/>
     </HeaderLogged>
   );
 };

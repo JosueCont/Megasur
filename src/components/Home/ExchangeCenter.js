@@ -10,9 +10,23 @@ import { onChangeType } from "../../store/ducks/exchangeDuck";
 
 const {height, width} = Dimensions.get('window');
 
-const ExchangeCenter = () => {
+const ExchangeCenter = ({capacity, fuelCost, points}) => {
     const navigation = useNavigation()
     const dispatch = useDispatch();
+
+
+    const getFuelProgress = () => {
+        let ltrsPosibles =  points / fuelCost;
+        if(ltrsPosibles > capacity){
+            return 4
+        }else{
+            let percentFill = (ltrsPosibles / capacity) * 100;
+            let levelFuel = Math.min(4, percentFill / 25);
+            levelFuel = parseFloat(levelFuel.toFixed(2))
+            return levelFuel;
+        }
+    }
+
     return(
         <View style={styles.card}>
             <View style={styles.contHeader}>
@@ -22,7 +36,7 @@ const ExchangeCenter = () => {
 
                 </TouchableOpacity>
             </View>
-            <FuelLoader withBorder={false} flow={1} color={Colors.green} isBig={true}/>
+            <FuelLoader withBorder={false} flow={capacity === 0 ? 0: getFuelProgress()} color={Colors.green} isBig={true}/>
             <View style={styles.contBtn}>
                 <TouchableOpacity 
                     onPress={() => {

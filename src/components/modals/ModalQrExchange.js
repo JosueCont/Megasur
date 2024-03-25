@@ -23,7 +23,7 @@ const ModalExchangeFuel = ({visible, setVisible, onConfirm, typeFuel, totalFuel}
     const code = useSelector(state => state.exchangeDuck.code)
     const user = useSelector(state => state.authDuck.dataUser)
     const loader = useSelector(state => state.exchangeDuck.loading)
-    const userCard = useSelector(state => state.homeDuck.cardsStorage)
+    const userCard = useSelector(state => state.authDuck.cardsStorage)
     const message = useSelector(state => state.exchangeDuck.message)
     const [isAllowed, setIsAllowed]  = useState(false)
 

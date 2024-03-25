@@ -30,13 +30,13 @@ const redeemDuck = (state = initialState, action) => {
         case CHANGE_VALUE:
             return{ ...state, [action.payload.prop]: action.payload.value}
         case EXCHANGE_CARDS:
-            return{ ...state, exchangeCards: action.payload, loading: false, }
+            return{ ...state, exchangeCards: action.payload, loading: false, modalAddCard: action.open }
         case EXCHANGE_CARD_SUCCESS:
             return{ ...state, loading: false, exchanged: true, modalAddCard: false, modalSuccess: true, message: action.payload, cardNumber:''}
         case EXCHANGE_CARD_FAILED: 
             return{ ...state, loading: false, modalAddCard: false, modalFailed:true, message: action.payload, cardNumber:''}
         case CLEAN:
-            return{ ...state, exchanged: false, message:''}
+            return{ ...state, exchanged: false, message:'', modalAddCard: false}
         default:
             return state;
     }
@@ -56,11 +56,15 @@ export const setCardSelected = (card) => {
     }
 }
 
-export const getPhysicCardsExchange = (cardId) => async(dispatch) => {
+export const getPhysicCardsExchange = (cardId, exchanged) => async(dispatch) => {
     try {
         dispatch({type: LOADING})
         const response = await getCardsExchange(cardId)
-        dispatch({type: EXCHANGE_CARDS, payload: response?.data || []})
+        dispatch({
+            type: EXCHANGE_CARDS, 
+            payload: response?.data || [],
+            open: exchanged ? false : response?.data.length >= 3 ? false : true
+        })
     } catch (e) {
         console.log('error',e)
     }

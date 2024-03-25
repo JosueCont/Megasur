@@ -24,7 +24,7 @@ const AboutAppScreen = () => {
       isBack={true}
       goBack={() => navigation.goBack()}
     >
-      <View style={{ marginHorizontal: 10 }}>
+      <View style={{ marginHorizontal: 15 }}>
         <View style={styles.contHeader}>
           <Image
             source={require("../../../../assets/LogoMegaCard.png")}

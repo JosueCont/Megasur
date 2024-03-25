@@ -27,7 +27,10 @@ const HeaderLocation = ({children,isBack=false, title='Bienvenidos', onRefresh, 
             <View style={styles.header}>
                 <View style={{flexDirection:'row', }}>
                      {isBack && <TouchableOpacity onPress={goBack}><AntDesign name="arrowleft" size={24} color={Colors.white} /></TouchableOpacity>}
-                     <Text style={styles.title}>{title}</Text>
+                     <TouchableOpacity disabled={!isBack} onPress={goBack}>
+                        <Text style={styles.title}>{title}</Text>
+
+                     </TouchableOpacity>
                 </View>
                 <TouchableOpacity style={styles.btnNotify} onPress={() => navigation.navigate('Notification')}>
                     <>

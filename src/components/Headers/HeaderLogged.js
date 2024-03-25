@@ -27,7 +27,11 @@ const HeaderLogged = ({children,isBack=false, title='Bienvenidos', onRefresh, re
                 <View style={{flexDirection:'row', alignItems:'center' }}>
                      {isBack && <TouchableOpacity style={{marginRight:5}} onPress={goBack}><AntDesign name="arrowleft" size={24} color={Colors.white} /></TouchableOpacity>}
                      <View>
-                        <Text style={styles.title}>{title}</Text>
+                        <TouchableOpacity
+                            disabled={!isBack}
+                            onPress={goBack}>
+                            <Text style={styles.title}>{title}</Text>
+                        </TouchableOpacity>
                         {showSubtitle && <Text style={styles.lblSubtitle}>Para eliminar un mensaje deslicelo a la izquierda</Text>}
                      </View>
                 </View>

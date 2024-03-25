@@ -95,7 +95,8 @@ Lorem ipsum dolor sit amet. Ut dolorem rerum quo molestias praesentium sit solut
                         });
                         dispatch(onUpdateCart(updatedCart));
                     }else{
-                        dispatch(addCartItem(product))
+                        console.log('product added',product)
+                        dispatch(addCartItem(product, count))
                     }
                     //setTimeout(() => {
                         //isFromHome ? 

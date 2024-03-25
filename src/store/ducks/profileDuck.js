@@ -67,7 +67,7 @@ const profileDuck = (state = initialState, action) => {
                 phone: action.payload.phone,
                 dataUser: action.payload,
                 userImage: action.payload.profile_picture,
-                receiveNotifications: action.payload.receive_notification,
+                receiveNotifications: action.payload.receive_notifications,
                 loading:false,
                 refresh:false,
                 //isAccountUpdate: false
@@ -179,7 +179,7 @@ export const onUpdateDataUser = (data) => async(dispatch) => {
         dispatch({
             type: UPDATE_DATA_USER_SUCCESS, 
             message:'Se ha actualizado la información del usuario',
-            notify: response?.data?.receive_notification
+            notify: response?.data?.receive_notifications
         })
     } catch (e) {
         console.log('error actualizar',e)

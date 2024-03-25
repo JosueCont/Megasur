@@ -78,7 +78,7 @@ const exchangeDuck = (state = initialState, action) => {
         case RESET_COUNT:
             return{ ...state, countProduct:0}
         case ADD_CART_ITEM:
-            return{ ...state, cart: [...state.cart, {...action.payload, quantity: 1}]}
+            return{ ...state, cart: [...state.cart, {...action.payload, quantity: action.quantity || 1}]}
         case DELETE_CAR_ITEM:
             return{ ...state, cart: state.cart.filter(item => item.id !== action.payload)}
         case CHANGE_MODAL:
@@ -187,10 +187,11 @@ export const getCategories = () => async(dispatch) => {
     }
 }
 
-export const addCartItem = (item) => {
+export const addCartItem = (item, count) => {
     return{
         type: ADD_CART_ITEM,
-        payload: item
+        payload: item,
+        quantity: count 
     }
 }
 
