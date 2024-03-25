@@ -41,7 +41,8 @@ const initialState = {
     dataUser: null,
     refresh: false,
     modalTerms:false,
-    answeredSurveys:[]
+    answeredSurveys:[],
+    receiveNotifications:false
 }
 
 const profileDuck = (state = initialState, action) => {
@@ -66,8 +67,11 @@ const profileDuck = (state = initialState, action) => {
                 phone: action.payload.phone,
                 dataUser: action.payload,
                 userImage: action.payload.profile_picture,
+                receiveNotifications: action.payload.receive_notifications,
                 loading:false,
-                refresh:false }
+                refresh:false,
+                //isAccountUpdate: false
+            }
         case CHANGE_IMAGE:
             return{ ...state, [action.payload.prop]: action.payload.image}
         case VALIDATE_EMAIL_CODE_SUCCESS:
@@ -81,7 +85,7 @@ const profileDuck = (state = initialState, action) => {
             const updatedCode = newCode.join('');
             return { ...state,code: updatedCode };
         case UPDATE_DATA_USER_SUCCESS:
-            return{ ...state, loading: false, isAccountUpdate: true, modalSuccess: true, message: action.message}
+            return{ ...state, loading: false, isAccountUpdate: true, modalSuccess: true, message: action.message, receiveNotifications: action.notify}
         case UPDATE_DATA_USER_FAILED:
             return{ ...state, loading: false, isAccountUpdate: false, modalFailed: true, message: action.message}
         case DELETE_ACCOUNT_SUCCESS:
@@ -172,7 +176,11 @@ export const onUpdateDataUser = (data) => async(dispatch) => {
         console.log('dataSend',formData)
         const response = await putUserData(formData)
         console.log('response actualizar',response)
-        dispatch({type: UPDATE_DATA_USER_SUCCESS, message:'Se ha actualizado la información del usuario'})
+        dispatch({
+            type: UPDATE_DATA_USER_SUCCESS, 
+            message:'Se ha actualizado la información del usuario',
+            notify: response?.data?.receive_notification
+        })
     } catch (e) {
         console.log('error actualizar',e)
         dispatch({type: UPDATE_DATA_USER_FAILED, message:'Ocurrio un error al actualizar los datos'})

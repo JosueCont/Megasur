@@ -29,11 +29,11 @@ const FuelLoader = ({withBorder=false, flow, color, isBig=false}) => {
                     styles.progressBar,widthStyle,
                     { 
                         backgroundColor:color, 
-                        borderTopRightRadius: withBorder ? 90 : 0, 
-                        borderBottomRightRadius: withBorder ? 90 : 0,
+                        borderTopRightRadius: withBorder ? 90 : (progress.value*100)+4 >= 75 ? 90 : 0, 
+                        borderBottomRightRadius: withBorder ? 90 : (progress.value*100)+4 >= 75 ? 90 :0,
                         }]}/>
             <Animated.Text style={[styles.lbl,{color: (progress.value*100)+4  >= 0 ? Colors.white : Colors.blackInit }]}>E</Animated.Text>
-            <Animated.Text style={[styles.lbl, {color: (progress.value*100)+4 >= 0 ? Colors.white : Colors.blackInit }]}>|</Animated.Text>
+            <Animated.Text style={[styles.lbl, {color: (progress.value*100)+4 >= 25 ? Colors.white : Colors.blackInit }]}>|</Animated.Text>
             <Fuel />
             <Animated.Text style={[styles.lbl,{color: (progress.value*100)+4 >= 50 ? Colors.white : Colors.blackInit }]}>|</Animated.Text>
             <Animated.Text style={[styles.lbl, {color: (progress.value*100)+4 >= 75 ? Colors.white : Colors.blackInit }]}>F</Animated.Text>

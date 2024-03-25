@@ -7,7 +7,7 @@ import LogoMega from "../../../assets/svg/LogoMega";
 import { MaterialIcons, AntDesign } from '@expo/vector-icons';
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
-import { onChangeModalProf, onVerifyEmail, verifyCodeEmail } from "../../store/ducks/profileDuck";
+import { onChangeModalProf, onUpdateDataUser, onVerifyEmail, verifyCodeEmail } from "../../store/ducks/profileDuck";
 import ModalVerifyEmail from "../modals/ModalVerifyEmail";
 import SwitchNotification from "./SwitchNotification";
 
@@ -21,7 +21,7 @@ const VerifyEmail = () => {
     const code = useSelector(state => state.profileDuck.code)
     const loader = useSelector(state => state.profileDuck.loading)
     const profile_picture = useSelector(state => state.profileDuck.userImage)
-
+    const receiveNotifications = useSelector(state => state.profileDuck.receiveNotifications)
     
     return(
         <View style={styles.container}>
@@ -62,7 +62,11 @@ const VerifyEmail = () => {
                         <Text style={styles.lblWarinig}>Verifica aquí tu correo electrónico</Text>
                     </TouchableOpacity>
                 ):null}
-                <SwitchNotification />
+                <SwitchNotification 
+                    receiveNotifications={receiveNotifications}
+                    onChangeSwitch={(val) => {
+                        dispatch(onUpdateDataUser({receive_notifications: val}))
+                    }}/>
             </View>
             {/*<Image source={require('../../../assets/LogoMegaCard.png')} style={styles.img}/>*/}
             <ModalVerifyEmail 

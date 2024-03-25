@@ -19,7 +19,7 @@ const ListDiscount = ({dataDisconunt}) => {
                 //snapToOffsets={[...Array(dataDisconunt.length)].map((x, i) =>  width * i + width/1.37)}
                 //decelerationRate={0}
                 snapToAlignment="center"
-                renderItem={({item,index}) => (
+                renderItem={({item,index}) => item?.is_active && (
                     <ListDiscountItem item={item} index={index}/>
                 )}
             />

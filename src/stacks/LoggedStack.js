@@ -28,6 +28,7 @@ import RedeemPointsDone from "../screens/loggedScreens/Profile/RedeemPointsScree
 import ContactScreen from "../screens/loggedScreens/Profile/ContactScreen";
 import SendQuestionScreen from "../screens/loggedScreens/Contact/SendQuestionScreen";
 import FrecuentQuestionsScreen from "../screens/loggedScreens/Contact/FrequentQuestionsScreen";
+import AboutAppScreen from "../screens/loggedScreens/Profile/AboutAppScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -77,6 +78,7 @@ const ProfileNavigator = () => {
             <Stack.Screen name="CheckIn" component={CheckInScreen}/>
             <Stack.Screen name="AnsweredSurvey" component={AnsweredSurveyScreen}/>
             <Stack.Screen name="InfoLegal" component={LegalInfoScreen}/>
+            <Stack.Screen name="About" component={AboutAppScreen}/>
             <Stack.Screen name="DetailCard" component={DetailCardScreen}/>
             <Stack.Screen name="RedemPoints" component={RedeemPointsDone}/>
             <Stack.Screen name="Contact" component={ContactScreen}/>
@@ -128,7 +130,8 @@ const TabNavigator = () => {
         <Tab.Navigator 
             tabBar={(props) => <CustomBottomTabBar {...props}/>} 
             screenOptions={({navigation, route}) =>({
-                headerShown:false
+                headerShown:false,
+                tabBarHideOnKeyboard: true
             })}>
             <Tab.Screen name="Home" component={HomeNavigator} />
             <Tab.Screen name="Charges" component={ChargesNavigator}/>

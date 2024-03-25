@@ -61,7 +61,7 @@ const ProductsScreen = () => {
     const exchangeDone = useSelector(state => state.exchangeDuck.exchangeDone)
     const refresh = useSelector(state => state.exchangeDuck.refresh)
     const points = useSelector(state => state.homeDuck.points)
-    const userCard = useSelector(state => state.homeDuck.cardsStorage)
+    const userCard = useSelector(state => state.authDuck.cardsStorage)
 
 
 

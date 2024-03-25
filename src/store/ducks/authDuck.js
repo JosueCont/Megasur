@@ -23,6 +23,9 @@ const LOGIN_FAILED = 'login_failed'
 const LOGOUT = 'logout'
 const RESET_VALIDATE = 'reset_validate_code'
 
+const SAVE_LOCAL_STORAGE = 'save_localStorage'
+
+
 const initialState = {
     phone:'',
     verificationCode:'',
@@ -40,6 +43,7 @@ const initialState = {
     isLogged:false,
     dataUser:null,
     isRegistered: false,
+    cardsStorage:[],
 }
 
 const authDuck = (state = initialState, action) => {
@@ -86,6 +90,8 @@ const authDuck = (state = initialState, action) => {
             return{ ...state, isLogged: false, dataUser: null}
         case RESET_VALIDATE:
             return{ ...state, isValidPhoneNumber: false}
+        case SAVE_LOCAL_STORAGE:
+            return{ ...state, cardsStorage: action.payload}
         default:
             return state;
     }
@@ -147,8 +153,8 @@ export const validateCode = (data) => async(dispatch) => {
         if(response?.data?.id){
             //usuario encontrado, debe iniciar sesión
             await saveTokens(response?.data?.access_token, response?.data)
-            dispatch({type: LOGIN_SUCCESS, payload: response?.data})
             dispatch(getCardUser())
+            dispatch({type: LOGIN_SUCCESS, payload: response?.data})
         }
         //if(response?.data?.status === 'incorrect') dispatch({type: VALIDATE_CODE_FAILED, message:'Código incorrecto'})
         //else dispatch({type: VALIDATE_CODE_SUCCESS, message:'Verificación exitosa'})
@@ -187,8 +193,8 @@ export const onRegisterUser = (data) => async(dispatch) => {
         const response = await postRegisterUser(dataSend)
         if(response?.data?.id){
             await saveTokens(response?.data?.access_token, response?.data)
-            dispatch({type: REGISTER_SUCCESS, payload: response?.data})
             dispatch(getCardUser())
+            dispatch({type: REGISTER_SUCCESS, payload: response?.data})
         }else{
             dispatch({type: REGISTER_FAILED, message: 'Ocurrio un error al registrar usuario'})
         } 
@@ -211,11 +217,15 @@ export const _parsedAPIMessageError = (
       ? e.message
       : defaultMessage;
 
-const getCardUser = (id) => async() =>  {
+const getCardUser = (id) => async(dispatch) =>  {
     try {
         const response = await getDataUser()
         if(response?.data?.id){
-            await AsyncStorage.setItem('cards',JSON.stringify(response?.data))
+            await AsyncStorage.setItem('cards',JSON.stringify(response?.data?.cards))
+            dispatch({
+                type: SAVE_LOCAL_STORAGE, 
+                payload: response?.data?.cards
+            })
         }
         console.log('usuario a guardar', response?.data)
     } catch (e) {
@@ -255,6 +265,7 @@ export const logoutAction = (data) => async(dispatch) => {
         //await AsyncStorage.removeItem('refreshToken')
         await AsyncStorage.removeItem('user')
         await AsyncStorage.removeItem('cards')
+        dispatch(saveDataLocalStorage([]))
 
         //dispatch({type: LOGOUT})
 
@@ -268,6 +279,17 @@ export const logoutAction = (data) => async(dispatch) => {
 export const resetValidateCode = () => {
     return{
         type: RESET_VALIDATE
+    }
+}
+
+export const saveDataLocalStorage = (cards) => async(dispatch) => {
+    try {
+        dispatch({
+            type: SAVE_LOCAL_STORAGE, 
+            payload: cards
+        })
+    } catch (e) {
+        console.log('eror st',e)
     }
 }
 

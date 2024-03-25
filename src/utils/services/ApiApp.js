@@ -26,6 +26,8 @@ export const getSiteConfig = async() => await axiosGet(axiosTypes.SITE_CONFIG)
 export const getCards = async(userId) => await axiosGet(`${axiosTypes.CARDS}${userId}`)
 export const postValidateOTP = async(data) => await axiosPost(axiosTypes.VALIDATE_OTP, data)
 export const getTotalPoints = async(id) => await axiosGet(`${axiosTypes.GET_POINTS}${id}/`)
+export const getPhysicalBanner = async(id) => await axiosGet(`${axiosTypes.SHOW_BANNER}${id}`)
+export const putPhysicBanner = async(id) => await axiosPut(`${axiosTypes.SHOW_BANNER}${id}`)
 
 //exchange center
 export const getListProducts = async(filters) => await axiosGet(`${axiosTypes.LIST_PRODUCTS}${filters}`)

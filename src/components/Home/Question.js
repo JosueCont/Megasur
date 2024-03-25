@@ -6,11 +6,14 @@ import { getFontSize } from "../../utils/functions";
 import { Colors } from "../../utils/Colors";
 import Animated,{useSharedValue, useAnimatedStyle, Easing, interpolate, Extrapolate, withSpring, withTiming} from "react-native-reanimated";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import { onShowBanner } from "../../store/ducks/homeDuck";
 
 const {height, width} = Dimensions.get('window');
 
-const Question = () => {
+const Question = ({cardId}) => {
     const navigation = useNavigation();
+    const dispatch = useDispatch()
     const [isAnswered, setAnswer] = useState(false)
     const isAnimated = useSharedValue(false)
     const animationValue = useSharedValue(0);
@@ -46,7 +49,15 @@ const Question = () => {
                     <>
                         <Text style={styles.question}>¿Tienes una tarjeta física?</Text>
                         <View style={styles.contBtn}>
-                            <TouchableOpacity onPress={() => {setAnswer(true); setTimeout(() => {startAnimation()},1000);}}style={[styles.btnQuestion,{backgroundColor: Colors.blueGreen,}]}>
+                            <TouchableOpacity 
+                                onPress={() => {
+                                    setAnswer(true);
+                                    dispatch(onShowBanner(cardId,2))
+                                    setTimeout(() => {
+                                        startAnimation()
+                                    },1000);
+                                }}
+                                style={[styles.btnQuestion,{backgroundColor: Colors.blueGreen,}]}>
                                 <Text style={styles.lblQuestion}>No</Text>
                             </TouchableOpacity>
                             <TouchableOpacity 

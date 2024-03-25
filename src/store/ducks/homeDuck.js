@@ -1,4 +1,4 @@
-import { getCards, getCardsExchange, getSiteConfig, getSurveys, getSurveysTotal, getTotalPoints, postSurveys, postValidateOTP } from "../../utils/services/ApiApp"
+import { getCards, getCardsExchange, getDataVehicle, getPhysicalBanner, getSiteConfig, getSurveys, getSurveysTotal, getTotalPoints, postSurveys, postValidateOTP, putPhysicBanner } from "../../utils/services/ApiApp"
 import { createDigest, createRandomBytes } from "@otplib/plugin-crypto-js"
 import { keyDecoder, keyEncoder } from "@otplib/plugin-base32-enc-dec"
 import { totpToken, totpOptions, KeyEncodings } from "@otplib/core" 
@@ -13,7 +13,7 @@ const SET_CODE = 'set_code'
 const SET_TIME = 'set_time'
 const UPDATE_AUTO_RUNNING = 'update_auto_running'
 
-const SAVE_LOCAL_STORAGE = 'save_localStorage'
+//const SAVE_LOCAL_STORAGE = 'save_localStorage'
 const SET_SURVEYS = 'set_serveys'
 const SET_TOTAL_SURVEYS = 'set_total_serveys'
 const ERROR_SURVEYS = 'error_serveys'
@@ -26,6 +26,8 @@ const ANSWER_SURVEY_SUCCESS = 'answer_survey_success'
 const ANSWER_SURVEY_FAILED = 'answer_survey_failed'
 const CLEAN_AFTER_NAVIGATION = 'clean_after_navigation'
 const SET_POINTS = 'set_points'
+const GET_VEHICLE = 'get_vehicle_data'
+const SHOW_PHYSIC_BANNER = 'show_physic_banner'
 
 
 const initialState = {
@@ -37,7 +39,7 @@ const initialState = {
     minutes:0,
     seconds:0,
     loading:false,
-    cardsStorage:[],
+    //cardsStorage:[],
     userStorage:null,
     surveys:[],
     totalSurveys:0,
@@ -48,7 +50,9 @@ const initialState = {
     modalFailed:false,
     message:'',
     points:0,
-    modalScreenShot: false
+    modalScreenShot: false,
+    vehicle:null,
+    showBannerCard: false
 }
 
 const homeDuck = (state = initialState, action) => {
@@ -67,8 +71,8 @@ const homeDuck = (state = initialState, action) => {
             return{ ...state, minutes: action.minutes, seconds: action.seconds}
         case UPDATE_AUTO_RUNNING:
             return{ ...state, isRunning: false}
-        case SAVE_LOCAL_STORAGE:
-            return{ ...state, cardsStorage: action.payload.cards}
+        /*case SAVE_LOCAL_STORAGE:
+            return{ ...state, cardsStorage: action.payload.cards}*/
         case SET_TOTAL_SURVEYS:
             return{ ...state, totalSurveys: action.payload}
         case SET_SURVEYS: 
@@ -91,6 +95,10 @@ const homeDuck = (state = initialState, action) => {
             return{ ...state, answerSuccess: false, loading: false, isFinish: false, modalQuizz: false, modalFailed: true, message: action.payload }
         case SET_POINTS:
             return{ ...state, points: action.payload}
+        case GET_VEHICLE:
+            return{ ...state, vehicle: action.payload}
+        case SHOW_PHYSIC_BANNER:
+            return{ ...state, showBannerCard: action.payload}
         default:
             return state;
     }
@@ -194,16 +202,16 @@ export const getAllCards = (userId) => async(dispatch) => {
     }
 }
 
-export const saveDataLocalStorage = (cards) => async(dispatch) => {
+/*export const saveDataLocalStorage = (cards) => async(dispatch) => {
     try {
         dispatch({
             type: SAVE_LOCAL_STORAGE, 
             payload: cards
         })
     } catch (e) {
-        
+        console.log('eror st',e)
     }
-}
+}*/
 
 export const getAllSurveys = () => async(dispatch) => {
     try {
@@ -289,10 +297,34 @@ export const cleanAfterNavigation = () => {
 export const getPointsCard = (cardId) => async(dispatch) => {
     try {
         const response = await getTotalPoints(cardId)
-        
+        //console.log('points',response?.data)
         dispatch({type: SET_POINTS, payload: response?.data?.total })
     } catch (e) {
         console.log('error points',e)
+    }
+}
+
+export const getInfoVehicle = (id) => async(dispatch) => {
+    try {
+        const response = await getDataVehicle(id)
+        dispatch({type: GET_VEHICLE, payload: response?.data})
+    } catch (e) {
+        console.log('error get vehicle0',e)
+    }
+}
+
+export const onShowBanner = (cardId, type) => async(dispatch) => {
+    try {
+        if(type != 1){
+            const respose = await putPhysicBanner(cardId)
+            //console.log('put banner', respose?.data)
+        }else{
+            const response = await getPhysicalBanner(cardId)
+            //console.log('shwbanner',response?.data)
+            dispatch({type: SHOW_PHYSIC_BANNER, payload: response?.data?.show})
+        }
+    } catch (e) {
+        console.log('error show',e)
     }
 }
 

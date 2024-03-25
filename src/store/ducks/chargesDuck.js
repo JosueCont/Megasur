@@ -129,6 +129,7 @@ export const getCharges = (filters='', options, isInitial=false) => async(dispat
                 }
             }
         }
+        console.log('cargas',chargesMonth)
         dispatch({type: GET_CHARGES_FUEL, payload: {chargesMonth, branches}})
     } catch (e) {
         console.log('error cargas',e)
