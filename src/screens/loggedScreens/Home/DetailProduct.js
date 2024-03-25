@@ -29,7 +29,8 @@ const DetailProduct = () => {
             isBack={true} 
             goBack={() => {
                 dispatch(resetCount())
-                navigation.navigate('Home',{screen:'Exchange'})
+                navigation.goBack()
+                //navigation.navigate('Home',{screen:'Exchange'})
             }}>
             <View style={styles.contHeader}>
                 <View style={[styles.contNew,{ backgroundColor: product?.isNewProduct ? Colors.yellowStrong: Colors.white}]}>
@@ -96,14 +97,14 @@ Lorem ipsum dolor sit amet. Ut dolorem rerum quo molestias praesentium sit solut
                     }else{
                         dispatch(addCartItem(product))
                     }
-                    setTimeout(() => {
-                        isFromHome ? 
-                        navigation.goBack() :
+                    //setTimeout(() => {
+                        //isFromHome ? 
+                        //navigation.goBack() //:
                         navigation.dispatch(CommonActions.reset({
                             index:0,
                             routes:[{name:'TabNavigator', params:{screen:'Store'}}]
                         }))
-                    }, 500)
+                    //}, 500)
                     /*navigation.navigate('Confirm')*/
                 }}>
                 <Text style={styles.lblBtn}>Agregar al carrito</Text>

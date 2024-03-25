@@ -4,7 +4,7 @@ import { getFontSize } from "../../../utils/functions";
 import { Colors } from "../../../utils/Colors";
 import HeaderLogged from "../../../components/Headers/HeaderLogged";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, CommonActions } from "@react-navigation/native";
 import { onChangeType } from "../../../store/ducks/exchangeDuck";
 const {height, width} = Dimensions.get('window');
 
@@ -20,7 +20,12 @@ const ConfirmExchange = () => {
             <View style={styles.contBtn}>
                 <TouchableOpacity 
                     style={styles.btn}
-                    onPress={() => navigation.navigate('House')}>
+                    onPress={() => {
+                        navigation.dispatch(CommonActions.reset({
+                            index:0,
+                            routes:[{name:'Home', params:{screen:'House'}}]
+                        }))
+                    }}>
                     <Text style={styles.lblBtn}>Volver al inicio</Text>
                 </TouchableOpacity>
                 <TouchableOpacity 

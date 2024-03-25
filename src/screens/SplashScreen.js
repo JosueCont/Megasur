@@ -23,7 +23,7 @@ const SplashScreen = ({onComplete}) => {
             onPlaybackStatusUpdate={onStatusUpdate}
             isLooping={false}
             shouldPlay
-
+            isMuted={true}
         />
     )
 }

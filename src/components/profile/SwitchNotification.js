@@ -1,14 +1,15 @@
 import React, {useState, useEffect} from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions, ImageBackground,} from "react-native";
-import { Switch } from "native-base";
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions, ImageBackground, Switch} from "react-native";
 import { getFontSize } from "../../utils/functions";
 import { Colors } from "../../utils/Colors";
 import LogoMega from "../../../assets/svg/LogoMega";
 import { MaterialIcons, AntDesign } from '@expo/vector-icons';
-
+import { useSelector } from "react-redux";
 const {height, width} = Dimensions.get('window');
 
-const SwitchNotification = () => {
+const SwitchNotification = ({receiveNotifications=false, onChangeSwitch}) => {
+    const isDisabled = useSelector(state => state.profileDuck.loading)
+
     return(
         <>
             <View style={styles.container}>
@@ -16,7 +17,16 @@ const SwitchNotification = () => {
                     <Text style={styles.title}>Notificaciones</Text>
                     <Text style={styles.lbl}>Activa tus notificaciones para recibir promociones.</Text>
                 </View>
-                <Switch size={'sm'} colorScheme={'green'}/>
+                <Switch 
+                    trackColor={{true: Colors.green, false: Colors.gray}}
+                    thumbColor={receiveNotifications ? Colors.greenStrong : Colors.gray}
+                    disabled={isDisabled}
+                    style={{ transform:[{ scaleX: .7 }, { scaleY: .7 }] }}
+                    //size={'sm'} 
+                    //colorScheme={'green'} 
+                    value={receiveNotifications}
+                    onValueChange={(val) => onChangeSwitch(val)}
+                />
             </View>
         
         </>

@@ -135,7 +135,7 @@ const PersonalInfoForm = () => {
                 value={first_name} 
                 setValue={(value) => dispatch(onChangeInputProf({prop:'name', value }))}
             />
-            <Text style={styles.lbl}>Apellidos(s)</Text>
+            <Text style={styles.lbl}>Apellido(s)</Text>
             <Input 
                 isLogged={true} 
                 value={last_name} 
@@ -152,7 +152,7 @@ const PersonalInfoForm = () => {
                 value={email} 
                 setValue={(value) => dispatch(onChangeInputProf({prop:'email',value}))}
             />
-            <Text style={styles.lbl}>Número celular (10 digitos)</Text>
+            <Text style={styles.lbl}>Número celular (10 dígitos)</Text>
             <Input 
                 editable={false}
                 isLogged={true} 

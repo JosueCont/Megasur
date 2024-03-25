@@ -20,7 +20,7 @@ const ListPromotions = ({dataPromotion}) => {
                 //snapToOffsets={[...Array(dataPromotion.length)].map((x, i) =>  width * i + width/1.2)}
                 //decelerationRate={0}
                 snapToAlignment="center"
-                renderItem={({item,index}) => (
+                renderItem={({item,index}) => item?.is_active && (
                     <ListPromotionItem item={item} index={index}/>
                 )}
             />

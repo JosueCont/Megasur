@@ -22,7 +22,7 @@ const ModalScreenShot = ({visible, setVisible}) => {
                         <Text style={styles.lblWarning}>¡Atención!</Text>   
                         <Text style={styles.desc}>
                             Por su seguridad, no se permiten capturas de pantalla a los códigos QR de la aplicación. 
-                            Le recomendamos borrar la captura de su dispositivo móvil cuanto antes. Gracias
+                            Le recomendamos borrar la captura de su dispositivo móvil cuanto antes. Gracias.
                         </Text>
                         <TouchableOpacity 
                             onPress={setVisible}
