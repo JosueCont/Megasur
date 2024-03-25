@@ -31,7 +31,7 @@ import ModalAlertFailed from "../modals/ModalAlertFail";
 
 const { height, width } = Dimensions.get("window");
 
-const VehicleInfoForm = () => {
+const VehicleInfoForm = ({carTypes}) => {
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
   const userId = useSelector((state) => state.authDuck.dataUser?.id);
@@ -40,16 +40,25 @@ const VehicleInfoForm = () => {
     insurance_policy_number: "",
     insurance_phone: "",
     insurance_validity_date: "",
+    vehicle_type:""
   });
   const [loader, setLoader] = useState(false);
   const [modalSuccess, setModalSuccess] = useState(false);
   const [modalFailed, setModalFailed] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [date, setDate] = useState(new Date());
+  const [disabled, setDisabled] = useState(false)
 
   useEffect(() => {
     getDataVehicle();
   }, [isFocused]);
+
+  useEffect(() => {
+    if( vehicleData.plate_number != '' && vehicleData.insurance_phone != '' && 
+        vehicleData.insurance_policy_number != '' && vehicleData.insurance_validity_date
+        && vehicleData.vehicle_type != '') setDisabled(false)
+    else setDisabled(true)
+  },[vehicleData,])
 
   const getDataVehicle = async () => {
     setLoader(true);
@@ -148,6 +157,21 @@ const VehicleInfoForm = () => {
           setVehicleData({ ...vehicleData, insurance_phone: value })
         }
       />
+      <Text style={styles.lbl}>Tipo de vehículo</Text>
+      <View style={styles.input}>
+        <Select
+          selectedValue={vehicleData.vehicle_type}
+          onValueChange={(value) => setVehicleData({...vehicleData, vehicle_type:value })}
+          borderWidth={0}
+          placeholder="Tipo de vehículo"
+          style={{}}>
+            {carTypes.map((type, index) => (
+              <Select.Item key={index} value={type.value} label={type.name}/>
+            ))}
+              
+        </Select>
+
+    </View>
       <Text style={styles.lbl}>Vigencia del seguro</Text>
       {showDatePicker && (
         <DateTimePicker
@@ -191,10 +215,11 @@ const VehicleInfoForm = () => {
       /> */}
       <View style={styles.contBt}></View>
       <TouchableOpacity
+        disabled={disabled}
         onPress={() => {
           handleUpdateVehicleData(vehicleData);
         }}
-        style={[styles.btnSave, { backgroundColor: Colors.blueGreen }]}
+        style={[styles.btnSave, { backgroundColor: disabled ? Colors.gray : Colors.blueGreen }]}
       >
         {loader ? (
           <Spinner size={"sm"} color={"white"} />

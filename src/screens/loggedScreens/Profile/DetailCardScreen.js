@@ -6,7 +6,7 @@ import { Colors } from "../../../utils/Colors";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import CardItem from "../../../components/profile/Card";
-import { exchangeCard, getPhysicCardsExchange, onChangeValueRedeem, setCardSelected } from "../../../store/ducks/redeemPointsDuck";
+import { cleanRedeems, exchangeCard, getPhysicCardsExchange, onChangeValueRedeem, setCardSelected } from "../../../store/ducks/redeemPointsDuck";
 import ModalPhysicalCard from "../../../components/modals/ModalAddPhysicalCard";
 import { Skeleton, useToast, Alert, VStack, HStack } from "native-base";
 import ModalAlertFailed from '../../../components/modals/ModalAlertFail'
@@ -28,15 +28,13 @@ const DetailCardScreen = () => {
     const message = useSelector(state => state.redeemDuck.message)
     const cardNumber = useSelector(state => state.redeemDuck.cardNumber)
 
-
-
     const changeValue = (prop,value) => {
         dispatch(onChangeValueRedeem({prop,value}))
     }
 
     useEffect(() => {
         (async() => {
-            await dispatch(getPhysicCardsExchange(cardSelected?.user_card_id))
+            await dispatch(getPhysicCardsExchange(cardSelected?.user_card_id, exchanged))
         })()
         if(exchanged){
             navigation.navigate('RedemPoints')
@@ -58,7 +56,7 @@ const DetailCardScreen = () => {
                 navigation.goBack()
             }}>
                 <View style={styles.container}>
-                    {cardSelected != null && <CardItem item={cardSelected} index={1} disable={true} showPts={true} points={getPoints()}/>}
+                    {cardSelected != null && <CardItem item={cardSelected} index={1} disable={true} showPts={true} points={exchangeCards[0]?.points}/>}
                     {loading ? (
                         <Skeleton lines={1} width={width * .93} height={100} mt={4} borderRadius={13} backgroundColor={'gray.100'}/>
                     ): (

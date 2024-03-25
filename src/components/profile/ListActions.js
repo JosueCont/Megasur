@@ -14,7 +14,7 @@ const ListActionsProfile = () => {
 
     const options =[
         {name:'Mi auto', icon: require('../../../assets/car-icon.png'), route:'MyCar'},
-        {name:'Vincular', icon: require('../../../assets/card-icon.png'), route:'Link'},
+        {name:'Vincular tarjeta física', icon: require('../../../assets/card-icon.png'), route:'Link'},
         {name:'Facturación', icon: require('../../../assets/file-icon.png'), route:'CheckIn'},
         {name:'Encuestas contestadas', icon: require('../../../assets/poll-icon.png'), route:'AnsweredSurvey'},
         {name:'Información legal', icon: require('../../../assets/signature-icon.png'), route:'InfoLegal'},

@@ -56,7 +56,11 @@ const ChargesItem = ({charge, index, lastItem, openModal}) => {
                 </View>
             </View>
             <View style={styles.contRate}>
-                {charge?.score != null ? (
+                {charge?.total_paid === 0 ? (
+                    <View style={[styles.btnRate,{backgroundColor: Colors.borders}]}>
+                        <Text style={{color: Colors.grayStrong, fontSize: getFontSize(13)}}>Canjeado</Text>
+                    </View>
+                ) : charge?.score != null ? (
                     <RateComponent rate={charge?.score}/>
                 ) : validateDates(charge?.fuel_datetime) ? (
                     <View style={[styles.btnRate,{backgroundColor: Colors.borders}]}>
@@ -71,7 +75,7 @@ const ChargesItem = ({charge, index, lastItem, openModal}) => {
                     </>
                 )}
                 {/*<Text style={styles.lblPoints}>+{charge?.points || 10}</Text>*/}
-                { charge?.score !=null && <Text style={styles.lblPoints}>+{points}</Text>}
+                { charge?.score !=null && charge?.total_paid !== 0 && <Text style={styles.lblPoints}>+{points}</Text>}
             </View>
         </View>
     )

@@ -67,7 +67,7 @@ const profileDuck = (state = initialState, action) => {
                 phone: action.payload.phone,
                 dataUser: action.payload,
                 userImage: action.payload.profile_picture,
-                receiveNotifications: action.payload.receive_notification,
+                receiveNotifications: action.payload.receive_notifications,
                 loading:false,
                 refresh:false,
                 //isAccountUpdate: false

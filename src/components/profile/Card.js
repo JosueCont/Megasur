@@ -1,5 +1,5 @@
 import React,{useEffect} from "react";
-import { View, Text, TouchableOpacity, ImageBackground, StyleSheet, Dimensions } from "react-native";
+import { View, Text, TouchableOpacity, ImageBackground, StyleSheet, Dimensions, Platform } from "react-native";
 import { getFontSize } from "../../utils/functions";
 import { Colors } from "../../utils/Colors";
 import { AntDesign } from '@expo/vector-icons';
@@ -33,15 +33,17 @@ const CardItem = ({item,index, cardSelected, showPts=false, disable=false, point
                 resizeMode='contain'
                 style={styles.img}>
                     <View style={styles.container}>
-                        {showPts && <Text style={styles.lblPts}>{points.toString()} pts</Text>}
-                        {!showPts && <AntDesign name="checkcircle" size={24} color={card?.card_id === item?.card_id ? Colors.green : Colors.gray} style={{alignSelf:'flex-end', marginRight:20}}/>}
-                        <View style={styles.contNumber}>
-                            <Text style={styles.lblTitle}>Número de tarjeta</Text>
-                            <View style={styles.contCode}>
-                                <Text style={styles.lblCode}>{separateText(item?.code,4)}</Text>
-                            </View>
+                        {showPts && points > 0 && <Text style={styles.lblPts}>{points.toString()} pts</Text>}
+                        {!showPts && <AntDesign name="checkcircle" size={32} color={card?.card_id === item?.card_id ? Colors.green : Colors.gray} style={{alignSelf:'flex-end', marginRight: Platform.OS === 'ios' ? 20 : 26}}/>}
+                        {showPts && points > 0 && (
+                            <View style={styles.contNumber}>
+                                <Text style={styles.lblTitle}>Número de tarjeta</Text>
+                                <View style={styles.contCode}>
+                                    <Text style={styles.lblCode}>{separateText(item?.code,4)}</Text>
+                                </View>
 
-                        </View>
+                            </View>
+                        )}
                     </View>
             </ImageBackground>
         </TouchableOpacity>

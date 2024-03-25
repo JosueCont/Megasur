@@ -68,7 +68,8 @@ const android = {
   },
   "permissions": [
     "'android.permission.ACCESS_FINE_LOCATION"
-  ]
+  ],
+  "softwareKeyboardLayoutMode":'pan'
 }
 
 const ios = {

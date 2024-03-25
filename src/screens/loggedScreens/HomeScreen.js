@@ -14,7 +14,8 @@ import ListPromotions from "../../components/Home/ListPromotions";
 import ListDiscount from "../../components/Home/ListDiscount";
 import CloseStations from "../../components/Home/CloseStations";
 import ModalQuizz from "../../components/modals/ModalQuizz";
-import { changeModalHome, getDataConfi, getAllCards, saveDataLocalStorage, getAllSurveys, getTotalSurveys, getPointsCard } from "../../store/ducks/homeDuck";
+import { changeModalHome, getDataConfi, getAllCards, getAllSurveys, getTotalSurveys, getPointsCard, getInfoVehicle, onShowBanner } from "../../store/ducks/homeDuck";
+import { saveDataLocalStorage } from "../../store/ducks/authDuck";
 import { getCloseStations } from "../../store/ducks/locationsDuck";
 import { getProfileData } from "../../store/ducks/profileDuck";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -35,7 +36,7 @@ const HomeScreen = () => {
     const modalQuizz = useSelector(state => state.homeDuck.modalQuizz)
     const stations = useSelector(state => state.locationDuck.nearBranches)
     const userId = useSelector(state => state.authDuck.dataUser?.id)
-    const userCard = useSelector(state => state.homeDuck.cardsStorage)
+    const userCard = useSelector(state => state.authDuck.cardsStorage)
     const totalSurveys = useSelector(state => state.homeDuck.totalSurveys)
     const surveys = useSelector(state => state.homeDuck.surveys)
     const modalFailed = useSelector(state => state.homeDuck.modalFailed)
@@ -44,7 +45,9 @@ const HomeScreen = () => {
     const points = useSelector(state => state.homeDuck.points)
     const modalScreenShot = useSelector(state => state.homeDuck.modalScreenShot)
     const gender = useSelector(state => state.authDuck.dataUser?.gender)
-
+    const fuelCost = useSelector(state => state.homeDuck.setupData?.fuel_cost)
+    const vehicle = useSelector(state => state.homeDuck.vehicle)
+    const showBannerCard = useSelector(state => state.homeDuck.showBannerCard)
     const [dataAdvertisements, setDataAdvertisements] = useState([])
     const [dataPromotions, setDataPromotions] = useState([])
 
@@ -53,12 +56,26 @@ const HomeScreen = () => {
         'FEMALE':'Bienvenida'
     }
 
+    const VehicleLtr = {
+        null: 0,
+        1: 45,
+        2: 60,
+        3: 80,
+        4: 80,
+        5: 120,
+        6: 70,
+        7: 90,
+        8: 120,
+        9: 90
+    }
+
     useEffect(() => {
         (async() => {
             if(userId && userId != undefined){
                 const cards = await AsyncStorage.getItem('cards')
                 await dispatch(saveDataLocalStorage(JSON.parse(cards)))
                 await dispatch(getDataConfi())
+                await dispatch(getInfoVehicle(userId))
                 const location = await getPermissionLocation()
                 await dispatch(getCloseStations(location?.coords))
                 //await dispatch(getAllCards(userId))
@@ -68,10 +85,13 @@ const HomeScreen = () => {
             }
                 
         })()
-    },[userId])
+    },[userId, vehicle])
 
     useEffect(() => {
-        if(userCard && userCard != undefined && userCard[0]?.user_card_id ) dispatch(getPointsCard(userCard[0]?.user_card_id))
+        if(userCard && userCard != undefined && userCard[0]?.user_card_id ){
+            dispatch(getPointsCard(userCard[0]?.user_card_id))
+            dispatch(onShowBanner(userCard[0]?.user_card_id,1))
+        }
     },[userCard, isFocused])
 
     useEffect(() => {
@@ -122,7 +142,7 @@ const HomeScreen = () => {
             title={genders[gender]}
             onRefresh={() => console.log('refreshPAge')}>
             <FlipCard cards={userCard} points={points}/>
-            <Question />
+            {showBannerCard && userCard && <Question cardId={userCard[0]?.user_card_id}/>}
             <ProvitionalPoints 
                 showSurvey={() => {
                     if(totalSurveys === 1){
@@ -132,7 +152,13 @@ const HomeScreen = () => {
                 }}
                 totalSurveys={totalSurveys}
             />
-            <ExchangeCenter />
+            {vehicle != null && (
+                <ExchangeCenter 
+                    fuelCost={fuelCost} 
+                    capacity={VehicleLtr[vehicle?.vehicle_type]} 
+                    points={points}
+                />
+            )}
             <ListPromotions dataPromotion={dataAdvertisements}/>
             <ListDiscount dataDisconunt={dataPromotions}/>
             <CloseStations stations={stations}/>

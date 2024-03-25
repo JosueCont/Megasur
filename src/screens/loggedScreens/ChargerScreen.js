@@ -14,10 +14,11 @@ import { useDispatch, useSelector } from "react-redux";
 import ModalRateCharge from "../../components/modals/ModalRateCharge";
 import { getCharges } from "../../store/ducks/chargesDuck";
 import ModalAlertFailed from "../../components/modals/ModalAlertFail";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 
 const ChargerScreen = () => {
     const dispatch = useDispatch();
+    const isFocused = useIsFocused();
     const navigation = useNavigation()
     const modalRate = useSelector(state => state.chargesDuck.modalActive)
     const charges = useSelector(state => state.chargesDuck.fuelCharges)
@@ -57,7 +58,7 @@ const ChargerScreen = () => {
             })
             navigation.navigate('ConfirmRate',{points:infoCharge?.score_points})
         }
-    },[isRate])
+    },[isRate, isFocused])
 
     const onFilter = async() => {
         const filters = buildUrlPath(typeFuel,branchName)

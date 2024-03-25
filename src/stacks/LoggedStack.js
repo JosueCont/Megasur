@@ -130,7 +130,8 @@ const TabNavigator = () => {
         <Tab.Navigator 
             tabBar={(props) => <CustomBottomTabBar {...props}/>} 
             screenOptions={({navigation, route}) =>({
-                headerShown:false
+                headerShown:false,
+                tabBarHideOnKeyboard: true
             })}>
             <Tab.Screen name="Home" component={HomeNavigator} />
             <Tab.Screen name="Charges" component={ChargesNavigator}/>

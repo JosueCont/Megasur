@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignSelf:'center',
-        width: width/1.3,
+        width: width/1.2,
         marginBottom: 80,
     },
     input: {
@@ -227,8 +227,9 @@ const styles = StyleSheet.create({
         fontSize: getFontSize(45),
         fontWeight:'300',
         color:Colors.darkGray,
-        width: width/7,
+        width: width/6.5,
         marginRight:5,
+        paddingTop: Platform.OS === 'android' ? 0 : 5,
         height:65,
         elevation:4,
         shadowColor: '#000', // Color de la sombra
