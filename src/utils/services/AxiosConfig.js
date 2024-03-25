@@ -5,6 +5,7 @@ import { logoutAction } from '../../store/ducks/authDuck';
 import { getExpoToken } from '../functions';
 
 export const baseURL = 'https://api.megasur.hiumanlab.mx';
+// export const baseURL = 'https://api.megasur.staging.hiumanlab.com'  // <-- Staging url.
 
 let config = {
     baseURL:baseURL,
