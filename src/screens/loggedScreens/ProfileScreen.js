@@ -19,6 +19,7 @@ import PersonalInfoForm from "../../components/profile/PersonalInfo";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { getExpoToken } from "../../utils/functions";
 import ListActionsProfile from "../../components/profile/ListActions";
+import { getInfoVehicle } from "../../store/ducks/homeDuck";
 
 const {height, width} = Dimensions.get('window');
 
@@ -41,9 +42,11 @@ const ProfileScreen = () => {
 
 
     useEffect(() => {
+        if(isFocused){
+            getDataUser()
+            applicationExpoToken()
+        }
         //if(userId && userId != undefined) 
-        getDataUser()
-        applicationExpoToken()
     },[isValid,isUpdateAccount, isFocused])
 
     const getDataUser = async() => {

@@ -71,21 +71,25 @@ const HomeScreen = () => {
 
     useEffect(() => {
         (async() => {
-            if(userId && userId != undefined){
-                const cards = await AsyncStorage.getItem('cards')
-                await dispatch(saveDataLocalStorage(JSON.parse(cards)))
-                await dispatch(getDataConfi())
-                await dispatch(getInfoVehicle(userId))
-                const location = await getPermissionLocation()
-                await dispatch(getCloseStations(location?.coords))
-                //await dispatch(getAllCards(userId))
-                await dispatch(getProfileData())
-                await dispatch(getAllSurveys())
+            if(isFocused){
+                if(userId && userId != undefined){
+                    const cards = await AsyncStorage.getItem('cards')
+                    await dispatch(saveDataLocalStorage(JSON.parse(cards)))
+                    await dispatch(getDataConfi())
+                    await dispatch(getInfoVehicle(userId))
+                    const location = await getPermissionLocation()
+                    await dispatch(getCloseStations(location?.coords))
+                    //await dispatch(getAllCards(userId))
+                    await dispatch(getProfileData())
+                    await dispatch(getAllSurveys())
+    
+                }
 
             }
                 
         })()
-    },[userId, vehicle])
+    },[userId, isFocused])
+
 
     useEffect(() => {
         if(userCard && userCard != undefined && userCard[0]?.user_card_id ){
@@ -152,7 +156,7 @@ const HomeScreen = () => {
                 }}
                 totalSurveys={totalSurveys}
             />
-            {vehicle != null && (
+            {vehicle != null && vehicle?.vehicle_type &&(
                 <ExchangeCenter 
                     fuelCost={fuelCost} 
                     capacity={VehicleLtr[vehicle?.vehicle_type]} 

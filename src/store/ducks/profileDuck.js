@@ -179,7 +179,7 @@ export const onUpdateDataUser = (data) => async(dispatch) => {
         dispatch({
             type: UPDATE_DATA_USER_SUCCESS, 
             message:'Se ha actualizado la información del usuario',
-            notify: response?.data?.receive_notification
+            notify: response?.data?.receive_notifications
         })
     } catch (e) {
         console.log('error actualizar',e)
