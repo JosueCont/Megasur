@@ -44,7 +44,12 @@ const PersonalInfoForm = () => {
     }
 
     useEffect(() => {
-        if(birthDay != undefined && birthDay != '') setDate(new Date(birthDay))
+        console.log("birthDay", birthDay)
+        if(birthDay && birthDay != undefined && birthDay != '') {
+            setDate(new Date(birthDay))
+        }else{
+            setDate(new Date())
+        }
     },[birthDay])
 
     useEffect(() => {
@@ -62,7 +67,7 @@ const PersonalInfoForm = () => {
             const currentDate = selectedDate || date;
             setDate(currentDate);
             if(Platform.OS === 'android'){
-                dispatch(onChangeInputProf({prop:'birthday',value: moment(currentDate.toDateString()).format('DD/MM/YYYY')}))
+                dispatch(onChangeInputProf({prop:'birthDay',value: moment(currentDate).format('DD/MM/YYYY')}))
                 //setBirthdayDate(moment(currentDate.toDateString()).format('DD/MM/YYYY'))
                 setShowDatePicker(false)
             }
@@ -110,9 +115,11 @@ const PersonalInfoForm = () => {
 
     const onUpdate = async() => {
         let dataSend = {
-            first_name, last_name, email, phone, 
-            birthDay, gender, imageBack, imageFront,
+            first_name, last_name, email, phone,
+            gender, imageBack, imageFront,
         }
+        if (birthDay)
+            dataSend.birthday = birthDay ? moment(birthDay,'DD/MM/YYYY').format('YYYY-MM-DD') : null
         if(image64 != '') dataSend.profile_picture = image64
         dispatch(onUpdateDataUser(dataSend))
     }
