@@ -67,9 +67,16 @@ const android = {
       "backgroundColor": "#ffffff"
   },
   "permissions": [
-    "'android.permission.ACCESS_FINE_LOCATION"
+    "ACCESS_FINE_LOCATION",
+    "ACCESS_COARSE_LOCATION"
   ],
-  "softwareKeyboardLayoutMode":'pan'
+  "package": "com.hiumanlab.megasur",
+  "softwareKeyboardLayoutMode":'pan',
+  "config": {
+    "googleMaps":{
+      "apiKey": process.env.GOOGLE_API_KEY
+    }
+  }
 }
 
 const ios = {

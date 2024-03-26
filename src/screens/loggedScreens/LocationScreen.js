@@ -4,7 +4,7 @@ import { getFontSize, getPermissionLocation } from "../../utils/functions";
 import { Colors } from "../../utils/Colors";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import HeaderLogged from "../../components/Headers/HeaderLogged";
-import MapView,{Marker, Callout, CalloutSubview} from "react-native-maps";
+import MapView,{Marker, Callout, CalloutSubview, PROVIDER_GOOGLE} from "react-native-maps";
 //import Animated, { useSharedValue, withTiming, interpolate, useAnimatedStyle, withSpring } from "react-native-reanimated";
 import { PanGestureHandler, State, GestureHandlerRootView, Gesture, GestureDetector } from "react-native-gesture-handler";
 import AccordionList from "../../components/profile/AccordionList";
@@ -77,7 +77,7 @@ const LocationScreen = () => {
                 })
                 dispatch((setLocationStation(null)))
             })();
-            getByZone()
+            //getByZone()
 
         }
     },[isFocused])
@@ -222,6 +222,7 @@ const LocationScreen = () => {
                 <Animated.View style={[{width: width, flex: animatedMapSize }]}>
                     {initialRegion != null &&
                      <MapView 
+                        provider={PROVIDER_GOOGLE}
                         style={{flex:1,}}
                         region={{...region, longitudeDelta: isOpen ? 0.009 : 0.9, latitudeDelta: 0.04}}
                         initialRegion={{
