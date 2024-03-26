@@ -91,7 +91,7 @@ const RegisterScreen = () => {
                
                 dispatch(onRegisterUser({
                     email, first_name:name, last_name: lastName, 
-                    birthday:moment(birthdayDate,'DD/MM/YYYY').format('YYYY-MM-DD'), 
+                    birthday: birthdayDate ? moment(birthdayDate,'DD/MM/YYYY').format('YYYY-MM-DD') : null,
                     gender, expoToken, os, password, phone
                 }))
                 //navigation.navigate('RegisterDone')
@@ -106,7 +106,7 @@ const RegisterScreen = () => {
         const password = getRandomPassword()
         await dispatch(onRegisterUser({
             email, first_name:name, last_name: lastName, 
-            birthday:birthdayDate != '' ? moment(birthdayDate,'DD/MM/YYYY').format('YYYY-MM-DD') : '', 
+            birthday:birthdayDate ? moment(birthdayDate,'DD/MM/YYYY').format('YYYY-MM-DD') : null, 
             gender, expoToken, os, password, phone
         }))
 
