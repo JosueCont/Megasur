@@ -1,10 +1,11 @@
-import React,{useEffect} from "react";
+import React,{useEffect, useRef} from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from "react-native";
 import { getFontSize } from "../../../utils/functions";
 import { Colors } from "../../../utils/Colors";
 import HeaderLogged from "../../../components/Headers/HeaderLogged";
 import { Video } from "expo-av";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import LottieView from 'lottie-react-native'
 
 const {height, width} = Dimensions.get('window');
 
@@ -12,7 +13,8 @@ const SurveyDoneScreen = () => {
     const navigation = useNavigation();
     const route = useRoute();
     const {points} = route.params;
-    
+    const animation = useRef(null);
+
     return(
         <HeaderLogged
             title="Encuesta contestada"
@@ -21,15 +23,16 @@ const SurveyDoneScreen = () => {
         >
             <View style={{alignItems:'center'}}> 
                 <View style={{height: height/3, width: width}}>
-                    <Video  
-                        source={require('../../../../assets/confeti.mp4')}
-                        style={{width: width, height: height/3,}}
-                        useNativeControls={false}
+                    <LottieView
+                        autoPlay
                         resizeMode="cover"
-                        isLooping
-                        shouldPlay
-                        isMuted
-                    />
+                        ref={animation}
+                        style={{
+                            flex:1,
+                            backgroundColor: 'white',
+                        }}
+                        source={require('./../../../../assets/Coins.json')}
+                    />  
                 </View>
                 <Text style={styles.title}>¡Felicidades!</Text>
                 <Text style={styles.subtitle}>Añadimos {points} pts a tu cuenta</Text>

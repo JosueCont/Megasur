@@ -67,9 +67,16 @@ const android = {
       "backgroundColor": "#ffffff"
   },
   "permissions": [
-    "'android.permission.ACCESS_FINE_LOCATION"
+    "ACCESS_FINE_LOCATION",
+    "ACCESS_COARSE_LOCATION"
   ],
-  "softwareKeyboardLayoutMode":'pan'
+  "package": "com.hiumanlab.megasur",
+  "softwareKeyboardLayoutMode":'pan',
+  "config": {
+    "googleMaps":{
+      "apiKey": 'AIzaSyD5J5pV_bXyGd_h-EfoHqDomx3jttyZELQ'//process.env.GOOGLE_API_KEY
+    }
+  }
 }
 
 const ios = {
@@ -77,6 +84,9 @@ const ios = {
     "usesAppleSignIn": true,
     "infoPlist": {
       "NSLocationAlwaysUsageDescription" : 'Los datos proporcionados serán utilizados exclusivamente para validar la sucursal de canje y garantizar la seguridad en la generación de códigos en dicha sucursal.'
+    },
+    "config":{
+      "googleMapsApiKey": 'AIzaSyD5J5pV_bXyGd_h-EfoHqDomx3jttyZELQ'//process.env.GOOGLE_API_KEY
     }
 }
 

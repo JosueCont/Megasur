@@ -17,7 +17,7 @@ const SurveyItem = ({item, index, onSelectedSurvey, isAnswered=false}) => {
                     <View style={styles.contIcon}>
                         <FontAwesome5 name="clipboard-list" size={20} color={Colors.blueGreen} />
                     </View>
-                    <Text style={styles.lblTitle}>{isAnswered ? item?.poll?.name : item?.name}</Text>
+                    <Text style={styles.lblTitle} ellipsizeMode="tail" numberOfLines={2}>{isAnswered ? item?.poll?.name : item?.name}</Text>
                     
                 </View>
                 <Text style={styles.lblBonus}>{isAnswered ? '+'+item?.poll?.bonus_points.toString() : item?.bonus_points.toString()} pts.</Text>
@@ -82,7 +82,8 @@ const styles = StyleSheet.create({
     lblTitle:{
         color: Colors.darkGray, 
         fontSize: getFontSize(18), 
-        fontWeight:'700'
+        fontWeight:'700',
+        width: width * .6
     },
     lblBonus:{
         color: Colors.blueGreen, 

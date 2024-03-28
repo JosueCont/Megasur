@@ -4,7 +4,7 @@ import { getFontSize, getPermissionLocation } from "../../utils/functions";
 import { Colors } from "../../utils/Colors";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import HeaderLogged from "../../components/Headers/HeaderLogged";
-import MapView,{Marker, Callout, CalloutSubview} from "react-native-maps";
+import MapView,{Marker, Callout, CalloutSubview, PROVIDER_GOOGLE} from "react-native-maps";
 //import Animated, { useSharedValue, withTiming, interpolate, useAnimatedStyle, withSpring } from "react-native-reanimated";
 import { PanGestureHandler, State, GestureHandlerRootView, Gesture, GestureDetector } from "react-native-gesture-handler";
 import AccordionList from "../../components/profile/AccordionList";
@@ -38,6 +38,7 @@ const LocationScreen = () => {
     const zones = useSelector(state => state.locationDuck.branchesZones)
     const modalActive = useSelector(state => state.locationDuck.modalLocation)
     const locationStation = useSelector(state => state.locationDuck.locationStation)
+    const [dataAccordion, setDataAccordion] = useState([])
 
     const sheetMaxHeight = height - 200;
     const sheetMinHeight = 75;
@@ -177,7 +178,8 @@ const LocationScreen = () => {
             })
         })
 
-        return dataAccordion
+        //return dataAccordion
+        setDataAccordion(dataAccordion)
 
     }
 
@@ -222,6 +224,7 @@ const LocationScreen = () => {
                 <Animated.View style={[{width: width, flex: animatedMapSize }]}>
                     {initialRegion != null &&
                      <MapView 
+                        provider={PROVIDER_GOOGLE}
                         style={{flex:1,}}
                         region={{...region, longitudeDelta: isOpen ? 0.009 : 0.9, latitudeDelta: 0.04}}
                         initialRegion={{
@@ -230,7 +233,7 @@ const LocationScreen = () => {
                             longitudeDelta: 0.09,
                             latitudeDelta: 0.04
                         }}
-                        //onRegionChangeComplete={(coords) => setNewRegion({latitude: coords.latitude, longitude: coords.longitude})}
+                        onRegionChangeComplete={(coords) => setNewRegion({latitude: coords.latitude, longitude: coords.longitude})}
                         >
                         <Marker style={{zIndex:10}}coordinate={{
                             longitude: initialRegion?.longitude,
@@ -239,7 +242,7 @@ const LocationScreen = () => {
                             <View style={{width:15, height:15, borderRadius:7.5, backgroundColor: Colors.blueGreen, borderWidth:1, borderColor: Colors.white}}/>
                         </Marker>
                         
-                            <>
+                            {dataAccordion.length > 0 && <>
                                 {stations.map((marker, index) => (
                                 <Marker 
                                     key={index}
@@ -271,7 +274,7 @@ const LocationScreen = () => {
                                     </Marker>
 
                                 )))}
-                            </>
+                            </>}
                         
                     </MapView>}
                     {isOpen && !modalActive && (
@@ -289,7 +292,7 @@ const LocationScreen = () => {
                     </View>
                     <Animated.View style={{opacity: animatedMapOpacity}}>
                         <FlatList 
-                            data={getByZone()}
+                            data={dataAccordion}
                             overScrollMode='always'
                             keyExtractor={(item,i) => i.toString()}
                             nestedScrollEnabled={true}

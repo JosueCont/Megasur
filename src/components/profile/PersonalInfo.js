@@ -8,12 +8,12 @@ import { Feather } from '@expo/vector-icons';
 import { Camera, CameraType } from "expo-camera";
 import * as MediaLibrary from 'expo-media-library'
 import CameraComponent from "../Camera";
-import { onChangeImage, onChangeInputProf, onUpdateDataUser } from "../../store/ducks/profileDuck";
+import { onChangeImage, onChangeInputProf, onChangeModalProf, onUpdateDataUser } from "../../store/ducks/profileDuck";
 import { useDispatch, useSelector } from "react-redux";
 import DateTimePicker from '@react-native-community/datetimepicker'
 import moment from "moment";
 import * as ImagePicker from 'expo-image-picker';
-
+import LottieView from 'lottie-react-native'
 
 const {height, width} = Dimensions.get('window');
 
@@ -32,9 +32,10 @@ const PersonalInfoForm = () => {
     const loader = useSelector(state => state.profileDuck.loading)
     const profile_picture = useSelector(state => state.profileDuck.userImage)
     const [image64, setImage ] = useState('')
-
+    const isComplete = useSelector(state => state.profileDuck.isCompleteRegis)
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [date, setDate] = useState(null);
+    const animation = useRef(null);
 
 
     const mimes = {
@@ -51,6 +52,15 @@ const PersonalInfoForm = () => {
             setDate(new Date())
         }
     },[birthDay])
+
+    useEffect(() => {
+        console.log('sComplete',isComplete)
+        if(isComplete){
+            setTimeout(() => {
+                dispatch(onChangeModalProf({prop:'isCompleteRegis', value: false}))
+            },9000)
+        }
+    },[isComplete])
 
     useEffect(() => {
         if(gender != undefined && gender !='') dispatch(onChangeInputProf({prop:'gender', value: gender.toString()}))
@@ -116,10 +126,10 @@ const PersonalInfoForm = () => {
     const onUpdate = async() => {
         let dataSend = {
             first_name, last_name, email, phone,
-            gender, imageBack, imageFront,
+            gender, imageBack, imageFront, birthDay
         }
-        if (birthDay)
-            dataSend.birthday = birthDay ? moment(birthDay,'DD/MM/YYYY').format('YYYY-MM-DD') : null
+        //if (birthDay !='' && birthDay != null)
+        //    dataSend.birthday = birthDay ? moment(birthDay,'DD/MM/YYYY').format('YYYY-MM-DD') : null
         if(image64 != '') dataSend.profile_picture = image64
         dispatch(onUpdateDataUser(dataSend))
     }
@@ -217,7 +227,7 @@ const PersonalInfoForm = () => {
                 </View>
                 <Text style={styles.lbl}>Identificación oficial</Text>
                 <View style={styles.contBt}>
-                    <TouchableOpacity 
+                    {!isComplete && <TouchableOpacity 
                         style={[styles.btn,{marginRight:8}]} 
                         onPress={() => {
                             setTypePhoto('imgFront')
@@ -233,8 +243,8 @@ const PersonalInfoForm = () => {
                                     <Text style={styles.lblBtn}>Frente</Text>
                                 </>
                             )}
-                    </TouchableOpacity>
-                    <TouchableOpacity 
+                    </TouchableOpacity>}
+                    {!isComplete && <TouchableOpacity 
                         style={styles.btn}
                         onPress={() => {
                             setTypePhoto('imgBack')
@@ -251,14 +261,29 @@ const PersonalInfoForm = () => {
                                 
                                 </>
                             )}
-                    </TouchableOpacity>
+                    </TouchableOpacity>}
                 </View>
-                <TouchableOpacity 
-                    onPress={() => onUpdate()}
-                    disabled={!(email !='' && phone != '')}
-                    style={[styles.btnSave,{backgroundColor: !(email != '' && phone != '') ? Colors.gray :Colors.blueGreen}]}>
-                    {loader ? <Spinner size={'sm'} color={'white'} /> :<Text style={styles.lblBtnSave}>Guardar</Text> }
-                </TouchableOpacity>
+                <View style={{height:100, }}>
+                    <TouchableOpacity 
+                        onPress={() => onUpdate()}
+                        disabled={!(email !='' && phone != '')}
+                        style={[styles.btnSave,{backgroundColor: !(email != '' && phone != '') ? Colors.gray :Colors.blueGreen, zIndex:10}]}>
+                        {loader ? <Spinner size={'sm'} color={'white'} /> :<Text style={styles.lblBtnSave}>Guardar</Text> }
+                    </TouchableOpacity>
+                    {isComplete && <LottieView
+                        autoPlay
+                        resizeMode="cover"
+                        ref={animation}
+                        style={{
+                          flex:1,
+                          position:'absolute',
+                          top:-40,
+                          backgroundColor: 'white',
+                        }}
+                        // Find more Lottie files at https://lottiefiles.com/featured
+                        source={require('./../../../assets/Coins.json')}
+                    />}
+                </View>
                 </>
             )}
             <CameraComponent 
@@ -293,7 +318,7 @@ const styles = StyleSheet.create({
     contBt:{
         flexDirection:'row', 
         justifyContent:'space-between',
-        marginBottom:20
+        marginBottom:20,
     },
     btn:{
         flex:1, 

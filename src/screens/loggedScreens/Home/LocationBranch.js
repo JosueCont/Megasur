@@ -5,7 +5,7 @@ import { Colors } from "../../../utils/Colors";
 import HeaderLogged from "../../../components/Headers/HeaderLogged";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
-import MapView,{ Marker} from "react-native-maps";
+import MapView,{ Marker, PROVIDER_GOOGLE} from "react-native-maps";
 
 const {height, width} = Dimensions.get('window');
 
@@ -36,6 +36,7 @@ const LocationBranchScreen = () => {
             <View style={{flex:4, }}>
                 {initialRegion != null && 
                     <MapView 
+                        provider={PROVIDER_GOOGLE}
                         style={{flex:1}}
                         region={{...region, longitudeDelta:  0.009, latitudeDelta: 0.04}}
                         initialRegion={{
