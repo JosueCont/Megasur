@@ -38,6 +38,7 @@ const LocationScreen = () => {
     const zones = useSelector(state => state.locationDuck.branchesZones)
     const modalActive = useSelector(state => state.locationDuck.modalLocation)
     const locationStation = useSelector(state => state.locationDuck.locationStation)
+    const [dataAccordion, setDataAccordion] = useState([])
 
     const sheetMaxHeight = height - 200;
     const sheetMinHeight = 75;
@@ -77,7 +78,7 @@ const LocationScreen = () => {
                 })
                 dispatch((setLocationStation(null)))
             })();
-            //getByZone()
+            getByZone()
 
         }
     },[isFocused])
@@ -177,7 +178,8 @@ const LocationScreen = () => {
             })
         })
 
-        return dataAccordion
+        //return dataAccordion
+        setDataAccordion(dataAccordion)
 
     }
 
@@ -231,7 +233,7 @@ const LocationScreen = () => {
                             longitudeDelta: 0.09,
                             latitudeDelta: 0.04
                         }}
-                        //onRegionChangeComplete={(coords) => setNewRegion({latitude: coords.latitude, longitude: coords.longitude})}
+                        onRegionChangeComplete={(coords) => setNewRegion({latitude: coords.latitude, longitude: coords.longitude})}
                         >
                         <Marker style={{zIndex:10}}coordinate={{
                             longitude: initialRegion?.longitude,
@@ -240,7 +242,7 @@ const LocationScreen = () => {
                             <View style={{width:15, height:15, borderRadius:7.5, backgroundColor: Colors.blueGreen, borderWidth:1, borderColor: Colors.white}}/>
                         </Marker>
                         
-                            <>
+                            {dataAccordion.length > 0 && <>
                                 {stations.map((marker, index) => (
                                 <Marker 
                                     key={index}
@@ -272,7 +274,7 @@ const LocationScreen = () => {
                                     </Marker>
 
                                 )))}
-                            </>
+                            </>}
                         
                     </MapView>}
                     {isOpen && !modalActive && (
@@ -290,7 +292,7 @@ const LocationScreen = () => {
                     </View>
                     <Animated.View style={{opacity: animatedMapOpacity}}>
                         <FlatList 
-                            data={getByZone()}
+                            data={dataAccordion}
                             overScrollMode='always'
                             keyExtractor={(item,i) => i.toString()}
                             nestedScrollEnabled={true}

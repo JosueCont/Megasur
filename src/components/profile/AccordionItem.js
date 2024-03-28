@@ -20,7 +20,8 @@ const AccordionItem = ({item,index,isLocation}) => {
 
     const runOnUIThread = useCallback(() => {
         'worklet';
-        heightValue.value = measure(listRef).height
+        heightValue.value = measure(listRef).height;
+        isExpanded.value = true;
     })
 
     useEffect(() => {
@@ -28,9 +29,9 @@ const AccordionItem = ({item,index,isLocation}) => {
             setTimeout(() => {
                 if(heightValue.value === 0){
                     runOnUI(runOnUIThread)()
+                    //isExpanded.value = true
                 }
             },200)
-            isExpanded.value = true
             
         }
     },[isFocused])

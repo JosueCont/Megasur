@@ -48,9 +48,8 @@ const ChargesItem = ({charge, index, lastItem, openModal}) => {
                     <Text style={styles.lblDate}>{moment(charge?.fuel_datetime).format('MMMM DD')} • {moment(charge?.fuel_datetime).format('hh:mm A')}</Text>
                     <View style={{flexDirection:'row', alignItems:'center'}}>
                         {getTypeFuel(charge?.product_code)}
-                        <View style={{marginLeft:11}}>
-                            <Text style={styles.lblPayment}>MX$</Text>
-                            <Text style={styles.lblPayment}>{charge?.total_paid}</Text>
+                        <View style={{marginLeft:11,}}>
+                            <Text style={styles.lblPayment}>MX ${charge?.total_paid}</Text>
                         </View>
                     </View>
                 </View>
@@ -104,7 +103,7 @@ const styles = StyleSheet.create({
         color: Colors.greenStrong, 
         fontSize: getFontSize(25), 
         fontWeight:'800', 
-        lineHeight:25,
+        lineHeight:26,
     },
     lblLts:{
         color: Colors.greenStrong, 

@@ -1,4 +1,4 @@
-import React,{useEffect,} from "react";
+import React,{useEffect,useRef} from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from "react-native";
 import HeaderLogged from "../../../components/Headers/HeaderLogged";
 import { getFontSize } from "../../../utils/functions";
@@ -9,6 +9,7 @@ import PersonalInfoForm from "../../../components/profile/PersonalInfo";
 import { onChangeModalProf, requestDeleteAccount } from "../../../store/ducks/profileDuck";
 import { Video } from "expo-av";
 import { onResetRate } from "../../../store/ducks/chargesDuck";
+import LottieView from 'lottie-react-native'
 
 const {height, width} = Dimensions.get('window');
 
@@ -16,6 +17,7 @@ const ConfirmRateScreen = () => {
     const dispatch = useDispatch()
     const navigation = useNavigation();
     const route = useRoute()
+    const animation = useRef(null);
 
     const points = useSelector(state => state.homeDuck.setupData)
 
@@ -35,14 +37,15 @@ const ConfirmRateScreen = () => {
             bgColor={Colors.white}>
                 <View style={{alignItems:'center'}}>
                     <View style={{height: height/3, width: width}}>
-                        <Video  
-                            source={require('../../../../assets/confeti.mp4')}
-                            style={{width: width, height: height/3,}}
-                            useNativeControls={false}
+                        <LottieView
+                            autoPlay
                             resizeMode="cover"
-                            isLooping
-                            shouldPlay
-                            isMuted
+                            ref={animation}
+                            style={{
+                              flex:1,
+                              backgroundColor: 'white',
+                            }}
+                            source={require('./../../../../assets/Coins.json')}
                         />
                     </View>
                     <Text style={styles.title}>¡Felicidades!</Text>

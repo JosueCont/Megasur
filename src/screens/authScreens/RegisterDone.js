@@ -1,4 +1,4 @@
-import React,{useEffect,useState} from "react";
+import React,{useEffect,useState, useRef} from "react";
 import { View, Text, Image, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
 import { Spinner } from "native-base";
 import { Colors } from "../../utils/Colors";
@@ -6,8 +6,8 @@ import { getFontSize } from "../../utils/functions";
 import { StatusBar } from 'expo-status-bar';
 import { Video } from "expo-av";
 import { useDispatch, useSelector } from "react-redux";
-import { loginAction } from "../../store/ducks/authDuck";
-
+import { changeModal, loginAction } from "../../store/ducks/authDuck";
+import LottieView from 'lottie-react-native'
 
 const {height, width} = Dimensions.get('window');
 
@@ -15,6 +15,8 @@ const RegisterDone = () => {
     const dispatch = useDispatch();
     const user = useSelector(state => state.authDuck.dataUser)
     const loader = useSelector(state => state.authDuck.loading)
+    const completeRegister = useSelector(state => state.authDuck.completeRegister)
+    const animation = useRef(null);
 
 
     return(
@@ -27,21 +29,42 @@ const RegisterDone = () => {
                 hidden={false}
             />
             <View style={{height: height/3, width: width}}>
-                <Video  
-                    source={require('../../../assets/confeti.mp4')}
-                    style={{width: width, height: height/3,}}
-                    useNativeControls={false}
-                    resizeMode="cover"
-                    isLooping
-                    shouldPlay
-                    isMuted
-                />
+                {!completeRegister ? (
+                    <Video  
+                        source={require('../../../assets/confeti.mp4')}
+                        style={{width: width, height: height/3,}}
+                        useNativeControls={false}
+                        resizeMode="cover"
+                        isLooping
+                        shouldPlay
+                        isMuted
+                    />
+                ):(
+                    <LottieView
+                        autoPlay
+                        resizeMode="cover"
+                        ref={animation}
+                        style={{
+                            flex:1,
+                            backgroundColor: 'white',
+                        }}
+                        source={require('./../../../assets/Coins.json')}
+                    />
+                )}
             </View>
             <Text style={styles.title}>¡Gracias!</Text>
             <View style={styles.contLegend}>
                 <Text style={styles.legend}>Estás oficialmente listo para desbloquear un mundo de recompensas y ahorros. ¡Vamos a empezar!</Text>
             </View>
-            <TouchableOpacity style={styles.btn} onPress={() => dispatch(loginAction(user))}>
+            <TouchableOpacity 
+                style={styles.btn} 
+                disabled={completeRegister}
+                onPress={() => {
+                    dispatch(changeModal({prop:'completeRegister', val: true}))
+                    setTimeout(() => {
+                        dispatch(loginAction(user))
+                    },10000)
+                }}>
                 {loader ? <Spinner size={'sm'} color={'white'} /> :<Text style={styles.lblBtn}>Continuar</Text>}
             </TouchableOpacity>
         </View>

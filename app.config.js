@@ -74,7 +74,7 @@ const android = {
   "softwareKeyboardLayoutMode":'pan',
   "config": {
     "googleMaps":{
-      "apiKey": process.env.GOOGLE_API_KEY
+      "apiKey": 'AIzaSyD5J5pV_bXyGd_h-EfoHqDomx3jttyZELQ'//process.env.GOOGLE_API_KEY
     }
   }
 }
@@ -84,6 +84,9 @@ const ios = {
     "usesAppleSignIn": true,
     "infoPlist": {
       "NSLocationAlwaysUsageDescription" : 'Los datos proporcionados serán utilizados exclusivamente para validar la sucursal de canje y garantizar la seguridad en la generación de códigos en dicha sucursal.'
+    },
+    "config":{
+      "googleMapsApiKey": 'AIzaSyD5J5pV_bXyGd_h-EfoHqDomx3jttyZELQ'//process.env.GOOGLE_API_KEY
     }
 }
 

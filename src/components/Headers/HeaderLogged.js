@@ -32,7 +32,7 @@ const HeaderLogged = ({children,isBack=false, title='Bienvenidos', onRefresh, re
                             onPress={goBack}>
                             <Text style={styles.title}>{title}</Text>
                         </TouchableOpacity>
-                        {showSubtitle && <Text style={styles.lblSubtitle}>Para eliminar un mensaje deslicelo a la izquierda</Text>}
+                        {showSubtitle && <Text style={styles.lblSubtitle}>Para eliminar un mensaje, deslícelo a la izquierda</Text>}
                      </View>
                 </View>
                 {!showSubtitle && <TouchableOpacity style={styles.btnNotify} onPress={() => navigation.navigate('Notification') }>

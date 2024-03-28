@@ -114,7 +114,7 @@ const ProfileScreen = () => {
                     setVisible={() => dispatch(onChangeModalProf({prop:'modalFailed',value: false}))}
                     message={message}
                 />
-                <ModalDeleteAccount 
+                {/*<ModalDeleteAccount 
                     visible={modalDeleteAccout}
                     setVisible={() => dispatch(onChangeModalProf({prop:'modalDelete', value: false}))}
                     onSubmit={() => {
@@ -123,7 +123,7 @@ const ProfileScreen = () => {
                             dispatch(requestDeleteAccount({user_id: userId}))
                         },500)
                     }}
-                />
+                />*/}
                 <ModalTerms 
                     visible={modalTerms}
                     setVisible={() => dispatch(onChangeModalProf({prop:'modalTerms', value:false}))}
