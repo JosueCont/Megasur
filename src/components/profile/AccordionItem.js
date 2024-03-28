@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useSyncExternalStore} from "react";
+import React, {useState, useEffect, useCallback} from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Image} from "react-native";
 import { getFontSize } from "../../utils/functions";
 import { Colors } from "../../utils/Colors";
@@ -18,17 +18,20 @@ const AccordionItem = ({item,index,isLocation}) => {
     const listRef = useAnimatedRef();
     const heightValue = useSharedValue(0)
 
+    const runOnUIThread = useCallback(() => {
+        'worklet';
+        heightValue.value = measure(listRef).height;
+        isExpanded.value = true;
+    })
+
     useEffect(() => {
         if(isLocation && index === 0){
             setTimeout(() => {
                 if(heightValue.value === 0){
-                    runOnUI(() => {
-                        'worklet';
-                        heightValue.value = measure(listRef).height
-                    })()
+                    runOnUI(runOnUIThread)()
+                    //isExpanded.value = true
                 }
-            },300)
-            isExpanded.value = true
+            },200)
             
         }
     },[isFocused])
@@ -68,10 +71,7 @@ const AccordionItem = ({item,index,isLocation}) => {
                     }else{
                         
                         if(heightValue.value === 0){
-                            runOnUI(() => {
-                                'worklet';
-                                heightValue.value = measure(listRef).height
-                            })()
+                            runOnUI(runOnUIThread)()
                         }
                         isExpanded.value = !isExpanded.value
 

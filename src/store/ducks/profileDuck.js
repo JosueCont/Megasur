@@ -42,7 +42,8 @@ const initialState = {
     refresh: false,
     modalTerms:false,
     answeredSurveys:[],
-    receiveNotifications:false
+    receiveNotifications:false,
+    isCompleteRegis:false
 }
 
 const profileDuck = (state = initialState, action) => {
@@ -70,6 +71,7 @@ const profileDuck = (state = initialState, action) => {
                 receiveNotifications: action.payload.receive_notifications,
                 loading:false,
                 refresh:false,
+                isCompleteRegis:false
                 //isAccountUpdate: false
             }
         case CHANGE_IMAGE:
@@ -85,7 +87,7 @@ const profileDuck = (state = initialState, action) => {
             const updatedCode = newCode.join('');
             return { ...state,code: updatedCode };
         case UPDATE_DATA_USER_SUCCESS:
-            return{ ...state, loading: false, isAccountUpdate: true, modalSuccess: true, message: action.message, receiveNotifications: action.notify}
+            return{ ...state, loading: false, isAccountUpdate: true, modalSuccess: true, message: action.message, receiveNotifications: action.notify, isCompleteRegis: action.isComplete}
         case UPDATE_DATA_USER_FAILED:
             return{ ...state, loading: false, isAccountUpdate: false, modalFailed: true, message: action.message}
         case DELETE_ACCOUNT_SUCCESS:
@@ -175,11 +177,13 @@ export const onUpdateDataUser = (data) => async(dispatch) => {
           }
         console.log('dataSend',formData)
         const response = await putUserData(formData)
+        console.log('actualizado',response?.data)
         console.log('response actualizar',response)
         dispatch({
             type: UPDATE_DATA_USER_SUCCESS, 
             message:'Se ha actualizado la información del usuario',
-            notify: response?.data?.receive_notifications
+            notify: response?.data?.receive_notifications,
+            isComplete: response?.data?.complete_registration
         })
     } catch (e) {
         console.log('error actualizar',e)

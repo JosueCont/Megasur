@@ -44,6 +44,7 @@ const initialState = {
     dataUser:null,
     isRegistered: false,
     cardsStorage:[],
+    completeRegister:false
 }
 
 const authDuck = (state = initialState, action) => {
@@ -83,7 +84,7 @@ const authDuck = (state = initialState, action) => {
         case REGISTER_FAILED:
             return{ ...state, loading: false, message: action.message, modalFailed: true}
         case LOGIN_SUCCESS:
-            return{ ...state, ...initialState, isLogged: true, dataUser: action.payload}
+            return{ ...state, ...initialState, isLogged: true, dataUser: action.payload, completeRegister:false}
         case LOGIN_FAILED:
             return{ ...state, loading: false, isLogged: false, modalFailed: true, message: action.message}
         case LOGOUT:

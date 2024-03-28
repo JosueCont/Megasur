@@ -14,7 +14,8 @@
         },
         "env": {
           "APP_ENV": "android"
-        }
+        },
+        "credentialsSource": "remote"
       },
       "android": {
         "env": {

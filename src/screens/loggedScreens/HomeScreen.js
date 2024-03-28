@@ -50,6 +50,7 @@ const HomeScreen = () => {
     const showBannerCard = useSelector(state => state.homeDuck.showBannerCard)
     const [dataAdvertisements, setDataAdvertisements] = useState([])
     const [dataPromotions, setDataPromotions] = useState([])
+    const [location, setLocation] = useState(null)
 
     const genders = {
         'MALE':'Bienvenido',
@@ -72,13 +73,14 @@ const HomeScreen = () => {
     useEffect(() => {
         (async() => {
             if(isFocused){
+                const location = await getPermissionLocation()
+                setLocation(location)
+                //await dispatch(getCloseStations(location?.coords))
                 if(userId && userId != undefined){
                     const cards = await AsyncStorage.getItem('cards')
                     await dispatch(saveDataLocalStorage(JSON.parse(cards)))
                     await dispatch(getDataConfi())
                     await dispatch(getInfoVehicle(userId))
-                    const location = await getPermissionLocation()
-                    await dispatch(getCloseStations(location?.coords))
                     //await dispatch(getAllCards(userId))
                     await dispatch(getProfileData())
                     await dispatch(getAllSurveys())
@@ -88,7 +90,12 @@ const HomeScreen = () => {
             }
                 
         })()
-    },[userId, isFocused])
+    },[ isFocused])
+
+    useEffect(() => {
+        console.log('change location permission', location)
+        if(location != null && location != undefined) dispatch(getCloseStations(location?.coords))
+    },[location])
 
 
     useEffect(() => {

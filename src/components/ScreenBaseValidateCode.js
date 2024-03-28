@@ -46,7 +46,7 @@ const ScreenBaseValidateCode = ({children, goBack}) => {
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{
                     flexGrow: 1,
-                    paddingBottom:20
+                    paddingBottom:30
                     
                 }}>
                     {children}
