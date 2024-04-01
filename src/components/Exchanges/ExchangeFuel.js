@@ -1,10 +1,10 @@
 import React,{useEffect, useState} from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Image } from "react-native";
-import { Slider } from "native-base";
+//import { Slider } from "native-base";
 import { getFontSize } from "../../utils/functions";
 import { Colors } from "../../utils/Colors";
 import moment from "moment";
-import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import { useDispatch, useSelector } from "react-redux";
 import { changeModalEx } from "../../store/ducks/exchangeDuck";
 import ModalExchangeFuel from "../modals/ModalQrExchange";
@@ -13,6 +13,9 @@ import * as ScreenCapture from 'expo-screen-capture'
 import * as MediaLibrary from 'expo-media-library';
 import { changeModalHome } from "../../store/ducks/homeDuck";
 import ModalScreenShot from "../modals/ModalScreenShot";
+import { Slider } from "react-native-awesome-slider";
+import { useSharedValue } from "react-native-reanimated";
+import { GestureHandlerRootView, GestureDetector, Gesture} from 'react-native-gesture-handler'
 
 const {height, width} = Dimensions.get('window');
 
@@ -21,9 +24,14 @@ const ExchangeFuel = ({availablePoints=0}) => {
     const navigation = useNavigation();
     const showModal = useSelector(state => state.exchangeDuck.modalFuel)
     const [valueSlider, setSlider] = useState(0)
+    const [marks, setMArks] = useState(0)
     const [typeFuel, setType] = useState(null)
     const types = ['Magna','Premium','Diesel']
     const modalScreenShot = useSelector(state => state.homeDuck.modalScreenShot)
+
+    const progress = useSharedValue(0);
+    const min = useSharedValue(0);
+    const max = useSharedValue(availablePoints);
 
 
     useEffect(() => {
@@ -77,7 +85,41 @@ const ExchangeFuel = ({availablePoints=0}) => {
                 <Text style={styles.lblTitle}>Puntos a redimir:</Text>
                 {availablePoints != 0 ? (
                     <View style={{flex:1}}>
-                        <Slider 
+                        <GestureHandlerRootView>
+                            <Slider
+                                theme={{
+                                    //disableMinTrackTintColor: 'red',
+                                    maximumTrackTintColor: '#fff',
+                                    minimumTrackTintColor: Colors.yellow,
+                                    //cacheTrackTintColor: '#333',
+                                    //bubbleBackgroundColor: 'red',
+                                    //heartbeatColor: 'red',
+                                }}
+                                style={styles.slider}
+                                containerStyle={{height:10, borderRadius:20,}}
+                                markStyle={{backgroundColor: Colors.blueGreen}}
+                                progress={progress}
+                                minimumValue={min}
+                                maximumValue={max}
+                                renderBubble={() => (
+                                    <View style={{ alignItems:'center'}}>
+                                        <Text style={{color: Colors.blueGreen, fontWeight:'700', lineHeight:15}}>{valueSlider} pts.</Text>
+                                        <View style={{height:15, width:20}}>
+                                            <MaterialIcons name="arrow-drop-down" size={24} color={Colors.blueGreen} />
+
+                                        </View>
+                                    </View>
+                                )}
+                                thumbWidth={20}
+                                renderThumb={() => (
+                                    <View style={{backgroundColor: Colors.blueGreen, width: 20, height:20, borderRadius:10}}/>
+                                )}
+                                onValueChange={(val) => setSlider(Math.round(val))}
+                                //onSlidingComplete={(val) => setSlider(Math.round(val))}
+                            />
+
+                        </GestureHandlerRootView>
+                        {/*<Slider 
                             defaultValue={0} 
                             size="lg"  
                             colorScheme='yellow' 
@@ -96,7 +138,7 @@ const ExchangeFuel = ({availablePoints=0}) => {
                                     <FontAwesome name="caret-down" size={20} color={Colors.blueGreen} style={{ lineHeight:15,}}/>
                                 </View>
                             </Slider.Thumb>
-                        </Slider>
+                </Slider>*/}
                         <View style={styles.contPoints}>
                             <Text style={styles.lbl}>0 pts</Text>
                             <Text style={styles.lbl}>{availablePoints}pts</Text>
@@ -159,7 +201,7 @@ const styles = StyleSheet.create({
         fontSize: getFontSize(16), 
         fontWeight:'400', 
         textAlign:'center',
-        marginBottom:15
+        marginBottom:33
         //width:70, 
         //marginRight:10
     },
@@ -238,6 +280,9 @@ const styles = StyleSheet.create({
         color: Colors.blueGreen, 
         fontWeight:'700', 
         fontSize: getFontSize(18)
+    },
+    slider:{
+        marginBottom:15,
     }
 })
 

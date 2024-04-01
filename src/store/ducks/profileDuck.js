@@ -178,7 +178,6 @@ export const onUpdateDataUser = (data) => async(dispatch) => {
         console.log('dataSend',formData)
         const response = await putUserData(formData)
         console.log('actualizado',response?.data)
-        console.log('response actualizar',response)
         dispatch({
             type: UPDATE_DATA_USER_SUCCESS, 
             message:'Se ha actualizado la información del usuario',
