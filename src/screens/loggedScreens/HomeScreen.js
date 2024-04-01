@@ -113,7 +113,13 @@ const HomeScreen = () => {
     const getDataAdvertisements = async()=>{
         const result = await getAdvertisements('?page=1&per_page=1000&type=1&is_active=true')
         if (result.status == 200){
-            setDataAdvertisements(result.data?.items ? result.data.items : [])
+            let advertisement = []
+            if(result.data?.items){
+                result.data?.items.map(item => {
+                    if(item?.is_active) advertisement.push(item)
+                })
+            }
+            setDataAdvertisements(advertisement)
         }
     }
 
@@ -121,7 +127,14 @@ const HomeScreen = () => {
         try {
             const result = await getAdvertisements('?page=1&per_page=1000&type=2&is_active=true')
             if (result.status == 200){
-                setDataPromotions(result.data?.items ? result.data.items : [])
+                let dataProm = []
+                if(result.data?.items?.length > 0){
+                    result.data?.items.map(item => {
+                        if(item?.is_active) dataProm.push(item)
+                    });
+
+                }
+                setDataPromotions(dataProm)
             }
             
         } catch (e) {

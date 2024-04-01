@@ -45,7 +45,6 @@ const PersonalInfoForm = () => {
     }
 
     useEffect(() => {
-        console.log("birthDay", birthDay)
         if(birthDay && birthDay != undefined && birthDay != '') {
             setDate(new Date(birthDay))
         }else{
@@ -54,7 +53,6 @@ const PersonalInfoForm = () => {
     },[birthDay])
 
     useEffect(() => {
-        console.log('sComplete',isComplete)
         if(isComplete){
             setTimeout(() => {
                 dispatch(onChangeModalProf({prop:'isCompleteRegis', value: false}))
@@ -77,7 +75,7 @@ const PersonalInfoForm = () => {
             const currentDate = selectedDate || date;
             setDate(currentDate);
             if(Platform.OS === 'android'){
-                dispatch(onChangeInputProf({prop:'birthDay',value: moment(currentDate).format('DD/MM/YYYY')}))
+                dispatch(onChangeInputProf({prop:'birthDay',value: moment(currentDate).format('YYYY-MM-DD')}))
                 //setBirthdayDate(moment(currentDate.toDateString()).format('DD/MM/YYYY'))
                 setShowDatePicker(false)
             }
@@ -90,7 +88,7 @@ const PersonalInfoForm = () => {
     };
     
     const confirmIOSDate = () => {
-        dispatch(onChangeInputProf({prop:'birthday',value: moment(date.toDateString()).format('DD/MM/YYYY')}))
+        dispatch(onChangeInputProf({prop:'birthDay',value: moment(date.toDateString()).format('YYYY-MM-DD')}))
         //setBirthdayDate(moment(date.toDateString()).format('DD/MM/YYYY'))
         onShowDatepicker()
     }
@@ -129,7 +127,7 @@ const PersonalInfoForm = () => {
             gender, imageBack, imageFront, //birthday: moment(birthDay).format('YYYY-MM-DD')
         }
         if (birthDay !='' && birthDay != null)
-            dataSend.birthday = moment(birthDay).format('YYYY-MM-DD')
+            dataSend.birthday = moment(birthDay, 'YYYY-MM-DD').format('YYYY-MM-DD')
         if(image64 != '') dataSend.profile_picture = image64
         dispatch(onUpdateDataUser(dataSend))
     }
@@ -266,8 +264,8 @@ const PersonalInfoForm = () => {
                 <View style={{height:100, }}>
                     <TouchableOpacity 
                         onPress={() => onUpdate()}
-                        disabled={!(email !='' && phone != '')}
-                        style={[styles.btnSave,{backgroundColor: !(email != '' && phone != '') ? Colors.gray :Colors.blueGreen, zIndex:10}]}>
+                        disabled={!(email !='' && phone != '' && gender != '' && birthDay != '')}
+                        style={[styles.btnSave,{backgroundColor: !(email != '' && phone != ''&& gender != '' && birthDay != '') ? Colors.gray :Colors.blueGreen, zIndex:10}]}>
                         {loader ? <Spinner size={'sm'} color={'white'} /> :<Text style={styles.lblBtnSave}>Guardar</Text> }
                     </TouchableOpacity>
                     {isComplete && <LottieView
