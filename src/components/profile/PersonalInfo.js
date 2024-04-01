@@ -126,10 +126,10 @@ const PersonalInfoForm = () => {
     const onUpdate = async() => {
         let dataSend = {
             first_name, last_name, email, phone,
-            gender, imageBack, imageFront, birthDay
+            gender, imageBack, imageFront, //birthday: moment(birthDay).format('YYYY-MM-DD')
         }
-        //if (birthDay !='' && birthDay != null)
-        //    dataSend.birthday = birthDay ? moment(birthDay,'DD/MM/YYYY').format('YYYY-MM-DD') : null
+        if (birthDay !='' && birthDay != null)
+            dataSend.birthday = moment(birthDay).format('YYYY-MM-DD')
         if(image64 != '') dataSend.profile_picture = image64
         dispatch(onUpdateDataUser(dataSend))
     }
@@ -272,6 +272,7 @@ const PersonalInfoForm = () => {
                     </TouchableOpacity>
                     {isComplete && <LottieView
                         autoPlay
+                        loop
                         resizeMode="cover"
                         ref={animation}
                         style={{

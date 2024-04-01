@@ -6,7 +6,7 @@ import HeaderLogged from "../../../components/Headers/HeaderLogged";
 import { useNavigation, useRoute, CommonActions } from "@react-navigation/native";
 import SliderGallery from "../../../components/SliderGalleryCustom";
 import { useDispatch, useSelector } from "react-redux";
-import { addCartItem, onActionCount, onUpdateCart, resetCount } from "../../../store/ducks/exchangeDuck";
+import { addCartItem, changeModalEx, onActionCount, onUpdateCart, resetCount } from "../../../store/ducks/exchangeDuck";
 
 const {height, width} = Dimensions.get('window');
 
@@ -16,12 +16,16 @@ const DetailProduct = () => {
     const dispatch = useDispatch()
     const count = useSelector(state => state.exchangeDuck.countProduct)
     const shoppingCart = useSelector(state => state.exchangeDuck.cart)
+    const points = useSelector(state => state.homeDuck.points)
+    const {product, isFromHome} = route?.params;
 
     useEffect(() => {
-        console.log('route',route)
+        if(shoppingCart.length > 0){
+            const item = shoppingCart.find((item) => item.id === product?.id)
+            dispatch(changeModalEx({prop:'countProduct', val: item?.quantity }))
+        }
     },[route])
 
-    const {product, isFromHome} = route?.params;
 
     return(
         <HeaderLogged 
@@ -77,7 +81,7 @@ const DetailProduct = () => {
                 <Text style={styles.lblDesc}>Lorem ipsum dolor sit amet. Ut dolorem rerum quo molestias praesentium sit soluta fugiat ut maxime necessitatibus sed.
 Lorem ipsum dolor sit amet. Ut dolorem rerum quo molestias praesentium sit soluta fugiat ut maxime necessitatibus sed.</Text>
                         </View>*/}
-            {product?.is_active ? (
+            {product?.is_active && points >= product.price_in_points ? (
             <TouchableOpacity 
                 disabled={count === 0}
                 style={[styles.btnOk,{backgroundColor: count === 0 ? Colors.grayStrong : Colors.blueGreen,}]} 
@@ -112,7 +116,7 @@ Lorem ipsum dolor sit amet. Ut dolorem rerum quo molestias praesentium sit solut
             </TouchableOpacity>
             ):(
                 <View style={[styles.btnOk,{backgroundColor: Colors.grayStrong}]}>
-                    <Text style={styles.lblBtn}>Producto no disponible</Text>
+                    <Text style={styles.lblBtn}>{product.price_in_points > points && product?.is_active? 'Puntos insuficientes':'Producto no disponible'}</Text>
                 </View>
             )}
         </HeaderLogged>

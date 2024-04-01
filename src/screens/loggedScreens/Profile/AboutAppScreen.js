@@ -42,7 +42,7 @@ const AboutAppScreen = () => {
           <Text style={styles.lblDesc}>
             <Text style={styles.lblSubtitle}>Descripción General: </Text>La
             aplicación es una plataforma de fidelización de clientes diseñada
-            para usuarios que frecuentan estaciones de servicio. Ofrece un
+            para usuarios que frecuentan estaciones de servicio de <Text style={{fontWeight:'bold'}}>MEGASUR</Text>. Ofrece un
             sistema de acumulación de puntos por cada compra de combustible,
             siguiendo reglas de bonificación de puntos establecidas. Además,
             proporciona la posibilidad de obtener puntos adicionales
@@ -57,7 +57,7 @@ const AboutAppScreen = () => {
               Acumulación de Puntos por Compra de Combustible:{" "}
             </Text>
             Los usuarios ganan puntos cada vez que realizan una compra de
-            combustible en una estación de servicio asociada. La cantidad de
+            combustible en una estación de servicio <Text style={{fontWeight:'bold'}}>MEGASUR</Text>. La cantidad de
             puntos ganados puede variar según el monto de la compra y las reglas
             de bonificación establecidas.
           </Text>
@@ -68,20 +68,19 @@ const AboutAppScreen = () => {
             </Text>{" "}
             La aplicación puede tener reglas específicas que determinan cuándo y
             cómo se otorgan puntos adicionales. Por ejemplo, bonificaciones por
-            cargar en determinados días de la semana, por alcanzar ciertos
-            umbrales de gasto, etc.
+            cargar en determinados días de la semana, por el cumpleaños del usuario, etc.
           </Text>
           <Text style={styles.lblDesc}>
             3.
             <Text style={styles.lblSubtitle}>
-              Canje de Puntos por Productos y Combustible:
+              Canje de Puntos por Productos y Combustible:{" "}
             </Text>
             Los usuarios pueden canjear los puntos acumulados por una variedad
             de productos disponibles en el programa de recompensas, que pueden
             incluir desde artículos de conveniencia hasta descuentos en
             combustible. El proceso de canje se realiza a través de la
             aplicación, donde los usuarios pueden navegar por el catálogo de
-            productos y seleccionar lo que desean.
+            producto/combustible (Magna, Premium y Diésel)  y seleccionar lo que desean.
           </Text>
           <Text style={styles.lblDesc}>
             4.
@@ -90,8 +89,7 @@ const AboutAppScreen = () => {
             </Text>
             Además de ganar puntos por compras de combustible, los usuarios
             pueden obtener puntos adicionales participando en actividades como
-            encuestas o promociones especiales. Esto aumenta la participación y
-            el compromiso del usuario con la aplicación.
+            encuestas o promociones especiales.
           </Text>
           <Text style={styles.lblDesc}>
             5.
@@ -108,14 +106,13 @@ const AboutAppScreen = () => {
               Notificaciones y Ofertas Personalizadas:{" "}
             </Text>
             La aplicación puede enviar notificaciones a los usuarios sobre
-            ofertas especiales, promociones exclusivas y otras noticias
-            relevantes basadas en sus patrones de compra y preferencias.
+            ofertas especiales, promociones exclusivas, entre otros anuncios relevantes.
           </Text>
         </View>
         <View style={styles.separator}>
           <Text style={styles.lblTitle}>Beneficios para los Usuarios:</Text>
           <Text style={styles.lblDesc}>
-            <Text style={[styles.lblSubtitle, { fontSize: getFontSize(20), fontWeight:'bold' }]}>
+            <Text style={[styles.lblSubtitle, { fontSize: getFontSize(18), fontWeight:'bold' }]}>
               ·{" "}
             </Text>
             Recompensas por la lealtad: Los usuarios se benefician de descuentos
@@ -123,31 +120,29 @@ const AboutAppScreen = () => {
             combustible.
           </Text>
           <Text style={styles.lblDesc}>
-            <Text style={[styles.lblSubtitle, { fontSize: getFontSize(20), fontWeight:'bold' }]}>
+            <Text style={[styles.lblSubtitle, { fontSize: getFontSize(18), fontWeight:'bold' }]}>
               ·{" "}
             </Text>
             Participación en actividades adicionales: Los usuarios pueden
-            obtener puntos adicionales participando en encuestas u otras
-            actividades promocionales, lo que les permite acumular puntos más
-            rápido.
+            obtener puntos adicionales participando en encuestas promocionales, 
+            lo que les permite acumular puntos más rápido.
           </Text>
           <Text style={styles.lblDesc}>
-            <Text style={[styles.lblSubtitle, { fontSize: getFontSize(20), fontWeight:'bold' }]}>
+            <Text style={[styles.lblSubtitle, { fontSize: getFontSize(18), fontWeight:'bold' }]}>
               ·{" "}
             </Text>
             Personalización de ofertas: La aplicación puede ofrecer ofertas
             personalizadas basadas en el historial de transacciones y las
-            preferencias del usuario, lo que aumenta la relevancia de las
-            promociones ofrecidas.
+            preferencias del usuario.
           </Text>
         </View>
 
-        <Text style={styles.lblDesc}>
+        {/*<Text style={styles.lblDesc}>
           En resumen, esta aplicación proporciona a los usuarios una manera
           conveniente de acumular puntos y obtener recompensas por sus compras
           de combustible, al tiempo que fomenta la participación a través de
           actividades adicionales y ofertas personalizadas.
-        </Text>
+            </Text>*/}
       </View>
     </HeaderLogged>
   );
@@ -182,7 +177,7 @@ const styles = StyleSheet.create({
     color: Colors.grayStrong,
     fontSize: getFontSize(14),
     fontWeight: "400",
-    marginBottom: 5,
+    marginBottom: 8,
     textAlign: "justify",
   },
 });

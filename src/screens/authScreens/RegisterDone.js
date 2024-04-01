@@ -41,7 +41,8 @@ const RegisterDone = () => {
                     />
                 ):(
                     <LottieView
-                        autoPlay
+                        //autoPlay
+                        loop={false}
                         resizeMode="cover"
                         ref={animation}
                         style={{
@@ -61,6 +62,7 @@ const RegisterDone = () => {
                 disabled={completeRegister}
                 onPress={() => {
                     dispatch(changeModal({prop:'completeRegister', val: true}))
+                    animation?.current?.play();
                     setTimeout(() => {
                         dispatch(loginAction(user))
                     },10000)

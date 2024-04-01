@@ -76,7 +76,7 @@ const exchangeDuck = (state = initialState, action) => {
         case CHANGE_COUNT_PRODUCT:
             return{ ...state, [action.payload.prop]: action.payload.val}
         case RESET_COUNT:
-            return{ ...state, countProduct:0}
+            return{ ...state, countProduct:1}
         case ADD_CART_ITEM:
             return{ ...state, cart: [...state.cart, {...action.payload, quantity: action.quantity || 1}]}
         case DELETE_CAR_ITEM:
