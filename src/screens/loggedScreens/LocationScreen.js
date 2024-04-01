@@ -167,15 +167,17 @@ const LocationScreen = () => {
                 />
         })
         zones.map((zone,index) => {
-            dataAccordion.push({
-                title: zone.name,
-                component: <StationList 
-                    stations={getZones(zones, zone.name)} 
-                    isLocation={true} 
-                    changeRegion={(coords) => onChangeRegion(coords)}
-                    openMaps={(coords, name) => onOpenMaps(coords, name)}
-                />
-            })
+            if(zone.branches.length > 0){
+                dataAccordion.push({
+                    title: zone.name,
+                    component: <StationList 
+                        stations={getZones(zones, zone.name)} 
+                        isLocation={true} 
+                        changeRegion={(coords) => onChangeRegion(coords)}
+                        openMaps={(coords, name) => onOpenMaps(coords, name)}
+                    />
+                })
+            }
         })
 
         //return dataAccordion

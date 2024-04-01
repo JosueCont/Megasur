@@ -103,7 +103,7 @@ const HomeScreen = () => {
             dispatch(getPointsCard(userCard[0]?.user_card_id))
             dispatch(onShowBanner(userCard[0]?.user_card_id,1))
         }
-    },[userCard, isFocused])
+    },[userCard, isFocused, showBannerCard])
 
     useEffect(() => {
         getDataAdvertisements()
@@ -170,9 +170,9 @@ const HomeScreen = () => {
                     points={points}
                 />
             )}
-            <ListPromotions dataPromotion={dataAdvertisements}/>
-            <ListDiscount dataDisconunt={dataPromotions}/>
-            <CloseStations stations={stations}/>
+            {dataAdvertisements.length > 0 &&<ListPromotions dataPromotion={dataAdvertisements}/>}
+            {dataPromotions.length > 0 && <ListDiscount dataDisconunt={dataPromotions}/>}
+            {stations.length > 0 && <CloseStations stations={stations}/>}
             
             {/**Modals */}
             <ModalQuizz 

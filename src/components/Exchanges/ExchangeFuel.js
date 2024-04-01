@@ -75,33 +75,37 @@ const ExchangeFuel = ({availablePoints=0}) => {
         <View style={{marginTop:10}}>
             <View style={{ marginBottom:30, marginHorizontal:10}}>
                 <Text style={styles.lblTitle}>Puntos a redimir:</Text>
-                <View style={{flex:1}}>
-                    <Slider 
-                        defaultValue={0} 
-                        size="lg"  
-                        colorScheme='yellow' 
-                        w="100%"
-                        maxW={width * .9}
-                        maxValue={availablePoints}
-                        step={setSteps()}
-                        onChange={(val) => setSlider(val)}>
-                        <Slider.Track bg={Colors.grayBorders} size={12}>
-                            <Slider.FilledTrack bg={Colors.yellow} size={12}/>
-                        </Slider.Track>
-                        <Slider.Thumb borderWidth="0" bg="transparent" >
-                            <View style={styles.pointer}/>
-                            <View style={styles.contMarker}>
-                                <Text style={styles.lblMarker}>{valueSlider} pts</Text>
-                                <FontAwesome name="caret-down" size={20} color={Colors.blueGreen} style={{ lineHeight:15,}}/>
-                            </View>
-                        </Slider.Thumb>
-                    </Slider>
-                    <View style={styles.contPoints}>
-                        <Text style={styles.lbl}>0 pts</Text>
-                        <Text style={styles.lbl}>{availablePoints}pts</Text>
-                    </View>
+                {availablePoints != 0 ? (
+                    <View style={{flex:1}}>
+                        <Slider 
+                            defaultValue={0} 
+                            size="lg"  
+                            colorScheme='yellow' 
+                            w="100%"
+                            maxW={width * .9}
+                            maxValue={availablePoints}
+                            step={setSteps()}
+                            onChange={(val) => setSlider(val)}>
+                            <Slider.Track bg={Colors.grayBorders} size={12}>
+                                <Slider.FilledTrack bg={Colors.yellow} size={12}/>
+                            </Slider.Track>
+                            <Slider.Thumb borderWidth="0" bg="transparent" >
+                                <View style={styles.pointer}/>
+                                <View style={styles.contMarker}>
+                                    <Text style={styles.lblMarker}>{valueSlider} pts</Text>
+                                    <FontAwesome name="caret-down" size={20} color={Colors.blueGreen} style={{ lineHeight:15,}}/>
+                                </View>
+                            </Slider.Thumb>
+                        </Slider>
+                        <View style={styles.contPoints}>
+                            <Text style={styles.lbl}>0 pts</Text>
+                            <Text style={styles.lbl}>{availablePoints}pts</Text>
+                        </View>
 
-                </View>
+                    </View>
+                    ):(
+                        <Text style={styles.lblTitle}>No hay puntos para canjear</Text>
+                    )}
             </View>
             <View style={styles.contChecks}>
                 {types.map((type, index) => (
