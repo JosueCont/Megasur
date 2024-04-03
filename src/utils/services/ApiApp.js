@@ -67,3 +67,12 @@ export const postAddPhysicCard = async(data) => await axiosPost(axiosTypes.ADD_P
 //contact
 export const getFrecuentQuestion = async() => await axiosGet(axiosTypes.GET_FREQUEST_QUESTIONS)
 export const postSendEmail = async(data) => await axiosPost(axiosTypes.SEND_MAIL, data)
+
+//invoicing
+export const getCfdiUse = async() => await axiosGet(axiosTypes.GET_CFDI_USE)
+export const getTaxRegimen = async() => await axiosGet(axiosTypes.GET_TAX_REGIMEN)
+export const postCreateRfc = async(data) => await axiosPost(axiosTypes.POST_ADD_RFC, data)
+export const getUserRfc = async() => await axiosGet(axiosTypes.GET_USER_RFC)
+export const putRfc = async(data, id) => await axiosPut(`${axiosTypes.POST_ADD_RFC}${id}/`,data)
+export const deleteRfc = async(id) => await axiosDelete(`${axiosTypes.POST_ADD_RFC}${id}/`)
+export const putAutoInvoicing = async() => await axiosPut(axiosTypes.AUTO_INVOICING)

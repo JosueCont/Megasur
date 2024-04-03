@@ -29,6 +29,7 @@ import ContactScreen from "../screens/loggedScreens/Profile/ContactScreen";
 import SendQuestionScreen from "../screens/loggedScreens/Contact/SendQuestionScreen";
 import FrecuentQuestionsScreen from "../screens/loggedScreens/Contact/FrequentQuestionsScreen";
 import AboutAppScreen from "../screens/loggedScreens/Profile/AboutAppScreen";
+import RegisterRfcScreen from "../screens/loggedScreens/Profile/RegisterRfcScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -84,6 +85,7 @@ const ProfileNavigator = () => {
             <Stack.Screen name="Contact" component={ContactScreen}/>
             <Stack.Screen name="ContactUs" component={SendQuestionScreen}/>
             <Stack.Screen name="FrecuentQuestions" component={FrecuentQuestionsScreen}/>
+            <Stack.Screen name="RegisterRfc" component={RegisterRfcScreen}/>
             
         </Stack.Navigator>
     )

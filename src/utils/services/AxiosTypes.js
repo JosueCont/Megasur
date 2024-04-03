@@ -30,5 +30,10 @@ export const axiosTypes = {
     SEND_MAIL:'/email/contact/send/',
     GET_POINTS: '/membership/user-card-points/',
     GET_QR_EXCHANGE_FUEL: '/membership/get-code-data/',
-    SHOW_BANNER: '/security/users/physical-link-banner/'
+    SHOW_BANNER: '/security/users/physical-link-banner/',
+    GET_CFDI_USE:'/invoicing/cfdi-use/',
+    GET_TAX_REGIMEN:'/invoicing/cfdi-regime/',
+    POST_ADD_RFC:'/invoicing/rfc/',
+    GET_USER_RFC:'/invoicing/user-rfc/',
+    AUTO_INVOICING:'/security/users/auto_invoicing/'
 }

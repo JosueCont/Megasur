@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
         color: Colors.greenStrong, 
         fontSize: getFontSize(25), 
         fontWeight:'800', 
-        lineHeight:26,
+        //lineHeight:26,
     },
     lblLts:{
         color: Colors.greenStrong, 
