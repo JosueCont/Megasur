@@ -187,6 +187,7 @@ const ProductsScreen = () => {
                         <ExchangeFuel availablePoints={points}/>
                     ) : selectedType === 1 ? (
                         <ExchangeList 
+                            filter={selectedFilter}
                             data={products}
                             isFromHome={route?.params?.allowBack}
                             onMinus={(id, action) => dispatch(updateProductQuantity(id, action))}

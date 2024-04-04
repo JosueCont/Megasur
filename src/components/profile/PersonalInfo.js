@@ -37,7 +37,8 @@ const PersonalInfoForm = () => {
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [date, setDate] = useState(null);
     const animation = useRef(null);
-
+    const maximumDate = new Date(); // Fecha actual
+    maximumDate.setFullYear(maximumDate.getFullYear() - 18)
 
     const mimes = {
         'jpg': 'image/jpeg',
@@ -89,7 +90,7 @@ const PersonalInfoForm = () => {
     };
     
     const confirmIOSDate = () => {
-        dispatch(onChangeInputProf({prop:'birthDay',value: moment(date.toDateString()).format('YYYY-MM-DD')}))
+        dispatch(onChangeInputProf({prop:'birthDay',value: moment(date.toDateString()).add(1,'day').format('YYYY-MM-DD')}))
         //setBirthdayDate(moment(date.toDateString()).format('DD/MM/YYYY'))
         onShowDatepicker()
     }
@@ -199,6 +200,8 @@ const PersonalInfoForm = () => {
                     mode="date"
                     display="spinner"
                     onChange={handleDateChange}
+                    maximumDate={maximumDate}
+                    timeZoneOffsetInMinutes={new Date().getTimezoneOffset()}
                 />
             )}
             {showDatePicker && Platform.OS === 'ios' && (

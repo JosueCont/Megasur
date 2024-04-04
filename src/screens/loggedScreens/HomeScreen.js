@@ -24,6 +24,8 @@ import { useIsFocused } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
 import ModalAlertFailed from "../../components/modals/ModalAlertFail";
 import ModalScreenShot from "../../components/modals/ModalScreenShot";
+import ModalInfoFuel from "../../components/modals/ModalInfoFuel";
+import { changeModalEx } from "../../store/ducks/exchangeDuck";
 
 const {height, width} = Dimensions.get('window');
 
@@ -48,6 +50,7 @@ const HomeScreen = () => {
     const fuelCost = useSelector(state => state.homeDuck.setupData?.fuel_cost)
     const vehicle = useSelector(state => state.homeDuck.vehicle)
     const showBannerCard = useSelector(state => state.homeDuck.showBannerCard)
+    const modalInfo = useSelector(state => state.exchangeDuck.modalInfo)
     const [dataAdvertisements, setDataAdvertisements] = useState([])
     const [dataPromotions, setDataPromotions] = useState([])
     const [location, setLocation] = useState(null)
@@ -202,6 +205,12 @@ const HomeScreen = () => {
             <ModalScreenShot 
                 visible={modalScreenShot}
                 setVisible={() => dispatch(changeModalHome({prop:'modalScreenShot', val: false}))}
+            />
+
+            <ModalInfoFuel 
+                visible={modalInfo}
+                setVisible={() => dispatch(changeModalEx({prop:'modalInfo',val:false}))}
+                message='nada'
             />
         </HeaderLogged>
     )
