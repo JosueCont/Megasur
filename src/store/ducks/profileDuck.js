@@ -63,7 +63,7 @@ const profileDuck = (state = initialState, action) => {
                 first_name: action.payload.first_name, 
                 lastName: action.payload.last_name, 
                 email: action.payload.email, 
-                birthDay: action.payload.birthday,
+                birthDay: action.payload.birthday != null ? action.payload.birthday : '',
                 gender: action.payload.gender, 
                 phone: action.payload.phone,
                 dataUser: action.payload,
@@ -130,7 +130,7 @@ export const getProfileData = () => async(dispatch) => {
         if(response?.data?.id){
             dispatch({type: GET_DATA_PROFILE, payload: response?.data})
         }
-        //console.log('dataUser', response?.data)
+        console.log('dataUser', response?.data)
     } catch (e) {
         console.log('error datos user',e)
         dispatch({type: DATA_PROFILE__FAILED})
@@ -178,7 +178,6 @@ export const onUpdateDataUser = (data) => async(dispatch) => {
         console.log('dataSend',formData)
         const response = await putUserData(formData)
         console.log('actualizado',response?.data)
-        console.log('response actualizar',response)
         dispatch({
             type: UPDATE_DATA_USER_SUCCESS, 
             message:'Se ha actualizado la información del usuario',

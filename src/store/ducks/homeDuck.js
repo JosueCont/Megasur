@@ -320,7 +320,7 @@ export const onShowBanner = (cardId, type) => async(dispatch) => {
             //console.log('put banner', respose?.data)
         }else{
             const response = await getPhysicalBanner(cardId)
-            //console.log('shwbanner',response?.data)
+            console.log('shwbanner',response?.data)
             dispatch({type: SHOW_PHYSIC_BANNER, payload: response?.data?.show})
         }
     } catch (e) {
