@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Image, Modal} from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Image, Modal, Alert} from "react-native";
 import { getFontSize } from "../utils/functions";
 import { Colors } from "../utils/Colors";
 import { Feather, Ionicons, MaterialIcons, Entypo, AntDesign } from '@expo/vector-icons'; 
@@ -41,7 +41,12 @@ const CameraComponent = ({visible, onSavePhoto, onClose, typePhoto}) => {
         if (image) {
           try {
             const asset = await MediaLibrary.createAssetAsync(image);
-            alert('¡Imagen guardada en galeria! 🎉');
+            Alert.alert(
+                '¡Imagen guardada en Galería!','',
+                [
+                    {text:'Continuar', onPress: () => console.log('onPress')}
+                ]
+            );
             onSavePhoto(image, typePhoto)
             setImage(null);
             //console.log('saved successfully');

@@ -40,8 +40,7 @@ const AboutAppScreen = () => {
         </View>
         <View style={styles.separator}>
           <Text style={styles.lblDesc}>
-            <Text style={styles.lblSubtitle}>Descripción General: </Text>La
-            aplicación es una plataforma de fidelización de clientes diseñada
+            La aplicación es una plataforma de fidelización de clientes diseñada
             para usuarios que frecuentan estaciones de servicio de <Text style={{fontWeight:'bold'}}>MEGASUR</Text>. Ofrece un
             sistema de acumulación de puntos por cada compra de combustible,
             siguiendo reglas de bonificación de puntos establecidas. Además,

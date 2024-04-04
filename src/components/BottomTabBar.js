@@ -51,7 +51,7 @@ const CustomBottomTabBar = ({state, navigation}) => {
                         break;
                     default:
                         iconName = focused ? 'person' : 'person-outline';
-                        label = 'Perfíl'
+                        label = 'Perfil'
                         break;
                 }
 

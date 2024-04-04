@@ -35,7 +35,7 @@ const ModalPhysicalCard = ({visible, setVisible, onSubmit, onChange}) => {
                         </TouchableOpacity>
                         <View style={styles.content}>
                             <Text style={styles.lblTitle}>Canjear tarjeta física</Text>
-                            <Text style={styles.lblDesc}>Para agregar puntos a su cuenta dígital, introduzca los dígitos al reverso de la tarjeta física</Text>
+                            <Text style={styles.lblDesc}>Para agregar puntos a su cuenta digital, introduzca los dígitos al reverso de la tarjeta física</Text>
                             <Input 
                                 placeholder='Ingresa el número'
                                 maxLength={19}

@@ -268,7 +268,7 @@ export const saveResponsesSurvey = (quizz_id, responses) => async(dispatch) => {
         const response = await postSurveys(dataSend)
         dispatch({type: ANSWER_SURVEY_SUCCESS})
     } catch (e) {
-        dispatch({type: ANSWER_SURVEY_FAILED, payload: 'Ocurrio un error al enviar respuestas, vuelve a intentarlo'})
+        dispatch({type: ANSWER_SURVEY_FAILED, payload: 'Ocurrió un error al enviar tus respuestas, vuelve a intentarlo más tarde.'})
         console.log('error',e)
     }
 }

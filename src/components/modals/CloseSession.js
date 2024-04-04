@@ -18,7 +18,7 @@ const ModalCloseSession = ({visible, setVisible, onSubmit}) => {
                             <Text style={styles.txtBtn}>Cancelar</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={[styles.btn,{backgroundColor:Colors.blueGreen,}]} onPress={onSubmit}>
-                            <Text style={styles.txtBtn}>Adelante</Text>
+                            <Text style={styles.txtBtn}>Aceptar</Text>
                         </TouchableOpacity>
 
                     </View>

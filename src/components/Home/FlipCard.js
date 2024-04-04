@@ -134,8 +134,8 @@ const FlipCard = ({cards, points =0}) => {
                                                     size={130}
                                                     backgroundColor="transparent"
                                                 />
-                                                <Text style={{color: Colors.white, marginTop:5}}>Código valido</Text>
-                                                <Text style={{color: Colors.white}}>Durante: {minutes < 10 ? `0${minutes}` : minutes}:{seconds < 10 ? `0${seconds}` : seconds} {minutes <= 0 ? 'sec' : 'min'}</Text>
+                                                <Text style={{color: Colors.white, marginTop:5}}>Código válido</Text>
+                                                <Text style={{color: Colors.white}}>durante: {minutes < 10 ? `0${minutes}` : minutes}:{seconds < 10 ? `0${seconds}` : seconds} {minutes <= 0 ? 'segundos' : 'minutos'}</Text>
                                             
                                             </>
 
@@ -164,7 +164,7 @@ const FlipCard = ({cards, points =0}) => {
                                     <View style={styles.contDes}>
                                         <View style={{width: width/1.5,}}>
                                             <Text style={styles.lblname}>{user?.first_name} {user?.last_name}</Text>
-                                            <Text style={styles.lbl}>Cuentas con: <Text style={styles.lblPoints}>{points.toString()} pts</Text></Text>
+                                            <Text style={styles.lbl}>Cuentas con: <Text style={styles.lblPoints}>{points.toString()} puntos</Text></Text>
                                         </View>
                                             <GestureHandlerRootView>
                                                 <GestureDetector gesture={tap.onStart(() => toggleFilp())}>

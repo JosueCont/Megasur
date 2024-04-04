@@ -163,8 +163,8 @@ const ModalShoppingCart = ({visible, setVisible, branches, points, onSubmit}) =>
                             ):(
                                 <View style={{justifyContent:'center', alignItems:'center'}}>
                                     <FontAwesome5 name="shopping-cart" size={50} color={Colors.grayStrong} />
-                                    <Text style={{color: Colors.grayStrong, fontSize: getFontSize(18), marginTop:15}}>No hay artículos en el carrito de canjes</Text>
-                                    <Text style={{color: Colors.grayStrong, fontSize: getFontSize(14), marginBottom:20}}>Agrega artículos para canjear</Text>
+                                    <Text style={{color: Colors.grayStrong, fontSize: getFontSize(18), marginTop:15}}>No hay artículos en el carrito</Text>
+                                    <Text style={{color: Colors.grayStrong, fontSize: getFontSize(14), marginBottom:20}}>Agrega artículos para canjear.</Text>
                                 </View>
                             )}
                         </Animated.View>

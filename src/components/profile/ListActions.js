@@ -18,7 +18,7 @@ const ListActionsProfile = () => {
         {name:'Facturación', icon: require('../../../assets/file-icon.png'), route:'CheckIn'},
         {name:'Encuestas contestadas', icon: require('../../../assets/poll-icon.png'), route:'AnsweredSurvey'},
         {name:'Información legal', icon: require('../../../assets/signature-icon.png'), route:'InfoLegal'},
-        {name:'Acerca de la app', icon: require('../../../assets/info-icon.png'), route:'About'}
+        {name:'Acerca de la aplicación', icon: require('../../../assets/info-icon.png'), route:'About'}
     ]
 
     return(

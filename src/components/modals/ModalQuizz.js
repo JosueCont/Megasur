@@ -147,7 +147,7 @@ const ModalQuizz = ({visible, setVisible, quizz,}) => {
                         {!startSurvey ? (
                             <View style={{flex:1}}>
                                 <View style={styles.contDesc}>
-                                    <Text style={styles.lbl}>Contesta esta encuesta y gana <Text style={{fontWeight:'700'}}>{quizz?.bonus_points} pts.</Text></Text>
+                                    <Text style={styles.lbl}>Contesta esta encuesta y gana <Text style={{fontWeight:'700'}}>{quizz?.bonus_points || 0} puntos.</Text></Text>
                                     <Text style={styles.lblDescription}>{quizz?.description}</Text>
                                 </View>
                                 <TouchableOpacity style={styles.btnStart} onPress={() => setStartSurvey(true)}>
@@ -161,8 +161,8 @@ const ModalQuizz = ({visible, setVisible, quizz,}) => {
 
                                 ): !answerSuccess && (
                                     <View style={styles.contSuccess}>
-                                        <Text style={styles.lblFinish}>¡Haz finalizado la encuesta!</Text>
-                                        <Text style={styles.lblBanner}>No olvides enviar tus respuestas para obtener la recompenza</Text>
+                                        <Text style={styles.lblFinish}>¡Has finalizado la encuesta!</Text>
+                                        <Text style={styles.lblBanner}>No olvides enviar tus respuestas para obtener tu recompensa</Text>
                                     </View>
                                 ) }
                             </SurveyContent>

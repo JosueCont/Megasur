@@ -1,4 +1,4 @@
-import React,{useEffect} from "react";
+import React,{useEffect, useState} from "react";
 import { View, Text, TouchableOpacity, Dimensions, StyleSheet, Image, FlatList } from "react-native";
 import { getFontSize } from "../../../utils/functions";
 import { Colors } from "../../../utils/Colors";
@@ -17,14 +17,40 @@ const DetailProduct = () => {
     const count = useSelector(state => state.exchangeDuck.countProduct)
     const shoppingCart = useSelector(state => state.exchangeDuck.cart)
     const points = useSelector(state => state.homeDuck.points)
+    const [isSameProduct, setSameProduct] = useState(false)
+    const [totalCount, setTotalCount] = useState(0)
     const {product, isFromHome} = route?.params;
 
     useEffect(() => {
+        setTotalCount(0)
         if(shoppingCart.length > 0){
+            console.log('shippingcar',shoppingCart)
             const item = shoppingCart.find((item) => item.id === product?.id)
-            dispatch(changeModalEx({prop:'countProduct', val: item?.quantity }))
+            if(item) setSameProduct(true)
+            console.log('item quantity',item)
+            dispatch(changeModalEx({prop:'countProduct', val: item?.quantity || 1 }))
+            
+            //const total = shoppingCart.reduce((total, item) => total + (item.price_in_points * item.quantity), 0);
+            //console.log(total)
+            //setTotalPoints(total)
+
         }
     },[route])
+
+    useEffect(() => {
+        if(count > 0){
+            let result = (product?.price_in_points * count)
+            console.log('result',result, 'totalPoints',  )
+            setTotalCount(result)
+
+        }
+    },[count])
+
+    const validateTotal = () => {
+        const total = shoppingCart.reduce((total, item) => total + (item.price_in_points * item.quantity), 0);
+        console.log('total',totalCount + (isSameProduct ? 0 : total))
+        return totalCount + (isSameProduct ? 0 : total)
+    }
 
 
     return(
@@ -81,7 +107,7 @@ const DetailProduct = () => {
                 <Text style={styles.lblDesc}>Lorem ipsum dolor sit amet. Ut dolorem rerum quo molestias praesentium sit soluta fugiat ut maxime necessitatibus sed.
 Lorem ipsum dolor sit amet. Ut dolorem rerum quo molestias praesentium sit soluta fugiat ut maxime necessitatibus sed.</Text>
                         </View>*/}
-            {product?.is_active && points >= product.price_in_points ? (
+            {product?.is_active && points >= product.price_in_points && (validateTotal() <= points) ? (
             <TouchableOpacity 
                 disabled={count === 0}
                 style={[styles.btnOk,{backgroundColor: count === 0 ? Colors.grayStrong : Colors.blueGreen,}]} 
@@ -116,7 +142,7 @@ Lorem ipsum dolor sit amet. Ut dolorem rerum quo molestias praesentium sit solut
             </TouchableOpacity>
             ):(
                 <View style={[styles.btnOk,{backgroundColor: Colors.grayStrong}]}>
-                    <Text style={styles.lblBtn}>{product.price_in_points > points && product?.is_active? 'Puntos insuficientes':'Producto no disponible'}</Text>
+                    <Text style={styles.lblBtn}>{product?.is_active && (validateTotal() > points) ? 'Puntos insuficientes':'Producto no disponible'}</Text>
                 </View>
             )}
         </HeaderLogged>

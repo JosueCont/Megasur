@@ -14,9 +14,9 @@ const ConfirmExchange = () => {
     const dispatch = useDispatch()
     return(
         <View style={styles.container}>
-            <Text style={styles.title}>¡Felicidades!</Text>
-            <Text style={styles.subtitle}>Te notificaremos cuando tu(s) producto(s) haya(n) llegado.</Text>
-            <Text style={styles.desc}>También puedes verificar su estado en <Text style={{fontWeight:'700'}}>Artículos canjeados</Text></Text>
+            <Text style={styles.title}>¡Canje exitoso!</Text>
+            <Text style={styles.subtitle}>Te notificaremos cuando tu(s) producto(s) haya(n) llegado a la sucursal.</Text>
+            <Text style={styles.desc}>También puedes verificar su estado en <Text style={{fontWeight:'700'}}>Artículos canjeados</Text>.</Text>
             <View style={styles.contBtn}>
                 <TouchableOpacity 
                     style={styles.btn}
@@ -35,7 +35,7 @@ const ConfirmExchange = () => {
                         dispatch(onChangeType(2))
                         navigation.navigate('Exchange')
                     }}>
-                    <Text style={styles.lblBtn}>Ver Artículos Cajeados</Text>
+                    <Text style={styles.lblBtn}>Ver Artículos cajeados</Text>
                 </TouchableOpacity>
             </View>
         </View>

@@ -33,7 +33,7 @@ const CardItem = ({item,index, cardSelected, showPts=false, disable=false, point
                 resizeMode='contain'
                 style={styles.img}>
                     <View style={styles.container}>
-                        {showPts && points > 0 && <Text style={styles.lblPts}>{points.toString()} pts</Text>}
+                        {showPts && points > 0 && <Text style={styles.lblPts}>{points.toString()} puntos</Text>}
                         {!showPts && <AntDesign name="checkcircle" size={32} color={card?.card_id === item?.card_id ? Colors.green : Colors.gray} style={{alignSelf:'flex-end', marginRight: Platform.OS === 'ios' ? 20 : 26}}/>}
                         {showPts && points > 0 && (
                             <View style={styles.contNumber}>
