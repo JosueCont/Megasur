@@ -45,6 +45,7 @@ const CheckInScreen = () => {
             setFirstRender(false);
             return;
         }else{
+            console.log('cargando invoicing')
             dispatch(getProfileData())
         }
     },[auto_invoicing])
@@ -120,7 +121,7 @@ const CheckInScreen = () => {
                     />
                     <ModalAlertSuccess 
                         visible={modalSuccess}
-                        message='Se ha establecido como default'
+                        message='Se ha cambiado el estado del rfc'
                         setVisible={() => {
                             dispatch(changeVariable({prop:'isFinishAction', value:!isFinish}))
                             dispatch(changeVariable({prop:'modalSucces', value: false}))

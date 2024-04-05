@@ -13,6 +13,8 @@ const CLEAN_VALUES = 'clean_values_invoicing'
 const DELETE_SUCCESS = 'delete_success_rfc'
 const DELETE_FAILED = 'delete_failed_rfc'
 const DISABLED = 'disabled'
+const UPDATE_INVOICING_SUCCESS = 'update_auto_invoi_success'
+const UPDATE_INVOICING_FAIL = 'update_auto_invoi_fail'
 
 const initialState = {
     loading: false,
@@ -48,7 +50,7 @@ const invoicingDuck = (state = initialState, action) => {
         case CHANGE_VALUE:
             return{ ...state, [action.payload.prop]: action.payload.value}
         case SET_RFC_USER:
-            return{ ...state, listRfc: action.payload, loading: false, auto_invoicing: action.auto }
+            return{ ...state, listRfc: action.payload, loading: false, auto_invoicing: action.auto, disableAutoInvoicing: action.disableInvoicing }
         case SAVE_SUCCESS:
             return{ ...state, loadingUpdate: false, modalSucces: true, message: action.payload}
         case SAVE_FAILED:
@@ -69,6 +71,10 @@ const invoicingDuck = (state = initialState, action) => {
             return{ ...state, loading: false, modalDelete: false, modalFailed: true, message: action.payload}
         case DISABLED:
             return{ ...state, disableAutoInvoicing: true}
+        case UPDATE_INVOICING_SUCCESS:
+            return{ ...state, auto_invoicing: action.payload, disableAutoInvoicing: false}
+        case UPDATE_INVOICING_FAIL:
+            return{ ...state, auto_invoicing: action.payload, disableAutoInvoicing: false}
         default:
             return state;
     }
@@ -114,10 +120,19 @@ const getCfdi = () => async(dispatch) => {
 
 export const getListUserRfc = (autoInvocing) => async(dispatch) => {
     try {
+        let invocing = false
         dispatch({type: LOADING})
         const response = await getUserRfc()
-        //console.log('userRfc',response?.data, 'autoInv',autoInvocing)
-        dispatch({type: SET_RFC_USER, payload: response?.data, auto: autoInvocing})
+        if(response?.data.length > 0){
+            const isBlocked = response?.data.filter(item => item.is_default)
+            invocing = isBlocked.length > 0 ? false : true
+        }
+        dispatch({
+            type: SET_RFC_USER, 
+            payload: response?.data,
+            auto: autoInvocing, 
+            disableInvoicing: invocing
+        })
     } catch (e) {
         console.log('error r',e)
     }
@@ -126,10 +141,10 @@ export const getListUserRfc = (autoInvocing) => async(dispatch) => {
 export const onSaveRFC = (data) => async(dispatch) => {
     try {
         dispatch({type: LOADING_UPDATE})
-        console.log('dtaSend',data)
+        //console.log('dtaSend',data)
         const response = await postCreateRfc(data)
         dispatch({type: SAVE_SUCCESS, payload: `Se ha agregado correctamente el rfc ${response?.data?.rfc}` })
-        console.log('response',response?.data)
+        //console.log('response',response?.data)
     } catch (e) {
         console.log('error',e)
         dispatch({type: SAVE_FAILED, payload:'Ha ocurrido un error al registrar ell rfc, inténtalo otra vez'})
@@ -173,12 +188,14 @@ export const onDeleteRfc = (id) => async(dispatch) => {
     }
 }
 
-export const updateAutoInvoicing = () => async(dispatch) => {
+export const updateAutoInvoicing = (autoInvoice) => async(dispatch) => {
     try {
         dispatch({type: DISABLED})
         const response = await putAutoInvoicing()
-        console.log('autoinvi¿oicing',response?.data)
+        dispatch({type: UPDATE_INVOICING_SUCCESS, payload: autoInvoice})
+        //console.log('autoinvi¿oicing',response?.data)
     } catch (e) {
+        dispatch({type: UPDATE_INVOICING_FAIL, payload: !autoInvoice})
         console.log('error autoI', e)
     }
 }
