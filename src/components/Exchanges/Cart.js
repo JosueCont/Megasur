@@ -9,7 +9,7 @@ const Cart = ({pressed, products=0,}) => {
     return(
         <TouchableOpacity style={styles.container} onPress={pressed}>
             <Image source={require('../../../assets/cart.png')} style={styles.img}/>
-            <Text style={styles.lbl}>{products}</Text>
+            <Text style={[styles.lbl,{left: products > 9 ? 20 : 23}]}>{products}</Text>
         </TouchableOpacity>
     )
 }
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     lbl:{
         position:'absolute', 
         top:12,
-        left:23, 
+        //left:23, 
         color: Colors.white, 
         fontSize: getFontSize(12), 
         fontWeight:'700'

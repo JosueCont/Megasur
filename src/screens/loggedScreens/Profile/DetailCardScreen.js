@@ -78,7 +78,7 @@ const DetailCardScreen = () => {
                         <Skeleton.Text px="10" lines={1} mb={2} mt={2} backgroundColor={'gray.100'}/>
                     ):(
 
-                        <Text style={styles.banner}>Se podrá añadir un máximo de 3 tarjetas.</Text>
+                        <Text style={styles.banner}>Se podrán añadir un máximo de 3 tarjetas.</Text>
                     )}
                     {exchangeCards.length <3 && (
                         <TouchableOpacity 

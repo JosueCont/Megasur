@@ -21,7 +21,7 @@ const UserProfileScreen = () => {
     const message = useSelector(state => state.profileDuck.message)
 
     return(
-        <HeaderLogged title="Datos usuario" isBack={true} goBack={() => navigation.goBack()}>
+        <HeaderLogged title="Información personal" isBack={true} goBack={() => navigation.goBack()}>
             <PersonalInfoForm />
             <TouchableOpacity 
                 onPress={() => dispatch(onChangeModalProf({prop:'modalDelete',value:true}))}
@@ -46,7 +46,7 @@ const UserProfileScreen = () => {
                 message={message}
             />
             <ModalAlertFailed 
-                titleBtn='Cerrar'
+                titleBtn='Aceptar'
                 visible={modalFailed}
                 setVisible={() => dispatch(onChangeModalProf({prop:'modalFailed',value: false}))}
                 message={message}

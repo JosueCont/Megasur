@@ -13,7 +13,8 @@ const AuthStack = () => {
             backBehavior={'history'}
             initialRouteName="InitialScreen"
             screenOptions={({navigation, route}) =>({
-                headerShown:false
+                headerShown:false,
+                gestureEnabled: false
             })}
         >
             <Stack.Screen name="InitialScreen" component={InitialScreen} />

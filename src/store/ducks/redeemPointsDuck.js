@@ -78,7 +78,7 @@ export const exchangeCard = (data) => async(dispatch) => {
             "card_number": data.cardNumber.replace(/\s+/g,'')
         }
         const response = await postAddPhysicCard(dataSend)
-        dispatch({type: EXCHANGE_CARD_SUCCESS, payload: `Se han agregado ${response?.data?.points} pts a tu tarjeta dígital`})
+        dispatch({type: EXCHANGE_CARD_SUCCESS, payload: `Se han agregado ${response?.data?.points} puntos a tu tarjeta digital`})
 
     } catch (e) {
         console.log('error ',e)

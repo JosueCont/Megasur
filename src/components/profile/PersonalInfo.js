@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef} from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Image, Pressable, Platform} from "react-native";
-import { Select, Spinner } from "native-base";
+import { Select, Spinner, useToast, Alert, VStack, HStack } from "native-base";
 import { getFontSize } from "../../utils/functions";
 import { Colors } from "../../utils/Colors";
 import Input from "../CustomInput";
@@ -19,6 +19,7 @@ const {height, width} = Dimensions.get('window');
 
 const PersonalInfoForm = () => {
     const dispatch = useDispatch();
+    const toast = useToast();
     const [modalCamera, setModaCamera] = useState(false)
     const [typePhoto, setTypePhoto] = useState(null)
     const imageBack = useSelector(state => state.profileDuck.imgBack)
@@ -36,7 +37,8 @@ const PersonalInfoForm = () => {
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [date, setDate] = useState(null);
     const animation = useRef(null);
-
+    const maximumDate = new Date(); // Fecha actual
+    maximumDate.setFullYear(maximumDate.getFullYear() - 18)
 
     const mimes = {
         'jpg': 'image/jpeg',
@@ -88,7 +90,7 @@ const PersonalInfoForm = () => {
     };
     
     const confirmIOSDate = () => {
-        dispatch(onChangeInputProf({prop:'birthDay',value: moment(date.toDateString()).format('YYYY-MM-DD')}))
+        dispatch(onChangeInputProf({prop:'birthDay',value: moment(date.toDateString()).add(1,'day').format('YYYY-MM-DD')}))
         //setBirthdayDate(moment(date.toDateString()).format('DD/MM/YYYY'))
         onShowDatepicker()
     }
@@ -103,7 +105,7 @@ const PersonalInfoForm = () => {
           base64: true
         });
         
-        if(!result.canceled) {
+        if(!result.canceled && result.assets[0].type != 'video' && !result.assets[0].fileName.includes('.GIF')) {
             const selectedAsset = result.assets[0];
             const { uri, width, height, base64 } = selectedAsset;
             let extension = uri.split('.').pop();
@@ -116,6 +118,22 @@ const PersonalInfoForm = () => {
                 uri: uri
             })
             dispatch(onChangeInputProf({prop:'userImage', value: result.assets[0].uri}))
+        }else{
+            toast.show({
+                placement:'top',
+                render:({id}) =>(
+                    <Alert maxWidth="100%" alignSelf="center" flexDirection="row" status='error' variant='solid' backgroundColor={Colors.pink} zIndex={1}>
+                        <VStack space={1} flexShrink={1} w="99%" >
+                            <HStack flexShrink={1} alignItems="center" justifyContent="space-between" >
+                                <HStack space={2} flexShrink={1} alignItems="center">
+                                    <Alert.Icon/>
+                                    <Text style={{color: Colors.white, fontSize: getFontSize(15)}}>No es posible seleccionar video o gif, selecciona el formato correcto.</Text>
+                                </HStack>
+                            </HStack>
+                        </VStack>
+                    </Alert>
+                )
+            })
         }
         
         console.log(result);
@@ -182,6 +200,8 @@ const PersonalInfoForm = () => {
                     mode="date"
                     display="spinner"
                     onChange={handleDateChange}
+                    maximumDate={maximumDate}
+                    timeZoneOffsetInMinutes={new Date().getTimezoneOffset()}
                 />
             )}
             {showDatePicker && Platform.OS === 'ios' && (

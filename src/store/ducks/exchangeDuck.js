@@ -58,7 +58,8 @@ const initialState = {
     branchId:null,
     exchangeDone:false,
     alertFailed: false,
-    refresh: false
+    refresh: false,
+    modalInfo: false
 }
 
 const exchangeDuck = (state = initialState, action) => {
