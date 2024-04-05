@@ -20,7 +20,7 @@ const SurveyItem = ({item, index, onSelectedSurvey, isAnswered=false}) => {
                     <Text style={styles.lblTitle} ellipsizeMode="tail" numberOfLines={2}>{isAnswered ? item?.poll?.name : item?.name}</Text>
                     
                 </View>
-                <Text style={styles.lblBonus}>{isAnswered ? '+'+item?.poll?.bonus_points.toString() : item?.bonus_points.toString()} pts.</Text>
+                <Text style={styles.lblBonus}>{isAnswered ? '+'+item?.poll?.bonus_points?.toString() || '0' : item?.bonus_points?.toString() || '0'} pts.</Text>
             </View>
             <Text style={styles.lblDesc} ellipsizeMode='tail' numberOfLines={2} >{isAnswered ? item?.poll?.description : item?.description}</Text>
             <View style={[styles.contTitle,{justifyContent:'space-between', }]}>

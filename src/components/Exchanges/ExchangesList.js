@@ -10,12 +10,11 @@ import EmptyList from "./EmptyList";
 const {height, width} = Dimensions.get('window');
 
 
-const ExchangeList = ({data, showTitle=true, showActions=true, onMinus, onPlus, onAddCar, isFromHome=false}) => {
+const ExchangeList = ({data, showTitle=true, showActions=true, onMinus, onPlus, onAddCar, isFromHome=false, filter}) => {
     const loader = useSelector(state => state.exchangeDuck.loading)
-
     return(
         <View>
-            {showTitle && data.length > 0 && <Text style={styles.title}>Especiales</Text>}
+            {showTitle && data.length > 0 && filter.id === 0 && <Text style={styles.title}>Especiales</Text>}
             <View style={styles.container}>
                 {loader ? (
                     <View style={{flex:1,flexDirection:'row', justifyContent:'space-between'}}>

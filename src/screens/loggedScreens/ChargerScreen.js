@@ -41,21 +41,6 @@ const ChargerScreen = () => {
             dispatch(await getCharges(`?page=1&per_page=100&user_id=${userId}`,[], true))
         })();
         if(toasUpdate){
-            toast.show({
-                placement:'top',
-                render:({id}) =>(
-                    <Alert maxWidth="100%" alignSelf="center" flexDirection="row" status='success' variant='solid' backgroundColor={Colors.green}>
-                        <VStack space={1} flexShrink={1} w="100%" >
-                            <HStack flexShrink={1} alignItems="center" justifyContent="space-between" >
-                                <HStack space={2} flexShrink={1} alignItems="center">
-                                    <Alert.Icon/>
-                                    <Text style={{color: Colors.white, fontSize: getFontSize(17)}}>{message}</Text>
-                                </HStack>
-                            </HStack>
-                        </VStack>
-                    </Alert>
-                )
-            })
             navigation.navigate('ConfirmRate',{points:infoCharge?.score_points})
         }
     },[isRate, isFocused])

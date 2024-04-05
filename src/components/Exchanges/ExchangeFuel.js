@@ -26,7 +26,7 @@ const ExchangeFuel = ({availablePoints=0}) => {
     const [valueSlider, setSlider] = useState(0)
     const [marks, setMArks] = useState(0)
     const [typeFuel, setType] = useState(null)
-    const types = ['Magna','Premium','Diesel']
+    const types = ['Magna','Premium','Diésel']
     const modalScreenShot = useSelector(state => state.homeDuck.modalScreenShot)
 
     const progress = useSharedValue(0);

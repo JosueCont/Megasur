@@ -230,7 +230,7 @@ const VehicleInfoForm = ({carTypes}) => {
       <ModalAlertSuccess
         visible={modalSuccess}
         setVisible={() => setModalSuccess(!modalSuccess)}
-        message={"Datos de vehículo actualizados."}
+        message={"Datos del vehículo actualizados."}
       />
       <ModalAlertFailed
         titleBtn="Cerrar"

@@ -49,7 +49,7 @@ const ConfirmRateScreen = () => {
                         />
                     </View>
                     <Text style={styles.title}>¡Felicidades!</Text>
-                    <Text style={styles.subtitle}>Añadimos {points?.points_bonification_by_transaction} pts a tu cuenta</Text>
+                    <Text style={styles.subtitle}>¡Hemos Añadido {points?.points_bonification_by_transaction} puntos a tu cuenta!</Text>
                     <View style={styles.contBtn}>
                         <TouchableOpacity 
                             style={styles.btn}

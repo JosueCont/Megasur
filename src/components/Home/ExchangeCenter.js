@@ -6,7 +6,7 @@ import FuelLoader from "../FuelLoader";
 import { Feather } from '@expo/vector-icons'; 
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
-import { onChangeType } from "../../store/ducks/exchangeDuck";
+import { changeModalEx, onChangeType } from "../../store/ducks/exchangeDuck";
 
 const {height, width} = Dimensions.get('window');
 
@@ -31,7 +31,7 @@ const ExchangeCenter = ({capacity, fuelCost, points}) => {
         <View style={styles.card}>
             <View style={styles.contHeader}>
                 <Text style={styles.title}>Centro de canje</Text>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => dispatch(changeModalEx({prop:'modalInfo', val: true}))}>
                     <Feather name="alert-circle" size={20} color="black" />
 
                 </TouchableOpacity>

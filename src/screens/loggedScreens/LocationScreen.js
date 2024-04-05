@@ -228,14 +228,14 @@ const LocationScreen = () => {
                      <MapView 
                         provider={PROVIDER_GOOGLE}
                         style={{flex:1,}}
-                        region={{...region, longitudeDelta: isOpen ? 0.009 : 0.9, latitudeDelta: 0.04}}
+                        region={{...region, longitudeDelta: isOpen ? region?.longitudeDelta ?? 0.009 : 0.9, latitudeDelta: region?.latitudeDelta ?? 0.04}}
                         initialRegion={{
                             longitude: initialRegion?.longitude,
                             latitude: initialRegion?.latitude,
                             longitudeDelta: 0.09,
                             latitudeDelta: 0.04
                         }}
-                        onRegionChangeComplete={(coords) => setNewRegion({latitude: coords.latitude, longitude: coords.longitude})}
+                        onRegionChangeComplete={setNewRegion}
                         >
                         <Marker style={{zIndex:10}}coordinate={{
                             longitude: initialRegion?.longitude,
@@ -281,7 +281,7 @@ const LocationScreen = () => {
                     </MapView>}
                     {isOpen && !modalActive && (
                         <TouchableOpacity
-                            onPress={()=> setNewRegion({...initialRegion})}
+                            onPress={()=> setNewRegion({...region, latitude: initialRegion.latitude, longitude: initialRegion.longitude})}
                             style={styles.btnMyLocation}>
                             <MaterialIcons name="my-location" size={15} color={Colors.white} />
                         </TouchableOpacity>
