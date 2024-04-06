@@ -9,12 +9,13 @@ import Filters from "../../components/Charges/Filters";
 import Help from "../../components/profile/Help";
 import moment from "moment";
 import ChargesList from "../../components/Charges/ListCharges";
-import { updateInfoCharge, changeModalCharges, onRateCharge, refreshAction } from "../../store/ducks/chargesDuck";
+import { updateInfoCharge, changeModalCharges, onRateCharge, refreshAction, onResetRate } from "../../store/ducks/chargesDuck";
 import { useDispatch, useSelector } from "react-redux";
 import ModalRateCharge from "../../components/modals/ModalRateCharge";
 import { getCharges } from "../../store/ducks/chargesDuck";
 import ModalAlertFailed from "../../components/modals/ModalAlertFail";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
+import ModalAlertSuccess from "../../components/modals/AlertModalSucces";
 
 const ChargerScreen = () => {
     const dispatch = useDispatch();
@@ -33,6 +34,7 @@ const ChargerScreen = () => {
     const modalFailed = useSelector(state => state.chargesDuck.modalFailed)
     const infoCharge = useSelector(state => state.chargesDuck.infoCharge)
     const userId = useSelector(state => state.authDuck.dataUser?.id)
+    const isInvoincing = useSelector(state => state.chargesDuck.isInvoincing)
 
     const toast = useToast();
 
@@ -40,19 +42,19 @@ const ChargerScreen = () => {
         (async() => {
             dispatch(await getCharges(`?page=1&per_page=100&user_id=${userId}`,[], true))
         })();
-        if(toasUpdate){
+        if(isRate){
             navigation.navigate('ConfirmRate',{points:infoCharge?.score_points})
         }
-    },[isRate, isFocused])
+    },[isRate, isFocused,])
 
     const onFilter = async() => {
         const filters = buildUrlPath(typeFuel,branchName)
-        console.log('filters',filters)
+        //console.log('filters',filters)
         await dispatch(getCharges(filters, branchesOptions, false))
     }
 
     const buildUrlPath = (type, branchName) => {
-        console.log('type',type)
+        //console.log('type',type)
         let filter = `?page=1&per_page=100&user_id=${userId}`
         if (type) {
             filter += `&product_code=${encodeURIComponent(type)}`;
@@ -64,7 +66,7 @@ const ChargerScreen = () => {
     }
 
     const onSendRate = async(charge, stars) => {
-        console.log('comment',comment)
+        //console.log('comment',comment)
         await dispatch(onRateCharge({charge,stars, comment, isRate}))
     }
 
@@ -108,6 +110,12 @@ const ChargerScreen = () => {
                     visible={modalFailed}
                     setVisible={() => dispatch(changeModalCharges({prop:'modalFailed', value: false}))}
                     message={message}
+                    titleBtn="Aceptar"
+                />
+                <ModalAlertSuccess 
+                    visible={toasUpdate}
+                    message={message}
+                    setVisible={() => dispatch(changeModalCharges({prop:'modalSuccess', value: false}))}
                 />
             </HeaderLogged>
             <Help pressed={() => navigation.navigate('Profile',{screen:'Contact', params: {route:'Charges'}})}/>

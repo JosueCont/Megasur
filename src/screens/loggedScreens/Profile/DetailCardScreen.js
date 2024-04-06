@@ -65,7 +65,7 @@ const DetailCardScreen = () => {
                             {exchangeCards.length > 0 ? exchangeCards.map((item,index) => (
                                 <View style={{flexDirection:'row', justifyContent:'space-between', marginBottom:7}} key={index+1}>
                                     <Text style={[styles.lbl16,{ fontWeight:'400'}]}>{item?.card_number.toString()}</Text>
-                                    <Text style={[styles.lbl16,{ fontWeight:'600'}]}>{item?.points} pts</Text>
+                                    <Text style={[styles.lbl16,{ fontWeight:'600'}]}>{item?.points} puntos</Text>
                                 </View>
 
                             )):(

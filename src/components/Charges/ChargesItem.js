@@ -4,15 +4,17 @@ import { getFontSize } from "../../utils/functions";
 import { Colors } from "../../utils/Colors";
 import RateComponent from "./Rate";
 import moment from "moment";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import 'moment/locale/es';
+import { invoicingFuelTransaction } from "../../store/ducks/chargesDuck";
 
 const {height, width} = Dimensions.get('window');
 
 const ChargesItem = ({charge, index, lastItem, openModal}) => {
+    const dispatch = useDispatch();
     const availableHours = useSelector(state => state.homeDuck.setupData?.hours_available_to_rate)
     const points = useSelector(state => state.homeDuck.setupData?.points_bonification_by_transaction)
 
-    
     const getTypeFuel = (type) => {
         let types = {
             'MAGNA': {type:'Magna', color: Colors.green},
@@ -45,7 +47,7 @@ const ChargesItem = ({charge, index, lastItem, openModal}) => {
                 </View>
                 <View>
                     <Text style={styles.lblName}>{charge?.branch?.name}</Text>
-                    <Text style={styles.lblDate}>{moment(charge?.fuel_datetime).format('MMMM DD')} • {moment(charge?.fuel_datetime).format('hh:mm A')}</Text>
+                    <Text style={styles.lblDate}>{moment(charge?.fuel_datetime).format('MMMM DD')} • {moment.utc(charge?.fuel_datetime).local().format('hh:mm A')}</Text>
                     <View style={{flexDirection:'row', alignItems:'center'}}>
                         {getTypeFuel(charge?.product_code)}
                         <View style={{marginLeft:11,}}>
@@ -74,7 +76,18 @@ const ChargesItem = ({charge, index, lastItem, openModal}) => {
                     </>
                 )}
                 {/*<Text style={styles.lblPoints}>+{charge?.points || 10}</Text>*/}
-                { charge?.score !=null && charge?.total_paid !== 0 && <Text style={styles.lblPoints}>+{points}</Text>}
+                <View style={{alignItems:'center',}}>
+                    { charge?.score !=null && charge?.total_paid !== 0 && <Text style={styles.lblPoints}>+{points}</Text>}
+                    {charge?.is_invoiced && charge?.total_paid !== 0 ? (
+                        <TouchableOpacity onPress={() => dispatch(invoicingFuelTransaction(charge?.id))}>
+                            <Text style={{color: Colors.blueGreen, fontSize: getFontSize(13)}}>Facturar</Text>
+                        </TouchableOpacity>
+                    ) : charge.invoiced && charge?.total_paid !== 0 ? (
+                        <TouchableOpacity>
+                            <Text style={{color: Colors.blueGreen, fontSize: getFontSize(13)}}>Visualizar</Text>
+                        </TouchableOpacity>
+                    ): null}
+                </View>
             </View>
         </View>
     )
