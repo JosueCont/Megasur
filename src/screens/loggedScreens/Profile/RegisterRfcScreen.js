@@ -70,7 +70,7 @@ const RegisterRfcScreen = () => {
                             placeholder="Selecciona regimen"
                             style={{}}>
                                 {regimens.map((item,index) => (
-                                    <Select.Item value={item.id} label={item?.descripcion} key={index}/>
+                                    <Select.Item value={item.id} label={`(${item?.id}) - ${item?.descripcion}`} key={index}/>
 
                                 ))}
                                 
@@ -120,7 +120,7 @@ const RegisterRfcScreen = () => {
                             placeholder="Selecciona uso de cfdi"
                             style={{}}>
                                 {listCfdi.map((item,index) => (
-                                    <Select.Item value={item.id} label={item?.descripcion} key={index}/>
+                                    <Select.Item value={item.id} label={`${item.id} - ${item?.descripcion}`} key={index}/>
 
                                 ))}
                                 
@@ -145,7 +145,10 @@ const RegisterRfcScreen = () => {
                     <ModalAlertSuccess 
                         visible={modalSuccess}
                         message={message}
-                        setVisible={() => dispatch(changeVariable({prop:'modalSucces', value: false}))}
+                        setVisible={() => {
+                            dispatch(changeVariable({prop:'modalSucces', value: false}))
+                            navigation.goBack();
+                        }}
                     />
                 </View>
         </HeaderLogged>

@@ -35,5 +35,6 @@ export const axiosTypes = {
     GET_TAX_REGIMEN:'/invoicing/cfdi-regime/',
     POST_ADD_RFC:'/invoicing/rfc/',
     GET_USER_RFC:'/invoicing/user-rfc/',
-    AUTO_INVOICING:'/security/users/auto_invoicing/'
+    AUTO_INVOICING:'/security/users/auto_invoicing/',
+    INVOICE_CHARGE:'invoicing/invoice_fuel_transaction/'
 }

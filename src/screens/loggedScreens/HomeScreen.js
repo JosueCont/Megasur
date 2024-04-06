@@ -51,6 +51,7 @@ const HomeScreen = () => {
     const vehicle = useSelector(state => state.homeDuck.vehicle)
     const showBannerCard = useSelector(state => state.homeDuck.showBannerCard)
     const modalInfo = useSelector(state => state.exchangeDuck.modalInfo)
+    const answerSuccess = useSelector(state => state.homeDuck.answerSuccess)
     const [dataAdvertisements, setDataAdvertisements] = useState([])
     const [dataPromotions, setDataPromotions] = useState([])
     const [location, setLocation] = useState(null)
@@ -86,7 +87,7 @@ const HomeScreen = () => {
                     await dispatch(getInfoVehicle(userId))
                     //await dispatch(getAllCards(userId))
                     await dispatch(getProfileData())
-                    await dispatch(getAllSurveys())
+                    //await dispatch(getAllSurveys())
     
                 }
 
@@ -96,7 +97,15 @@ const HomeScreen = () => {
     },[ isFocused])
 
     useEffect(() => {
-        console.log('change location permission', location)
+        (async() => {
+            if(isFocused){
+                await dispatch(getAllSurveys())
+                if(answerSuccess) dispatch(changeModalHome({prop:'answerSuccess', val: false}))
+            }
+        })()
+    },[isFocused, answerSuccess])
+
+    useEffect(() => {
         if(location != null && location != undefined) dispatch(getCloseStations(location?.coords))
     },[location])
 

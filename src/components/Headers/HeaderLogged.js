@@ -7,6 +7,7 @@ import { Colors } from "../../utils/Colors";
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons'; 
 import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
+import 'moment/locale/es';
 
 const {height, width} = Dimensions.get('window');
 

@@ -1,5 +1,5 @@
 import moment from "moment"
-import { getBranches, getInfoBranch, getTransactions, putRateCharge } from "../../utils/services/ApiApp"
+import { getBranches, getInfoBranch, getTransactions, putInvoicingTransaction, putRateCharge } from "../../utils/services/ApiApp"
 
 const LOADING = 'loading_char'
 const LOADING_MODAL = 'loading_modal'
@@ -11,6 +11,8 @@ const REFRESH_FILTERS = 'refresh_filters_charges'
 const RATE_CHARGE_SUCCESS = 'rate_charge_success'
 const RATE_CHARGE_FAILED = 'rate_charge_failed'
 const RESET_RATE = 'reset_israte'
+const INVOICING_CHARGE_SUCCESS = 'invoicing_charge_success'
+const INVOICING_CHARGE_FAILED = 'invoiving_charge_fail'
 
 const REFRESH = 'refresh_charge'
 
@@ -28,7 +30,8 @@ const initialState = {
     branchName:'',
     message:'',
     isRate:false,
-    refresh: false
+    refresh: false,
+    isInvoincing:false
 }
 
 const chargesDuck = (state = initialState, action) => {
@@ -50,11 +53,15 @@ const chargesDuck = (state = initialState, action) => {
         case REFRESH_FILTERS:
             return{ ...state, typeFuel:'', branchName:''}
         case RATE_CHARGE_SUCCESS:
-            return{ ...state, isRate: action.payload, modalSuccess: true, message: 'Se ha calificado la carga'}
+            return{ ...state, isRate: action.payload,}
         case RATE_CHARGE_FAILED:
             return{ ...state, modalFailed: true, message: action.payload}
         case RESET_RATE:
             return{ ...state, isRate: false, modalSuccess: false, }
+        case INVOICING_CHARGE_SUCCESS:
+            return{ ...state, modalSuccess: true, message: action.payload}
+        case INVOICING_CHARGE_FAILED:
+            return{ ...state, modalFailed:true, message: action.payload}
         default:
             return state;
     }
@@ -129,7 +136,7 @@ export const getCharges = (filters='', options, isInitial=false) => async(dispat
                 }
             }
         }
-        console.log('cargas',chargesMonth)
+        //console.log('cargas',chargesMonth)
         dispatch({type: GET_CHARGES_FUEL, payload: {chargesMonth, branches}})
     } catch (e) {
         console.log('error cargas',e)
@@ -174,6 +181,22 @@ export const refreshAction = () => {
 export const onResetRate = () => {
     return{
         type: RESET_RATE,
+    }
+}
+
+export const invoicingFuelTransaction = (id) => async(dispatch) => {
+    try {
+        const response = await putInvoicingTransaction(id)
+        dispatch({
+            type: INVOICING_CHARGE_SUCCESS,
+            payload:'Factura generada correctamente'
+        })
+    } catch (e) {
+        dispatch({
+            type: INVOICING_CHARGE_FAILED, 
+            payload: e?.response?.data?.detail
+        })
+        console.log('error',e)
     }
 }
 export default chargesDuck

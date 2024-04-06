@@ -122,7 +122,7 @@ const PersonalInfoForm = () => {
             toast.show({
                 placement:'top',
                 render:({id}) =>(
-                    <Alert maxWidth="100%" alignSelf="center" flexDirection="row" status='error' variant='solid' backgroundColor={Colors.pink} zIndex={1}>
+                    <Alert maxWidth="100%" alignSelf="center" flexDirection="row" status='error' variant='solid' backgroundColor={Colors.red} zIndex={1} mt={12}>
                         <VStack space={1} flexShrink={1} w="99%" >
                             <HStack flexShrink={1} alignItems="center" justifyContent="space-between" >
                                 <HStack space={2} flexShrink={1} alignItems="center">
@@ -153,156 +153,166 @@ const PersonalInfoForm = () => {
 
     return(
         <View style={styles.container}>
-            <TouchableOpacity style={styles.btnImgProf} onPress={onPickImage}>
-                {profile_picture != null && profile_picture != '' && 
-                    profile_picture?.split('/').pop() !== 'None' ? (
-                    <Image source={{uri: profile_picture}} style={styles.imgProfile}/>
-                ):(
-                    <Image source={require('../../../assets/profile.png')}style={styles.imgProfile}/>
-                        
-                )}
-            </TouchableOpacity>
-            <Text style={styles.lbl}>Nombre(s)</Text>
-            <Input 
-                isLogged={true} 
-                value={first_name} 
-                setValue={(value) => dispatch(onChangeInputProf({prop:'name', value }))}
-            />
-            <Text style={styles.lbl}>Apellido(s)</Text>
-            <Input 
-                isLogged={true} 
-                value={last_name} 
-                setValue={(value) => dispatch(onChangeInputProf({prop:'lastName', value}))}
-            />
-            <Text style={styles.lbl}>Correo electrónico</Text>
-            <Input 
-                //autoComplete={false}
-                autoCorrect={false}
-                autoCapitalize="none"
-                autoComplete="off"
-                //editable={false}
-                isLogged={true} 
-                value={email} 
-                setValue={(value) => dispatch(onChangeInputProf({prop:'email',value}))}
-            />
-            <Text style={styles.lbl}>Número celular (10 dígitos)</Text>
-            <Input 
-                editable={false}
-                isLogged={true} 
-                value={phone} 
-                setValue={(value) => dispatch(onChangeInputProf({prop:'phone', value}))}
-            />
-            <Text style={styles.lbl}>Fecha de nacimiento</Text>
-            {showDatePicker && (
-                <DateTimePicker
-                    locale="es-ES"
-                    value={date}
-                    mode="date"
-                    display="spinner"
-                    onChange={handleDateChange}
-                    maximumDate={maximumDate}
-                    timeZoneOffsetInMinutes={new Date().getTimezoneOffset()}
-                />
-            )}
-            {showDatePicker && Platform.OS === 'ios' && (
-                <View style={{flexDirection:'row',justifyContent:'space-between', width: width/2}}>
-                    <TouchableOpacity onPress={onShowDatepicker} style={{padding:7, backgroundColor:Colors.red, borderRadius:7}}>
-                        <Text style={{color:Colors.white}}>Cancelar</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={confirmIOSDate} style={{padding:7, backgroundColor:Colors.orange, borderRadius:7}}>
-                        <Text style={{color:Colors.white}}>Confirmar</Text>
-                    </TouchableOpacity>
+            {isComplete ? (
+                <View style={{alignItems:'center'}}>
+                    <View style={{width: width, height: height/3,}}>
+                        <LottieView
+                            autoPlay
+                            loop
+                            resizeMode="cover"
+                            ref={animation}
+                            style={{
+                                flex:1,
+                                //position:'absolute',
+                                //top:-40,
+                                backgroundColor: 'white',
+                            }}
+                            // Find more Lottie files at https://lottiefiles.com/featured
+                            source={require('./../../../assets/Coins.json')}
+                        />
+                    </View>
+                    <Text style={styles.title}>¡Felicidades!</Text>
+                    <Text style={styles.subtitle}>¡Has completado los datos de tu perfil!</Text>
                 </View>
-            )}
-            {!showDatePicker && (
-                <Pressable onPress={onShowDatepicker}>
-                    <Input 
-                        placeholder='DD/MM/YYYY' 
-                        editable={false} 
-                        isLogged={true}
-                        onPressIn={onShowDatepicker}
-                        //style={{width:150, height:44, backgroundColor:'white', justifyContent:'center',alignItems:'center', paddingLeft:30}}
-                        value={birthDay}
-                        //onChange={(val) => se}    
-                    />
-
-                </Pressable>)}
-            {!showDatePicker && (
+            ):(
                 <>
-                <Text style={styles.lbl}>Género</Text>
-                <View style={styles.input}>
-                    <Select
-                        selectedValue={gender}
-                        onValueChange={(value) => dispatch(onChangeInputProf({prop:'gender', value}))}
-                        borderWidth={0}
-                        placeholder="Escoge tu genero"
-                        style={{}}>
-                            <Select.Item value="MALE" label="Masculino"/>
-                            <Select.Item value="FEMALE" label="Femenino"/>
-                            <Select.Item value="OTHER" label="Otro"/>
-                        </Select>
-
-                </View>
-                <Text style={styles.lbl}>Identificación oficial</Text>
-                <View style={styles.contBt}>
-                    {!isComplete && <TouchableOpacity 
-                        style={[styles.btn,{marginRight:8}]} 
-                        onPress={() => {
-                            setTypePhoto('imgFront')
-                            setTimeout(() => {
-                                setModaCamera(true)
-                            },300)
-                        }}>
-                            {imageFront != '' ? (
-                                <Image source={{ uri: imageFront }} style={styles.img}/>
-                            ):(
-                                <>
-                                    <Feather name="camera" size={40} color={Colors.gray} />
-                                    <Text style={styles.lblBtn}>Frente</Text>
-                                </>
-                            )}
-                    </TouchableOpacity>}
-                    {!isComplete && <TouchableOpacity 
-                        style={styles.btn}
-                        onPress={() => {
-                            setTypePhoto('imgBack')
-                            setTimeout(() => {
-                                setModaCamera(true)
-                            },300)
-                        }}>
-                            {imageBack != '' ? (
-                                <Image source={{ uri: imageBack }} style={styles.img}/>
-                            ):(
-                                <>
-                                    <Feather name="camera" size={40} color={Colors.gray} />
-                                    <Text style={styles.lblBtn}>Reverso</Text>
-                                
-                                </>
-                            )}
-                    </TouchableOpacity>}
-                </View>
-                <View style={{height:100, }}>
+                <TouchableOpacity style={styles.btnImgProf} onPress={onPickImage}>
+                    {profile_picture != null && profile_picture != '' && 
+                        profile_picture?.split('/').pop() !== 'None' ? (
+                        <Image source={{uri: profile_picture}} style={styles.imgProfile}/>
+                    ):(
+                        <Image source={require('../../../assets/profile.png')}style={styles.imgProfile}/>
+                            
+                    )}
+                </TouchableOpacity>
+                <Text style={styles.lbl}>Nombre(s)</Text>
+                <Input 
+                    isLogged={true} 
+                    value={first_name} 
+                    setValue={(value) => dispatch(onChangeInputProf({prop:'name', value }))}
+                />
+                <Text style={styles.lbl}>Apellido(s)</Text>
+                <Input 
+                    isLogged={true} 
+                    value={last_name} 
+                    setValue={(value) => dispatch(onChangeInputProf({prop:'lastName', value}))}
+                />
+                <Text style={styles.lbl}>Correo electrónico</Text>
+                <Input 
+                    //autoComplete={false}
+                    autoCorrect={false}
+                    autoCapitalize="none"
+                    autoComplete="off"
+                    //editable={false}
+                    isLogged={true} 
+                    value={email} 
+                    setValue={(value) => dispatch(onChangeInputProf({prop:'email',value}))}
+                />
+                <Text style={styles.lbl}>Número celular (10 dígitos)</Text>
+                <Input 
+                    editable={false}
+                    isLogged={true} 
+                    value={phone} 
+                    setValue={(value) => dispatch(onChangeInputProf({prop:'phone', value}))}
+                />
+                <Text style={styles.lbl}>Fecha de nacimiento</Text>
+                {showDatePicker && (
+                    <DateTimePicker
+                        locale="es-ES"
+                        value={date}
+                        mode="date"
+                        display="spinner"
+                        onChange={handleDateChange}
+                        maximumDate={maximumDate}
+                        timeZoneOffsetInMinutes={new Date().getTimezoneOffset()}
+                    />
+                )}
+                {showDatePicker && Platform.OS === 'ios' && (
+                    <View style={{flexDirection:'row',justifyContent:'space-between', width: width/2}}>
+                        <TouchableOpacity onPress={onShowDatepicker} style={{padding:7, backgroundColor:Colors.red, borderRadius:7}}>
+                            <Text style={{color:Colors.white}}>Cancelar</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={confirmIOSDate} style={{padding:7, backgroundColor:Colors.orange, borderRadius:7}}>
+                            <Text style={{color:Colors.white}}>Confirmar</Text>
+                        </TouchableOpacity>
+                    </View>
+                )}
+                {!showDatePicker && (
+                    <Pressable onPress={onShowDatepicker}>
+                        <Input 
+                            placeholder='DD/MM/YYYY' 
+                            editable={false} 
+                            isLogged={true}
+                            onPressIn={onShowDatepicker}
+                            //style={{width:150, height:44, backgroundColor:'white', justifyContent:'center',alignItems:'center', paddingLeft:30}}
+                            value={birthDay}
+                            //onChange={(val) => se}    
+                        />
+    
+                    </Pressable>)}
+                {!showDatePicker && (
+                    <>
+                    <Text style={styles.lbl}>Género</Text>
+                    <View style={styles.input}>
+                        <Select
+                            selectedValue={gender}
+                            onValueChange={(value) => dispatch(onChangeInputProf({prop:'gender', value}))}
+                            borderWidth={0}
+                            placeholder="Escoge tu genero"
+                            style={{}}>
+                                <Select.Item value="MALE" label="Masculino"/>
+                                <Select.Item value="FEMALE" label="Femenino"/>
+                                <Select.Item value="OTHER" label="Otro"/>
+                            </Select>
+    
+                    </View>
+                    <Text style={styles.lbl}>Identificación oficial</Text>
+                    <View style={styles.contBt}>
+                        {!isComplete && <TouchableOpacity 
+                            style={[styles.btn,{marginRight:8}]} 
+                            onPress={() => {
+                                setTypePhoto('imgFront')
+                                setTimeout(() => {
+                                    setModaCamera(true)
+                                },300)
+                            }}>
+                                {imageFront != '' ? (
+                                    <Image source={{ uri: imageFront }} style={styles.img}/>
+                                ):(
+                                    <>
+                                        <Feather name="camera" size={40} color={Colors.gray} />
+                                        <Text style={styles.lblBtn}>Frente</Text>
+                                    </>
+                                )}
+                        </TouchableOpacity>}
+                        {!isComplete && <TouchableOpacity 
+                            style={styles.btn}
+                            onPress={() => {
+                                setTypePhoto('imgBack')
+                                setTimeout(() => {
+                                    setModaCamera(true)
+                                },300)
+                            }}>
+                                {imageBack != '' ? (
+                                    <Image source={{ uri: imageBack }} style={styles.img}/>
+                                ):(
+                                    <>
+                                        <Feather name="camera" size={40} color={Colors.gray} />
+                                        <Text style={styles.lblBtn}>Reverso</Text>
+                                    
+                                    </>
+                                )}
+                        </TouchableOpacity>}
+                    </View>
                     <TouchableOpacity 
                         onPress={() => onUpdate()}
                         disabled={!(email !='' && phone != '' && gender != '' && birthDay != '')}
                         style={[styles.btnSave,{backgroundColor: !(email != '' && phone != ''&& gender != '' && birthDay != '') ? Colors.gray :Colors.blueGreen, zIndex:10}]}>
                         {loader ? <Spinner size={'sm'} color={'white'} /> :<Text style={styles.lblBtnSave}>Guardar</Text> }
                     </TouchableOpacity>
-                    {isComplete && <LottieView
-                        autoPlay
-                        loop
-                        resizeMode="cover"
-                        ref={animation}
-                        style={{
-                          flex:1,
-                          position:'absolute',
-                          top:-40,
-                          backgroundColor: 'white',
-                        }}
-                        // Find more Lottie files at https://lottiefiles.com/featured
-                        source={require('./../../../assets/Coins.json')}
-                    />}
-                </View>
+                
+                </>
+            )}
                 </>
             )}
             <CameraComponent 
@@ -396,7 +406,21 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.25, 
         shadowRadius: 4, 
-    }
+    },
+    title:{
+        color: Colors.blueGreen, 
+        fontSize: getFontSize(56), 
+        fontWeight:'700', 
+        marginBottom:16
+    },
+    subtitle:{
+        textAlign:'center', 
+        width: width/1.8,
+        color: Colors.darkGray,
+        fontSize: getFontSize(18),
+        fontWeight:'400', 
+        marginBottom:28
+    },
 })
 
 export default PersonalInfoForm;
