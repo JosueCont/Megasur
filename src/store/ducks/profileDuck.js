@@ -76,7 +76,8 @@ const profileDuck = (state = initialState, action) => {
                 receiveNotifications: action.payload.receive_notifications,
                 loading:false,
                 refresh:false,
-                isCompleteRegis:false
+                isCompleteRegis:false,
+                isEmailValid: action.payload.email != '' && action.payload.email != null ? true : false
                 //isAccountUpdate: false
             }
         case CHANGE_IMAGE:
