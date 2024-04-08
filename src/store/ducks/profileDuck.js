@@ -43,7 +43,8 @@ const initialState = {
     modalTerms:false,
     answeredSurveys:[],
     receiveNotifications:false,
-    isCompleteRegis:false
+    isCompleteRegis:false,
+    isEmailValid: false
 }
 
 const profileDuck = (state = initialState, action) => {
@@ -53,7 +54,11 @@ const profileDuck = (state = initialState, action) => {
         case REFRESH:
             return{ ...state, refresh: true}
         case CHANGE_INPUT:
-            return{ ...state, [action.payload.prop]: action.payload.value}
+            if(action.payload.prop === 'email'){
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                const isValid = emailRegex.test(action.payload.value);
+                return{ ...state, email: action.payload.value, isEmailValid: isValid}
+            }else return{ ...state, [action.payload.prop]: action.payload.value}
         case CHANGE_MODAL:
             return{ ...state, [action.payload.prop]: action.payload.value}
         case GET_DATA_PROFILE:

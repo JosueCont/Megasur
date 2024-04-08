@@ -11,7 +11,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 const {height, width} = Dimensions.get('window');
 
-const ChargesList = ({charges, setVisible}) => {
+const ChargesList = ({charges, setVisible, onSetCharge}) => {
     const loader = useSelector(state => state.chargesDuck.loading)
 
     return(
@@ -33,6 +33,7 @@ const ChargesList = ({charges, setVisible}) => {
                                 index={index} 
                                 lastItem={charge.charges.length -1} 
                                 openModal={(val) => setVisible(val)}
+                                onSetCharge={onSetCharge}
                             />
                         )}
                         <View style={[styles.line,{ borderStyle:'dotted', marginTop:10,}]}/>

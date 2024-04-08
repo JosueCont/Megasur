@@ -10,7 +10,7 @@ import { invoicingFuelTransaction } from "../../store/ducks/chargesDuck";
 
 const {height, width} = Dimensions.get('window');
 
-const ChargesItem = ({charge, index, lastItem, openModal}) => {
+const ChargesItem = ({charge, index, lastItem, openModal, onSetCharge}) => {
     const dispatch = useDispatch();
     const availableHours = useSelector(state => state.homeDuck.setupData?.hours_available_to_rate)
     const points = useSelector(state => state.homeDuck.setupData?.points_bonification_by_transaction)
@@ -79,7 +79,7 @@ const ChargesItem = ({charge, index, lastItem, openModal}) => {
                 <View style={{alignItems:'center',}}>
                     { charge?.score !=null && charge?.total_paid !== 0 && <Text style={styles.lblPoints}>+{points}</Text>}
                     {charge?.is_invoiced && charge?.total_paid !== 0 ? (
-                        <TouchableOpacity onPress={() => dispatch(invoicingFuelTransaction(charge?.id))}>
+                        <TouchableOpacity onPress={() => onSetCharge(charge)}>
                             <Text style={{color: Colors.blueGreen, fontSize: getFontSize(13)}}>Facturar</Text>
                         </TouchableOpacity>
                     ) : charge.invoiced && charge?.total_paid !== 0 ? (

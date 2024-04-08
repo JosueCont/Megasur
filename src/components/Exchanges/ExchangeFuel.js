@@ -140,8 +140,8 @@ const ExchangeFuel = ({availablePoints=0}) => {
                             </Slider.Thumb>
                 </Slider>*/}
                         <View style={styles.contPoints}>
-                            <Text style={styles.lbl}>0 pts</Text>
-                            <Text style={styles.lbl}>{availablePoints}pts</Text>
+                            <Text style={styles.lbl}>0</Text>
+                            <Text style={styles.lbl}>{availablePoints}</Text>
                         </View>
 
                     </View>
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
         fontSize: getFontSize(16), 
         fontWeight:'400', 
         textAlign:'center',
-        marginBottom:33
+        marginBottom:45
         //width:70, 
         //marginRight:10
     },

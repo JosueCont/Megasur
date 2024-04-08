@@ -9,13 +9,14 @@ import Filters from "../../components/Charges/Filters";
 import Help from "../../components/profile/Help";
 import moment from "moment";
 import ChargesList from "../../components/Charges/ListCharges";
-import { updateInfoCharge, changeModalCharges, onRateCharge, refreshAction, onResetRate } from "../../store/ducks/chargesDuck";
+import { updateInfoCharge, changeModalCharges, onRateCharge, refreshAction, onResetRate, invoicingFuelTransaction } from "../../store/ducks/chargesDuck";
 import { useDispatch, useSelector } from "react-redux";
 import ModalRateCharge from "../../components/modals/ModalRateCharge";
 import { getCharges } from "../../store/ducks/chargesDuck";
 import ModalAlertFailed from "../../components/modals/ModalAlertFail";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import ModalAlertSuccess from "../../components/modals/AlertModalSucces";
+import ModalAlertQuestion from "../../components/modals/ModalAlertQuestion";
 
 const ChargerScreen = () => {
     const dispatch = useDispatch();
@@ -34,7 +35,8 @@ const ChargerScreen = () => {
     const modalFailed = useSelector(state => state.chargesDuck.modalFailed)
     const infoCharge = useSelector(state => state.chargesDuck.infoCharge)
     const userId = useSelector(state => state.authDuck.dataUser?.id)
-    const isInvoincing = useSelector(state => state.chargesDuck.isInvoincing)
+    const modalCharge = useSelector(state => state.chargesDuck.modalInvoicingCharge)
+    const [chargeSelected, setCharge] = useState(null)
 
     const toast = useToast();
 
@@ -91,7 +93,12 @@ const ChargerScreen = () => {
                         setVisible={(val) => {
                             dispatch(updateInfoCharge(val))
                             dispatch(changeModalCharges({prop:'modalActive', value: true}))
-                        }}/>
+                        }}
+                        onSetCharge={(charge) => {
+                            setCharge(charge)
+                            dispatch(changeModalCharges({prop:'modalInvoicingCharge', value: true}))
+                        }}
+                    />
                 </View>
 
                 <ModalRateCharge 
@@ -116,6 +123,14 @@ const ChargerScreen = () => {
                     visible={toasUpdate}
                     message={message}
                     setVisible={() => dispatch(changeModalCharges({prop:'modalSuccess', value: false}))}
+                />
+                <ModalAlertQuestion 
+                    visible={modalCharge}
+                    setVisible={() => dispatch(changeModalCharges({prop:'modalInvoicingCharge', value: false}))}
+                    onSubmit={() => {
+                        console.log('chargeSelected', chargeSelected)
+                        dispatch(invoicingFuelTransaction(chargeSelected?.id))
+                    }}
                 />
             </HeaderLogged>
             <Help pressed={() => navigation.navigate('Profile',{screen:'Contact', params: {route:'Charges'}})}/>

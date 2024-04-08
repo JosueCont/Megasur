@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, Dimensions, StyleSheet } from "react-native";
 import { useToast, Alert, VStack, HStack } from "native-base";
-import { getFontSize, getPermissionLocation } from "../../../utils/functions";
+import { getFontSize, getPermissionLocation, setFormatNumber } from "../../../utils/functions";
 import { Colors } from "../../../utils/Colors";
 import HeaderLogged from "../../../components/Headers/HeaderLogged";
 import { useDispatch, useSelector } from "react-redux";
@@ -169,7 +169,7 @@ const ProductsScreen = () => {
                 }}
                 refresh={refresh}
                 onRefresh={() => onRefresh()}>
-                <Text style={styles.title}>Tienes disponibles: <Text style={{fontWeight:'700'}}>{points.toString()} pts</Text></Text>
+                <Text style={styles.title}>Puntos disponibles: <Text style={{fontWeight:'700'}}>{setFormatNumber(points)}</Text></Text>
                 <View style={styles.header}>
                     <TypeExchange selected={selectedType} setSelected={(val) => dispatch(onChangeType(val))}/>
                     {selectedType === 1 && (<Filters filters={categories} setSelected={(val) => setFilter(val)} selected={selectedFilter}/>)}

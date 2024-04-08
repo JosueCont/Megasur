@@ -13,6 +13,7 @@ const RATE_CHARGE_FAILED = 'rate_charge_failed'
 const RESET_RATE = 'reset_israte'
 const INVOICING_CHARGE_SUCCESS = 'invoicing_charge_success'
 const INVOICING_CHARGE_FAILED = 'invoiving_charge_fail'
+const LOADING_INVOICING = 'loading_invoicing_charge'
 
 const REFRESH = 'refresh_charge'
 
@@ -31,7 +32,9 @@ const initialState = {
     message:'',
     isRate:false,
     refresh: false,
-    isInvoincing:false
+    isInvoincing:false,
+    modalInvoicingCharge: false,
+    loadingInvoicing: false
 }
 
 const chargesDuck = (state = initialState, action) => {
@@ -59,9 +62,11 @@ const chargesDuck = (state = initialState, action) => {
         case RESET_RATE:
             return{ ...state, isRate: false, modalSuccess: false, }
         case INVOICING_CHARGE_SUCCESS:
-            return{ ...state, modalSuccess: true, message: action.payload}
+            return{ ...state, modalInvoicingCharge: false, modalSuccess: true, message: action.payload, loadingInvoicing: false}
         case INVOICING_CHARGE_FAILED:
-            return{ ...state, modalFailed:true, message: action.payload}
+            return{ ...state, modalInvoicingCharge: false, modalFailed:true, message: action.payload, loadingInvoicing: false}
+        case LOADING_INVOICING:
+            return{ ...state, loadingInvoicing: true}
         default:
             return state;
     }
@@ -186,6 +191,7 @@ export const onResetRate = () => {
 
 export const invoicingFuelTransaction = (id) => async(dispatch) => {
     try {
+        dispatch({type: LOADING_INVOICING})
         const response = await putInvoicingTransaction(id)
         dispatch({
             type: INVOICING_CHARGE_SUCCESS,
