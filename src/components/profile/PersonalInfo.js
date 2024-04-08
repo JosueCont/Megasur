@@ -33,6 +33,7 @@ const PersonalInfoForm = () => {
     const loader = useSelector(state => state.profileDuck.loading)
     const profile_picture = useSelector(state => state.profileDuck.userImage)
     const [image64, setImage ] = useState('')
+    const isValid = useSelector(state => state.profileDuck.isEmailValid)
     const isComplete = useSelector(state => state.profileDuck.isCompleteRegis)
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [date, setDate] = useState(null);
@@ -189,14 +190,32 @@ const PersonalInfoForm = () => {
                 <Input 
                     isLogged={true} 
                     value={first_name} 
-                    setValue={(value) => dispatch(onChangeInputProf({prop:'name', value }))}
+                    maxLength={80}
+                    minLength={2}
+                    setValue={(value) => {
+                        if (/^[a-zA-ZáéíóúÁÉÍÓÚüÜ]+$/u.test(value)) {
+                            // Si es válido, actualizar el estado del valor del TextInput
+                            dispatch(onChangeInputProf({prop:'name', value }))
+                          }
+                    }}
                 />
+                {first_name?.length < 3 && <Text style={{color: Colors.red}}>Al menos 3 dígitos</Text>}
                 <Text style={styles.lbl}>Apellido(s)</Text>
                 <Input 
                     isLogged={true} 
-                    value={last_name} 
-                    setValue={(value) => dispatch(onChangeInputProf({prop:'lastName', value}))}
+                    value={last_name}
+                    minLength={2} 
+                    maxLength={80}
+                    setValue={(value) => {
+                        if (/^[a-zA-ZáéíóúÁÉÍÓÚüÜ]+$/u.test(value)) {
+                            // Si es válido, actualizar el estado del valor del TextInput
+                            dispatch(onChangeInputProf({prop:'lastName', value}))
+                            
+                          }
+                    }}
                 />
+                {last_name?.length < 3 && <Text style={{color: Colors.red}}>Al menos 3 dígitos</Text>}
+
                 <Text style={styles.lbl}>Correo electrónico</Text>
                 <Input 
                     //autoComplete={false}
@@ -208,6 +227,7 @@ const PersonalInfoForm = () => {
                     value={email} 
                     setValue={(value) => dispatch(onChangeInputProf({prop:'email',value}))}
                 />
+                {email != '' && !isValid && <Text style={{color: Colors.red}}>Correo inválido</Text> }
                 <Text style={styles.lbl}>Número celular (10 dígitos)</Text>
                 <Input 
                     editable={false}
@@ -306,8 +326,8 @@ const PersonalInfoForm = () => {
                     </View>
                     <TouchableOpacity 
                         onPress={() => onUpdate()}
-                        disabled={!(email !='' && phone != '' && gender != '' && birthDay != '')}
-                        style={[styles.btnSave,{backgroundColor: !(email != '' && phone != ''&& gender != '' && birthDay != '') ? Colors.gray :Colors.blueGreen, zIndex:10}]}>
+                        disabled={!(email !='' && phone != '' && gender != '' && birthDay != '' && first_name.length > 3 && last_name.length > 3)}
+                        style={[styles.btnSave,{backgroundColor: !(email != '' && phone != ''&& gender != '' && birthDay != '' && first_name.length > 3 && last_name.length > 3) ? Colors.gray :Colors.blueGreen, zIndex:10}]}>
                         {loader ? <Spinner size={'sm'} color={'white'} /> :<Text style={styles.lblBtnSave}>Guardar</Text> }
                     </TouchableOpacity>
                 

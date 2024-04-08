@@ -81,3 +81,14 @@ export const getPermissionLocation = async() => {
         console.error("Error requesting location permission:", error);
     }
 }
+
+export const setFormatNumber =(number) =>  {
+    const parts = number.toString().split('.');
+    let integerPart = parts[0];
+    const decimalPart = parts.length > 1 ? '.' + parts[1] : '';
+    
+    // Insertar comas cada tres dígitos en la parte entera
+    integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  
+    return integerPart + decimalPart;
+  }

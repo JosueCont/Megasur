@@ -17,6 +17,7 @@ const ListPromotions = ({dataPromotion}) => {
                 keyExtractor={item => item.id.toString()}
                 horizontal
                 showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{paddingLeft:10}}
                 //snapToOffsets={[...Array(dataPromotion.length)].map((x, i) =>  width * i + width/1.2)}
                 //decelerationRate={0}
                 snapToAlignment="center"

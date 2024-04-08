@@ -9,8 +9,8 @@ const {height, width} = Dimensions.get('window');
 
 const TypeExchange = ({selected, setSelected}) => {
     const types = [
-        {id:'1', title:'Canjear combustible'},
-        {id:'2', title:'Canjear   artículos'},
+        {id:'1', title:'Combustible'},
+        {id:'2', title:'Artículos'},
         {id:'3', title:'Artículos canjeados'},
     ]
     return(
@@ -19,7 +19,7 @@ const TypeExchange = ({selected, setSelected}) => {
                 <TouchableOpacity 
                     key={index} 
                     onPress={() => setSelected(index)}
-                    style={[styles.item,{backgroundColor: selected === index ? Colors.yellowStrong : Colors.white}]}>
+                    style={[styles.item, index != 2 && styles.limitHeight, {backgroundColor: selected === index ? Colors.yellowStrong : Colors.white,}]}>
                 <Text style={[styles.lbl, { color: selected === index ? Colors.darkGray : Colors.grayStrong }]}>{item.title}</Text>
             </TouchableOpacity>
             ))}
@@ -57,6 +57,11 @@ const styles = StyleSheet.create({
         textAlign:'center', 
         fontSize: getFontSize(12), 
         fontWeight:'600', 
+    },
+    limitHeight:{
+        height: 43,
+        justifyContent:'center',
+        alignItems:'center'
     }
 })
 

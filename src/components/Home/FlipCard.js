@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useRef} from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions, ImageBackground} from "react-native";
 import { Spinner } from "native-base";
-import { getFontSize } from "../../utils/functions";
+import { getFontSize, setFormatNumber } from "../../utils/functions";
 import { Colors } from "../../utils/Colors";
 import Animated, { useSharedValue, withTiming, Easing, useAnimatedStyle, runOnJS,  interpolate, Extrapolate, withSpring } from "react-native-reanimated";
 import { GestureHandlerRootView, GestureDetector, Gesture} from 'react-native-gesture-handler'
@@ -164,7 +164,7 @@ const FlipCard = ({cards, points =0}) => {
                                     <View style={styles.contDes}>
                                         <View style={{width: width/1.5,}}>
                                             <Text style={styles.lblname}>{user?.first_name} {user?.last_name}</Text>
-                                            <Text style={styles.lbl}>Cuentas con: <Text style={styles.lblPoints}>{points.toString()} puntos</Text></Text>
+                                            <Text style={styles.lbl}>Cuentas con: <Text style={styles.lblPoints}>{setFormatNumber(points)} puntos</Text></Text>
                                         </View>
                                             <GestureHandlerRootView>
                                                 <GestureDetector gesture={tap.onStart(() => toggleFilp())}>
