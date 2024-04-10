@@ -12,7 +12,7 @@ const ModalDeleteAccount = ({visible, setVisible, onSubmit}) => {
             <View style={styles.container}>
                 <View style={styles.card}>
                     <Image source={require('../../../assets/warning.png')} style={styles.img}/>
-                    <Text style={styles.message}>¿Está seguro que quiere borrar su cuenta?</Text>
+                    <Text style={styles.message}>¿Estás seguro/a que quiere borrar su cuenta?</Text>
                     <View style={styles.contBtns}>
                         <TouchableOpacity style={[styles.btn,{backgroundColor:Colors.grayStrong,}]} onPress={setVisible}>
                             <Text style={styles.txtBtn}>Cancelar</Text>

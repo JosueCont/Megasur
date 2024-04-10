@@ -162,7 +162,7 @@ const ModalQuizz = ({visible, setVisible, quizz,}) => {
                                 ): !answerSuccess && (
                                     <View style={styles.contSuccess}>
                                         <Text style={styles.lblFinish}>¡Has finalizado la encuesta!</Text>
-                                        <Text style={styles.lblBanner}>No olvides enviar tus respuestas para obtener tu recompensa</Text>
+                                        <Text style={styles.lblBanner}>No olvides enviar tus respuestas para obtener tu recompensa.</Text>
                                     </View>
                                 ) }
                             </SurveyContent>

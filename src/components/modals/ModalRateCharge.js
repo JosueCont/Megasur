@@ -75,7 +75,7 @@ const ModalRateCharge = ({visible, setVisible, onRate}) => {
                             </>
                         ) : (
                             <View >
-                                <Text style={styles.lblComment}>Dinos que podemos mejorar</Text>
+                                <Text style={styles.lblComment}>Déjanos saber cómo podemos mejorar. Tu opinión es importante.</Text>
                                 <TextArea 
                                     w={width/1.2}
                                     h={180}

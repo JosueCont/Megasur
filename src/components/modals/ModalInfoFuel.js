@@ -23,10 +23,9 @@ const ModalInfoFuel = ({ visible, setVisible, message }) => {
 
             </View>
           <Text style={styles.message}>
-            La barra de progreso de combustible es una representación aproximada y es generada con base a la información
-            registrada de su vehículo en la sección perfil, la cantidad de
-            puntos acumulados y el costo promedio de combustible en nuestras
-            estaciones.
+            La barra de progreso de combustible es una representación aproximada y se genera en función de la información
+            registrada de su vehículo en la sección <Text style={{fontWeight:'bold'}}>Perfil</Text>, así como la cantidad de puntos acumulados y el costo promedio 
+            de combustible en nuestras estaciones.
           </Text>
           <TouchableOpacity style={styles.btn} onPress={setVisible}>
             <Text style={styles.txtBtn}>Aceptar</Text>

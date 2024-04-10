@@ -159,7 +159,7 @@ const LoggedStack = () => {
     useFocusEffect(
         useCallback(() => {
             const handleBackButton = () => {
-                console.log('bloquadeo', navigation.getCurrentRoute())
+                //console.log('bloquadeo', navigation.getCurrentRoute())
                 if(modalAddCard) console.log('Cerrar el modal')
                 let route = navigation.getCurrentRoute().name
                 if(route === 'House' || route === 'ListCharges' || route==='Account'){

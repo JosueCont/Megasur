@@ -134,8 +134,8 @@ const FlipCard = ({cards, points =0}) => {
                                                     size={130}
                                                     backgroundColor="transparent"
                                                 />
-                                                <Text style={{color: Colors.white, marginTop:5}}>Código válido</Text>
-                                                <Text style={{color: Colors.white}}>durante: {minutes < 10 ? `0${minutes}` : minutes}:{seconds < 10 ? `0${seconds}` : seconds} {minutes <= 0 ? 'segundos' : 'minutos'}</Text>
+                                                <Text style={{color: Colors.white, marginTop:5}}>Código válido durante:</Text>
+                                                <Text style={{color: Colors.white}}>{minutes < 10 ? `0${minutes}` : minutes}:{seconds < 10 ? `0${seconds}` : seconds} {minutes <= 0 ? 'segundos' : 'minutos'}</Text>
                                             
                                             </>
 
