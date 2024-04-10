@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useCallback , useEffect} from "react";
+import { BackHandler } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "../screens/loggedScreens/HomeScreen";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -30,6 +31,10 @@ import SendQuestionScreen from "../screens/loggedScreens/Contact/SendQuestionScr
 import FrecuentQuestionsScreen from "../screens/loggedScreens/Contact/FrequentQuestionsScreen";
 import AboutAppScreen from "../screens/loggedScreens/Profile/AboutAppScreen";
 import RegisterRfcScreen from "../screens/loggedScreens/Profile/RegisterRfcScreen";
+import { useNavigation, useRoute, useFocusEffect, CommonActions } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
+import { resetCount } from "../store/ducks/exchangeDuck";
+import { onChangeValueRedeem, setCardSelected } from "../store/ducks/redeemPointsDuck";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -133,7 +138,7 @@ const TabNavigator = () => {
             tabBar={(props) => <CustomBottomTabBar {...props}/>} 
             screenOptions={({navigation, route}) =>({
                 headerShown:false,
-                tabBarHideOnKeyboard: true
+                tabBarHideOnKeyboard: true,
             })}>
             <Tab.Screen name="Home" component={HomeNavigator} />
             <Tab.Screen name="Charges" component={ChargesNavigator}/>
@@ -145,12 +150,53 @@ const TabNavigator = () => {
     )
 }
 const LoggedStack = () => {
+    const navigation =useNavigation()
+    const dispatch = useDispatch()
+    const modalAddCard = useSelector(state => state.redeemDuck.modalAddCard)
+    const totalSurveys = useSelector(state => state.homeDuck.totalSurveys)
+
+
+    useFocusEffect(
+        useCallback(() => {
+            const handleBackButton = () => {
+                console.log('bloquadeo', navigation.getCurrentRoute())
+                if(modalAddCard) console.log('Cerrar el modal')
+                let route = navigation.getCurrentRoute().name
+                if(route === 'House' || route === 'ListCharges' || route==='Account'){
+                    return true;
+    
+                }else{
+                    if(route === 'DetailProduct') dispatch(resetCount())
+                    else if(route === 'DetailCard'){
+                        dispatch(setCardSelected(null))
+                        modalAddCard && dispatch(onChangeValueRedeem({prop:'modalAddCard', value: false}))
+                    }else if(route === 'SurveyDone'){
+                        totalSurveys > 1 ? navigation.navigate('Surveys') : navigation.navigate('House')
+                    }else if(route === 'Contact'){
+                        navigation.dispatch(CommonActions.reset({
+                            index:0,
+                            routes:[{name:navigation?.getCurrentRoute().params?.route, params: {screen: navigation?.getCurrentRoute().params?.route }}]
+                        }))
+                    }else if(route === 'Stations'){
+                        if(!navigation?.getCurrentRoute()?.params?.fromCloseStations) return true;
+                    }
+                }
+            }
+
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton);
+    
+            return () => {
+              BackHandler.removeEventListener('hardwareBackPress', handleBackButton);
+            };
+        },[])
+
+    )
     return(
         <Stack.Navigator 
             initialRouteName="TabNavigator"
             
             screenOptions={({navigation, route}) =>({
-                headerShown: false,
+                headerShown: false                
             })}
         >
             <Stack.Screen name="TabNavigator" component={TabNavigator} />

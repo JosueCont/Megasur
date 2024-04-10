@@ -11,6 +11,7 @@ import { createSession } from "../store/ducks/authDuck";
 import { injectStore } from "../utils/services/AxiosConfig";
 import { store } from "../store/store";
 import { getCountNotifications, getUserNotifications } from "../store/ducks/NotificationsDuck";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 preventAutoHideAsync();
 
@@ -37,17 +38,6 @@ const NavigationContainerConfig = () => {
         //}, 300)
     },[status])
 
-    useEffect(() => {
-        const handleBackButton = () => {
-            console.log('bloquadeo')
-            return true
-        }
-        BackHandler.addEventListener('hardwareBackPress', handleBackButton);
-
-        return () => {
-          BackHandler.removeEventListener('hardwareBackPress', handleBackButton);
-    };
-    },[])
 
 
     const getSession = async() => dispatch(await createSession())
