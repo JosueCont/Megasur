@@ -186,7 +186,7 @@ export const onUpdateDataUser = (data) => async(dispatch) => {
         console.log('actualizado',response?.data)
         dispatch({
             type: UPDATE_DATA_USER_SUCCESS, 
-            message:'Información personal actualizada',
+            message:'Información personal actualizada.',
             notify: response?.data?.receive_notifications,
             isComplete: response?.data?.complete_registration
         })
@@ -200,12 +200,12 @@ export const requestDeleteAccount = (id) => async(dispatch) => {
     try {
         const response = await postDeleteAccount(id)
         console.log('response delete',response?.data)
-        if(response?.data?.id) dispatch({type: DELETE_ACCOUNT_SUCCESS, message: 'La solicitud para eliminar la cuenta fue enviada'})
+        if(response?.data?.id) dispatch({type: DELETE_ACCOUNT_SUCCESS, message: 'La solicitud para eliminar tu cuenta fue enviada'})
         else   dispatch({type: DELETE_ACCOUNT_FAILED, message: 'Ocurrio un error al intentar eliminar la cuenta'})
 
     } catch (e) {
         console.log('error dele',e)
-        dispatch({type: DELETE_ACCOUNT_FAILED, message:e?.response?.status === 404 ? 'Ya existe una solicitud de eliminación de cuenta.' : 'Ocurrio un error al intentar eliminar la cuenta'})
+        dispatch({type: DELETE_ACCOUNT_FAILED, message:e?.response?.status === 404 ? 'Ya existe una solicitud de eliminación de tu cuenta.' : 'Ocurrio un error al intentar eliminar la cuenta'})
     }
 }
 

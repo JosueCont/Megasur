@@ -35,7 +35,7 @@ const SurveyDoneScreen = () => {
                     />  
                 </View>
                 <Text style={styles.title}>¡Felicidades!</Text>
-                <Text style={styles.subtitle}>¡Hemos Añadido {points} puntos a tu cuenta!</Text>
+                <Text style={styles.subtitle}>¡Hemos añadido {points} puntos a tu cuenta!</Text>
                 <View style={styles.contBtn}>
                     <TouchableOpacity 
                         style={styles.btn}
