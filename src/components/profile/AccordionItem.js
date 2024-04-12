@@ -7,11 +7,12 @@ import Animated,{useSharedValue, useAnimatedStyle, withSpring, useAnimatedRef, r
 import { useDispatch } from "react-redux";
 import { onChangeModalProf } from "../../store/ducks/profileDuck";
 import { useIsFocused } from "@react-navigation/native";
+import StationList from "../StationsList";
 
 
 const {height, width} = Dimensions.get('window');
 
-const AccordionItem = ({item,index,isLocation}) => {
+const AccordionItem = ({item,index,isLocation, onChangeRegion,onOpenMaps}) => {
     const dispatch = useDispatch();
     const isFocused = useIsFocused()
     const isExpanded = useSharedValue(false)
@@ -85,7 +86,14 @@ const AccordionItem = ({item,index,isLocation}) => {
                 </Animated.View>
             </TouchableOpacity>
             <Animated.View style={heightExpanded}>
-                <Animated.View ref={listRef} style={[{position:'absolute', top:0,}]}>{item?.component}</Animated.View>
+                <Animated.View ref={listRef} style={[{position:'absolute', top:0,}]}>
+                    <StationList 
+                        stations={item?.stations} 
+                        isLocation={true} 
+                        changeRegion={onChangeRegion}
+                        openMaps={onOpenMaps}
+                    />
+                </Animated.View>
 
             </Animated.View>
         </Animated.View>

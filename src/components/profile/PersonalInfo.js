@@ -191,30 +191,27 @@ const PersonalInfoForm = () => {
                     isLogged={true} 
                     value={first_name} 
                     maxLength={80}
-                    minLength={2}
+                    //minLength={2}
                     setValue={(value) => {
-                        if (/^[a-zA-ZáéíóúÁÉÍÓÚüÜ]+$/u.test(value)) {
-                            // Si es válido, actualizar el estado del valor del TextInput
+                        if (value === "" || /^[a-zA-ZáéíóúÁÉÍÓÚüÜ]+$/u.test(value)) {
                             dispatch(onChangeInputProf({prop:'name', value }))
-                          }
+                        }
                     }}
                 />
-                {first_name?.length < 3 && <Text style={{color: Colors.red}}>Al menos 3 dígitos</Text>}
+                {first_name?.length < 3 && <Text style={styles.lblWarning}>Ingresa al menos 3 letras</Text>}
                 <Text style={styles.lbl}>Apellido(s)</Text>
                 <Input 
                     isLogged={true} 
                     value={last_name}
-                    minLength={2} 
                     maxLength={80}
                     setValue={(value) => {
-                        if (/^[a-zA-ZáéíóúÁÉÍÓÚüÜ]+$/u.test(value)) {
-                            // Si es válido, actualizar el estado del valor del TextInput
+                        if (value === "" || /^[a-zA-ZáéíóúÁÉÍÓÚüÜ]+$/u.test(value)) {
                             dispatch(onChangeInputProf({prop:'lastName', value}))
                             
-                          }
+                        }
                     }}
                 />
-                {last_name?.length < 3 && <Text style={{color: Colors.red}}>Al menos 3 dígitos</Text>}
+                {last_name?.length < 3 && <Text style={styles.lblWarning}>Ingresa al menos 3 letras</Text>}
 
                 <Text style={styles.lbl}>Correo electrónico</Text>
                 <Input 
@@ -227,7 +224,7 @@ const PersonalInfoForm = () => {
                     value={email} 
                     setValue={(value) => dispatch(onChangeInputProf({prop:'email',value}))}
                 />
-                {email != '' && !isValid && <Text style={{color: Colors.red}}>Correo inválido</Text> }
+                {email != '' && !isValid && <Text style={styles.lblWarning}>Correo inválido</Text> }
                 <Text style={styles.lbl}>Número celular (10 dígitos)</Text>
                 <Input 
                     editable={false}
@@ -441,6 +438,12 @@ const styles = StyleSheet.create({
         fontWeight:'400', 
         marginBottom:28
     },
+    lblWarning:{
+        color: Colors.red, 
+        alignSelf:'flex-start', 
+        marginLeft:4, 
+        marginTop:4
+    }
 })
 
 export default PersonalInfoForm;

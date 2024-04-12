@@ -103,9 +103,9 @@ const ExchangeFuel = ({availablePoints=0}) => {
                                 maximumValue={max}
                                 renderBubble={() => (
                                     <View style={{ alignItems:'center'}}>
-                                        <Text style={{color: Colors.blueGreen, fontWeight:'700', lineHeight:15}}>{valueSlider} pts.</Text>
-                                        <View style={{height:15, width:20}}>
-                                            <MaterialIcons name="arrow-drop-down" size={24} color={Colors.blueGreen} />
+                                        <Text style={{color: Colors.blueGreen, fontWeight:'700', lineHeight:15}}>{valueSlider}</Text>
+                                        <View style={{height:15, width:20,}}>
+                                            <MaterialIcons name="arrow-drop-down" size={20} color={Colors.blueGreen}/>
 
                                         </View>
                                     </View>
@@ -156,8 +156,11 @@ const ExchangeFuel = ({availablePoints=0}) => {
                             style={{flexDirection:'row'}}
                             onPress={() => setType(index)}>
                             <View style={[styles.check, {
-                                backgroundColor: index === typeFuel ? Colors.blueGreen : Colors.lightGray
-                            }]}/>
+                                borderColor: index === typeFuel ? Colors.blueGreen : Colors.grayBorders,
+                                borderWidth: index === typeFuel ? 2 : 1, 
+                            }]}>
+                                <View style={[styles.mark,{backgroundColor: index === typeFuel ? Colors.blueGreen : Colors.lightGray}]}/>
+                            </View>
                             <Text style={styles.lblType}>{type}</Text>
                         </TouchableOpacity>
                     </View>
@@ -206,9 +209,9 @@ const styles = StyleSheet.create({
         //marginRight:10
     },
     lbl:{
-        color: Colors.grayStrong,
+        color: Colors.blueGreen,
         fontSize: getFontSize(12), 
-        fontWeight:'400'
+        fontWeight:'700'
     },
     pointer:{
         width:25, 
@@ -247,9 +250,10 @@ const styles = StyleSheet.create({
         width:25, 
         height:25, 
         borderRadius:12.5, 
-        borderWidth:1, 
         borderColor: Colors.grayStrong, 
-        marginRight:5
+        marginRight:5,
+        justifyContent:'center',
+        alignItems:'center'
     },
     lblType:{
         color: Colors.grayStrong, 
@@ -283,6 +287,11 @@ const styles = StyleSheet.create({
     },
     slider:{
         marginBottom:15,
+    },
+    mark:{
+        width:15, 
+        height:15, 
+        borderRadius:7.5,
     }
 })
 
