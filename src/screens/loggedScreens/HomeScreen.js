@@ -19,13 +19,14 @@ import { saveDataLocalStorage } from "../../store/ducks/authDuck";
 import { getCloseStations } from "../../store/ducks/locationsDuck";
 import { getProfileData } from "../../store/ducks/profileDuck";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getAdvertisements } from "../../utils/services/ApiApp";
+import { getAdvertisements, getStations } from "../../utils/services/ApiApp";
 import { useIsFocused } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
 import ModalAlertFailed from "../../components/modals/ModalAlertFail";
 import ModalScreenShot from "../../components/modals/ModalScreenShot";
 import ModalInfoFuel from "../../components/modals/ModalInfoFuel";
 import { changeModalEx } from "../../store/ducks/exchangeDuck";
+import ModalSubmit from "../../components/modals/ModalSubmitForm";
 
 const {height, width} = Dimensions.get('window');
 
@@ -36,7 +37,7 @@ const HomeScreen = () => {
     const navigation = useNavigation();
 
     const modalQuizz = useSelector(state => state.homeDuck.modalQuizz)
-    const stations = useSelector(state => state.locationDuck.nearBranches)
+    //const stations = useSelector(state => state.locationDuck.nearBranches)
     const userId = useSelector(state => state.authDuck.dataUser?.id)
     const userCard = useSelector(state => state.authDuck.cardsStorage)
     const totalSurveys = useSelector(state => state.homeDuck.totalSurveys)
@@ -55,6 +56,7 @@ const HomeScreen = () => {
     const [dataAdvertisements, setDataAdvertisements] = useState([])
     const [dataPromotions, setDataPromotions] = useState([])
     const [location, setLocation] = useState(null)
+    const [stations, setStations] = useState([])
 
     const genders = {
         'MALE':'Bienvenido',
@@ -106,7 +108,7 @@ const HomeScreen = () => {
     },[isFocused, answerSuccess])
 
     useEffect(() => {
-        if(location != null && location != undefined) dispatch(getCloseStations(location?.coords))
+        if(location != null && location != undefined) getCloseStations(location?.coords)
     },[location])
 
 
@@ -121,6 +123,16 @@ const HomeScreen = () => {
         getDataAdvertisements()
         getDataPromotions()
     },[isFocused])
+
+    const getCloseStations = async(coords) => {
+        try {
+            const closeStations = await getStations(coords?.latitude, coords?.longitude)
+            setStations(closeStations?.data?.near_branches)
+            //console.log('statiosn',closeStations?.data)
+        } catch (e) {
+            console.log('error stations',e)
+        }
+    }
 
     const getDataAdvertisements = async()=>{
         const result = await getAdvertisements('?page=1&per_page=1000&type=1&is_active=true')

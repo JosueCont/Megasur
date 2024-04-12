@@ -18,7 +18,7 @@ const StationItem = ({station, index, isLocation, changeRegion, openMaps}) => {
 
     const setNavigate = () => {
         dispatch(setLocationStation(station?.location_as_lat_long))
-        navigation.navigate('Stations',{fromCloseStations:true,})
+        navigation.navigate('Stations',{fromCloseStations:true, locationStation: station?.location_as_lat_long })
     }
     return(
         <TouchableOpacity 

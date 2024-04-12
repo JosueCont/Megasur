@@ -11,10 +11,10 @@ const ModalSubmit = ({visible, setVisible, onSubmit}) => {
         <Modal visible={visible} animationType='slide' transparent>
             <View style={styles.container}>
                 <View style={styles.card}>
-                    <Image source={require('../../../assets/questionMark.png')} style={styles.img}/>
-                    <Text style={styles.message}>¡Completa, Gana, Disfruta! Responde todas la preguntas y llévate <Text style={{fontWeight:'bold'}}>100 puntos de recompensa.</Text></Text>
+                    <Image source={require('../../../assets/coin.png')} style={styles.img}/>
+                    <Text style={styles.message}>¡Completa tu registro y llévate <Text style={{fontWeight:'bold'}}>10 puntos de recompensa.</Text></Text>
                     <View style={{marginBottom:18}}>
-                        <Text>¿Aún deseas omitir tus respuestas?</Text>
+                        <Text>¿Aún deseas omitir tus registro?</Text>
                     </View>
                     <View style={styles.contBtns}>
                         <TouchableOpacity style={[styles.btn,{backgroundColor:Colors.grayStrong,}]} onPress={setVisible}>
@@ -59,7 +59,8 @@ const styles = StyleSheet.create({
         fontSize: getFontSize(20), 
         fontWeight:'300', 
         color: Colors.blackInit, 
-        textAlign:'center'
+        textAlign:'center',
+        marginHorizontal:10
     },
     contBtns:{
         flexDirection:'row', 

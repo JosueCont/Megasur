@@ -1,5 +1,8 @@
 import React,{useState,useEffect, useRef} from "react";
-import { View, Text, TouchableOpacity, Dimensions, Platform, ScrollView, Image, StyleSheet, Linking, FlatList, PanResponder, Animated } from "react-native";
+import { 
+    View, Text, TouchableOpacity, Dimensions, Platform, ScrollView, 
+    Image, StyleSheet, Linking, FlatList, PanResponder, Animated,
+    PermissionsAndroid, Alert } from "react-native";
 import { getFontSize, getPermissionLocation } from "../../utils/functions";
 import { Colors } from "../../utils/Colors";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -17,6 +20,9 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { onChangeModalLoc, setLocationStation } from "../../store/ducks/locationsDuck";
 import ModalLocation from "../../components/modals/ModalLocationStation";
 import AccordionItem from "../../components/profile/AccordionItem";
+import { getStations } from "../../utils/services/ApiApp";
+import * as Location from 'expo-location'
+import { Spinner } from "native-base";
 
 const {height, width} = Dimensions.get('window');
 
@@ -31,14 +37,18 @@ const LocationScreen = () => {
     const [isOpen, setIsOpen] = useState(true);
     const [selectedMarker, setSelectMarker] = useState(null)
     const [modalLoading, setModalLoading] = useState(false)
+    const [stations, setStations] = useState([])
+    const [zones, setZones] = useState([])
     //const translateY = useSharedValue(0);
     //const context = useSharedValue({ y: 0 });
     //const pan = Gesture.Pan();
-    const stations = useSelector(state => state.locationDuck.nearBranches)
-    const zones = useSelector(state => state.locationDuck.branchesZones)
+    //const stations = useSelector(state => state.locationDuck.nearBranches)
+    //const zones = useSelector(state => state.locationDuck.branchesZones)
     const modalActive = useSelector(state => state.locationDuck.modalLocation)
     const locationStation = useSelector(state => state.locationDuck.locationStation)
     const [dataAccordion, setDataAccordion] = useState([])
+    const [loading, setLoading] = useState(false)
+    const [isPermissions, setIsPermission] = useState(false)
 
     const sheetMaxHeight = height - 200;
     const sheetMinHeight = 75;
@@ -60,28 +70,78 @@ const LocationScreen = () => {
     //const { locationStation,  } = route?.params
     useEffect(() => {
       setIsOpen(true)
-      
+      if(route?.params?.locationStation){
+        setTimeout(() => {
+            setNewRegion({
+                latitude: route?.params?.locationStation?.lat,
+                longitude: route?.params?.locationStation?.lng
+    
+            })
+
+        },500)
+      }
     },[isFocused])
  
     useEffect(() => {
-        if(isFocused){
-            (async() => {
+        (async() => {
+            //if(isFocused){
+                setLoading(true)
                 const location = await getPermissionLocation()
                 console.log('location', Platform.OS, location)
-                setRegion({
-                    latitude: location?.coords?.latitude,
-                    longitude: location?.coords?.longitude
-                })
-                setNewRegion({
-                    latitude: locationStation != null ? locationStation.lat : location?.coords?.latitude,
-                    longitude: locationStation != null ? locationStation.lng : location?.coords?.longitude
-                })
-                dispatch((setLocationStation(null)))
-            })();
-            getByZone()
+                //getZonesStations(location?.coords)
+                if( location != undefined && location?.coords){
+                    setIsPermission(true)
+                    setRegion({
+                        latitude: location?.coords?.latitude,
+                        longitude: location?.coords?.longitude
+                    })
+                    setNewRegion({
+                        latitude: locationStation != null ? locationStation.lat : location?.coords?.latitude,
+                        longitude: locationStation != null ? locationStation.lng : location?.coords?.longitude
+                    })
+                    dispatch((setLocationStation(null)))
 
+                }else {
+                    setLoading(false)
+                    setIsPermission(false)
+                }
+                //getByZone()
+                
+            //}
+        })();
+    },[])
+
+    useEffect(() => {
+        if(initialRegion != null && initialRegion != undefined) getZonesStations(initialRegion)
+    },[initialRegion])
+
+    const getZonesStations = async(coords) => {
+        try {
+            //setLoading(true)
+            const stations = await getStations(coords?.latitude, coords?.longitude)
+            setZones(stations?.data?.branches_by_zone)
+            setStations(stations?.data?.near_branches)
+            let dataAccordion = []
+            dataAccordion.push({
+                title:'Estaciones cerca de ti', 
+                stations: stations?.data?.near_branches
+            })
+            stations?.data?.branches_by_zone.map((zone,index) => {
+                if(zone.branches.length > 0){
+                    dataAccordion.push({
+                        title: zone.name,
+                        stations: getZones(stations?.data?.branches_by_zone, zone.name)
+                    })
+                }
+            })
+            setLoading(false)
+
+            setDataAccordion(dataAccordion)
+
+        } catch (e) {
+            console.log('error stations',e)
         }
-    },[isFocused])
+    }
 
     const panResponder = useRef(
         PanResponder.create({
@@ -216,6 +276,68 @@ const LocationScreen = () => {
         },500)
     }
 
+    const showPermissionsAndroid = async() => {
+        try {          
+            //console.log('solicitando permisos')
+            const permision = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+                {
+                    title: 'Megasur solicita permiso para ubicación',
+                    message: 'Los datos proporcionados serán utilizados exclusivamente para validar la sucursal de canje y garantizar la seguridad en la generación de códigos en dicha sucursal.',
+                    //buttonNeutral: 'Ask Me Later',
+                    buttonNegative: 'Cancel',
+                    buttonPositive: 'OK',
+                });
+             if(permision === PermissionsAndroid.RESULTS.GRANTED){
+                const location = await getPermissionLocation()
+                setIsPermission(true)
+                setRegion({
+                    latitude: location?.coords?.latitude,
+                    longitude: location?.coords?.longitude
+                })
+                setNewRegion({
+                    latitude: location?.coords?.latitude,
+                    longitude: location?.coords?.longitude
+                })
+             }
+            //const location = await getPermissionLocation();
+        } catch (e) {
+            console.log('error permisions',e)
+        }
+    }
+
+    const showPermissionsIos = async() => {
+        const permisison = await Location.requestForegroundPermissionsAsync()
+        if(permisison.status === 'denied') {
+            setTimeout(() => {
+                Alert.alert(
+                    "Permisos denegados",
+                    "Para permitir acceso a tu ubicación, abre configuración y acepta los permisos.",
+                    [
+                      { text: "Cancelar", style: "cancel" },
+                      {
+                        text: "Abrir configuración",
+                        onPress: () => {
+                          Linking.openURL("app-settings:");
+                        }
+                      }
+                    ]
+                  );
+            }, 500)
+        }else if(permisison.status === 'granted'){
+            const location = await getPermissionLocation()
+                setIsPermission(true)
+                setRegion({
+                    latitude: location?.coords?.latitude,
+                    longitude: location?.coords?.longitude
+                })
+                setNewRegion({
+                    latitude: location?.coords?.latitude,
+                    longitude: location?.coords?.longitude
+                })
+        }
+        //console.log('permisos ios', permisison)
+    }
+
     
     return(
         <HeaderLocation 
@@ -279,7 +401,7 @@ const LocationScreen = () => {
                             </>}
                         
                     </MapView>}
-                    {isOpen && !modalActive && (
+                    {isOpen && !modalActive && isPermissions && (
                         <TouchableOpacity
                             onPress={()=> setNewRegion({...region, latitude: initialRegion.latitude, longitude: initialRegion.longitude})}
                             style={styles.btnMyLocation}>
@@ -293,6 +415,7 @@ const LocationScreen = () => {
 
                     </View>
                     <Animated.View style={{opacity: animatedMapOpacity}}>
+                        {!loading ? (
                         <FlatList 
                             data={dataAccordion}
                             overScrollMode='always'
@@ -301,9 +424,33 @@ const LocationScreen = () => {
                             //style={{backgroundColor:'red', }}
                             contentContainerStyle={{ paddingBottom:30, flexGrow:1,}}
                             renderItem={({item,index}) => (
-                                <AccordionItem item={item} index={index} isLocation={true}/>
+                                <AccordionItem 
+                                    item={item} 
+                                    index={index} 
+                                    isLocation={true}
+                                    onChangeRegion={(coords) => onChangeRegion(coords)}
+                                    onOpenMaps={(coords, name) => onOpenMaps(coords, name)}
+                                />
                             )}
                         />
+                        ):(
+                            <View style={{ justifyContent:'center', alignItems:'center', height:200}}>
+                                <Spinner size={'sm'} color={Colors.blueGreen} />
+
+                            </View>
+                        )}
+
+                        {!loading && !isPermissions && (
+                            <View style={{ justifyContent:'center', alignItems:'center', height:100}}>
+                                <Text>No cuentas con los permisos de ubicación.</Text>
+                                <TouchableOpacity 
+                                    style={styles.btn} 
+                                    onPress={() => Platform.OS === 'ios' ?  showPermissionsIos() : showPermissionsAndroid()}>
+                                    <Text style={styles.lblBtn}>Solicitar permisos</Text>
+                                </TouchableOpacity>
+
+                            </View>
+                        )}
 
                     </Animated.View>
                 </Animated.View>
@@ -360,7 +507,22 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         alignSelf:'center', 
         marginVertical:15
-      },
+    },
+    btn:{
+        width: width * 0.8,
+        paddingVertical:14,
+        backgroundColor: Colors.blueGreen,
+        borderRadius:8,
+        marginTop:15,
+        justifyContent:'center',
+        alignItems:'center',
+        marginBottom:10
+    },
+    lblBtn:{
+        color: Colors.white,
+        fontSize: getFontSize(16),
+        fontWeight:'400'
+    },
 })
 
 export default LocationScreen;
