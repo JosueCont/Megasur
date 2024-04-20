@@ -21,7 +21,7 @@ const ModalSubmit = ({visible, setVisible, onSubmit}) => {
                             <Text style={styles.txtBtn}>Continuar</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={[styles.btn,{backgroundColor:Colors.blueGreen,}]} onPress={onSubmit}>
-                            <Text style={styles.txtBtn}>Si, omitir</Text>
+                            <Text style={styles.txtBtn}>Sí, omitir</Text>
                         </TouchableOpacity>
 
                     </View>

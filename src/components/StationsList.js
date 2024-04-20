@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import StationItem from "./StationITem";
 
 
-const StationList = ({stations, isLocation=false, changeRegion, openMaps}) => {
+const StationList = ({stations, isLocation=false, changeRegion, openMaps, disabled}) => {
     return(
         <View style={{alignItems:'center'}}>
             {stations?.map((item,index) => (
@@ -13,6 +13,8 @@ const StationList = ({stations, isLocation=false, changeRegion, openMaps}) => {
                     isLocation={isLocation}
                     changeRegion={changeRegion}
                     openMaps={openMaps}
+                    disabled={disabled}
+
                 />
             ))}
         </View>

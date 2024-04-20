@@ -56,7 +56,8 @@ const VehicleInfoForm = ({carTypes}) => {
   useEffect(() => {
     if( vehicleData.plate_number != '' && vehicleData.insurance_phone != '' && 
         vehicleData.insurance_policy_number != '' && vehicleData.insurance_validity_date
-        && vehicleData.vehicle_type != '') setDisabled(false)
+        && vehicleData.vehicle_type != '' && vehicleData?.plate_number.length >2 
+        && vehicleData?.insurance_policy_number.length >2) setDisabled(false)
     else setDisabled(true)
   },[vehicleData,])
 
@@ -91,7 +92,7 @@ const VehicleInfoForm = ({carTypes}) => {
   };
 
   const handleDateChange = ({ type }, selectedDate) => {
-    console.log("event", type);
+    onShowDatepicker()
     if (type === "set") {
       const currentDate = selectedDate || date;
 
@@ -103,7 +104,6 @@ const VehicleInfoForm = ({carTypes}) => {
             "DD/MM/YYYY"
           ),
         });
-        setShowDatePicker(false);
 
       }
     } else {
@@ -133,20 +133,28 @@ const VehicleInfoForm = ({carTypes}) => {
         autoCapitalize="characters"
         isLogged={true}
         value={vehicleData.plate_number}
-        setValue={(value) =>
-          setVehicleData({ ...vehicleData, plate_number: value })
-        }
+        setValue={(value) =>{
+          if (value === "" || /^[a-zA-Z0-9]+$/.test(value)) {
+            setVehicleData({ ...vehicleData, plate_number: value })
+          }
+
+        }}
       />
+      {vehicleData?.plate_number?.length < 3 && <Text style={styles.lblWarning}>Ingresa al menos 3 dígitos</Text>}
       <Text style={styles.lbl}>No. póliza de seguro</Text>
       <Input
         autoCapitalize="none"
         maxLength={40}
         isLogged={true}
         value={vehicleData.insurance_policy_number}
-        setValue={(value) =>
-          setVehicleData({ ...vehicleData, insurance_policy_number: value })
-        }
+        setValue={(value) => {
+          if (value === "" || /^[a-zA-Z0-9]+$/.test(value)) {
+            setVehicleData({ ...vehicleData, insurance_policy_number: value })
+          }
+        }}
       />
+      {vehicleData?.insurance_policy_number?.length < 3 && <Text style={styles.lblWarning}>Ingresa al menos 3 dígitos</Text>}
+
       <Text style={styles.lbl}>Teléfono de aseguradora</Text>
       <Input
         isLogged={true}
@@ -246,7 +254,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    marginHorizontal: 15,
+    marginHorizontal: 20,
   },
   lblTitle: {
     fontSize: getFontSize(18),
@@ -254,7 +262,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 4,
     alignSelf: "flex-start",
-    marginLeft: 15,
+    //marginLeft: 15,
     marginTop: 8,
   },
   lbl: {
@@ -263,7 +271,7 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     marginBottom: 4,
     alignSelf: "flex-start",
-    marginLeft: 15,
+    //marginLeft: 15,
     marginTop: 8,
   },
   contBt: {
@@ -313,6 +321,12 @@ const styles = StyleSheet.create({
     //aspectRatio:2,
     resizeMode: "cover",
   },
+  lblWarning:{
+    color: Colors.red, 
+    alignSelf:'flex-start', 
+    marginLeft:4, 
+    marginTop:4
+}
 });
 
 export default VehicleInfoForm;

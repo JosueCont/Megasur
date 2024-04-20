@@ -24,7 +24,7 @@ const MailComponent = () => {
                 autoComplete="off"/>
             {email != '' && !isValid && <Text style={{color: Colors.red, marginTop:10, fontSize: getFontSize(16), }}>El email es invalido</Text>}
             <View style={{ width: width/1.4}}>
-                <Text style={styles.legend}>¡Gracias por confiar en nosotros!Te prometemos no enviarte spam.</Text>
+                <Text style={styles.legend}>¡Gracias por confiar en nosotros!.</Text>
             </View>
         </View>
     )

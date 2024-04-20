@@ -200,7 +200,7 @@ export const requestDeleteAccount = (id) => async(dispatch) => {
     try {
         const response = await postDeleteAccount(id)
         console.log('response delete',response?.data)
-        if(response?.data?.id) dispatch({type: DELETE_ACCOUNT_SUCCESS, message: 'La solicitud para eliminar tu cuenta fue enviada'})
+        if(response?.data?.id) dispatch({type: DELETE_ACCOUNT_SUCCESS, message: 'La solicitud para eliminar tu cuenta fue enviada.'})
         else   dispatch({type: DELETE_ACCOUNT_FAILED, message: 'Ocurrio un error al intentar eliminar la cuenta'})
 
     } catch (e) {

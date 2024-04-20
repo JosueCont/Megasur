@@ -149,7 +149,7 @@ const ModalShoppingCart = ({visible, setVisible, branches, points, onSubmit}) =>
                                 </View>
                                 <View style={styles.contTotal}>
                                     <Text>Total:</Text>
-                                    <Text style={styles.lblPoints}>{getTotal()}pts</Text>
+                                    <Text style={styles.lblPoints}>{getTotal()} puntos</Text>
                                 </View>
                                 <TouchableOpacity 
                                     disabled={isDisabled}

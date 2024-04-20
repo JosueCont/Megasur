@@ -12,22 +12,19 @@ import StationList from "../StationsList";
 
 const {height, width} = Dimensions.get('window');
 
-const AccordionItem = ({item,index,isLocation, onChangeRegion,onOpenMaps}) => {
+const AccordionItem = ({item,index,isLocation, onChangeRegion,onOpenMaps, disabled}) => {
     const dispatch = useDispatch();
     const isFocused = useIsFocused()
     const isExpanded = useSharedValue(false)
     const listRef = useAnimatedRef();
     const heightValue = useSharedValue(0)
 
-    const runOnUIThread = useCallback(() => {
-        'worklet';
-        heightValue.value = measure(listRef).height;
-        isExpanded.value = true;
-    })
-
+    
     useEffect(() => {
-        if(isLocation && index === 0){
-            setTimeout(() => {
+        let timeoutId;
+        if(isLocation && index === 0 && listRef.current){
+            console.log('se vuelve a correr', heightValue.value)
+            timeoutId = setTimeout(() => {
                 if(heightValue.value === 0){
                     runOnUI(runOnUIThread)()
                     //isExpanded.value = true
@@ -35,8 +32,20 @@ const AccordionItem = ({item,index,isLocation, onChangeRegion,onOpenMaps}) => {
             },200)
             
         }
+        return () => {
+            // Limpiar el timeout si el componente se desmonta antes de que se ejecute
+            clearTimeout(timeoutId);
+        };
     },[isFocused])
-
+    
+    const runOnUIThread = useCallback(() => {
+        'worklet';
+            const measuredHeight = measure(listRef)?.height;
+            if(measuredHeight != undefined && measuredHeight != null){
+                heightValue.value = measuredHeight
+                isExpanded.value = true;
+            }
+    })
 
     const rotateRow =useAnimatedStyle(() => {
         return{
@@ -56,7 +65,7 @@ const AccordionItem = ({item,index,isLocation, onChangeRegion,onOpenMaps}) => {
             Extrapolate.CLAMP
         )
         return{
-            height: withTiming(animationHeight, {duration:500}),
+            height: withTiming(animationHeight, {duration:500}) ,
             opacity: withTiming(isExpanded.value ? 1 : 0,{duration:500})
         }
     })
@@ -85,17 +94,18 @@ const AccordionItem = ({item,index,isLocation, onChangeRegion,onOpenMaps}) => {
 
                 </Animated.View>
             </TouchableOpacity>
-            <Animated.View style={heightExpanded}>
+            {item?.stations.length > 0 && <Animated.View style={heightExpanded}>
                 <Animated.View ref={listRef} style={[{position:'absolute', top:0,}]}>
                     <StationList 
                         stations={item?.stations} 
                         isLocation={true} 
                         changeRegion={onChangeRegion}
                         openMaps={onOpenMaps}
+                        disabled={disabled}
                     />
                 </Animated.View>
 
-            </Animated.View>
+            </Animated.View>}
         </Animated.View>
         
     )

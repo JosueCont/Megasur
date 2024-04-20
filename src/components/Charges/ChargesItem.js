@@ -6,7 +6,7 @@ import RateComponent from "./Rate";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import 'moment/locale/es';
-import { invoicingFuelTransaction } from "../../store/ducks/chargesDuck";
+import { changeModalCharges, invoicingFuelTransaction } from "../../store/ducks/chargesDuck";
 
 const {height, width} = Dimensions.get('window');
 
@@ -76,17 +76,23 @@ const ChargesItem = ({charge, index, lastItem, openModal, onSetCharge}) => {
                     </>
                 )}
                 {/*<Text style={styles.lblPoints}>+{charge?.points || 10}</Text>*/}
-                <View style={{alignItems:'center',}}>
+                <View style={{alignItems:'center', marginTop:5}}>
                     { charge?.score !=null && charge?.total_paid !== 0 && <Text style={styles.lblPoints}>+{points}</Text>}
-                    {charge?.is_invoiced && charge?.total_paid !== 0 ? (
+                    {charge?.is_invoiced && charge?.total_paid !== 0 && (
                         <TouchableOpacity onPress={() => onSetCharge(charge)}>
                             <Text style={{color: Colors.blueGreen, fontSize: getFontSize(13)}}>Facturar</Text>
                         </TouchableOpacity>
-                    ) : charge.invoiced && charge?.total_paid !== 0 ? (
-                        <TouchableOpacity>
-                            <Text style={{color: Colors.blueGreen, fontSize: getFontSize(13)}}>Visualizar</Text>
+                    )} 
+                    {charge?.is_invoiced && charge.invoiced && charge?.total_paid !== 0 && (
+                        <TouchableOpacity 
+                            onPress={() => {
+                                dispatch(changeModalCharges({
+                                    prop:'modalDownload', value: true
+                                }))
+                            }}>
+                            <Text style={{color: Colors.blueGreen, fontSize: getFontSize(13)}}>Descargar</Text>
                         </TouchableOpacity>
-                    ): null}
+                    )}
                 </View>
             </View>
         </View>

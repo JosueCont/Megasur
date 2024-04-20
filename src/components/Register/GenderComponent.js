@@ -58,9 +58,10 @@ const styles = StyleSheet.create({
         width:width/1.13, 
         height: 50,  
         borderRadius:8, 
-        padding:7,
+        //padding:7,
         borderColor:Colors.gray,
-        borderWidth:1
+        borderWidth:1,
+        justifyContent:'center'
         //elevation:4,
         //shadowColor: '#000', // Color de la sombra
         //shadowOffset: {

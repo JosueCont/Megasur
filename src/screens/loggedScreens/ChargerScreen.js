@@ -17,6 +17,8 @@ import ModalAlertFailed from "../../components/modals/ModalAlertFail";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import ModalAlertSuccess from "../../components/modals/AlertModalSucces";
 import ModalAlertQuestion from "../../components/modals/ModalAlertQuestion";
+import { getListUserRfc } from "../../store/ducks/invoicingDuck";
+import ModalDownload from "../../components/modals/ModalDownload";
 
 const ChargerScreen = () => {
     const dispatch = useDispatch();
@@ -36,6 +38,9 @@ const ChargerScreen = () => {
     const infoCharge = useSelector(state => state.chargesDuck.infoCharge)
     const userId = useSelector(state => state.authDuck.dataUser?.id)
     const modalCharge = useSelector(state => state.chargesDuck.modalInvoicingCharge)
+    const dataUser = useSelector(state => state.profileDuck.dataUser)
+    const listRfc = useSelector(state => state.invoicingDuck.listRfc)
+    const modalDownload = useSelector(state => state.chargesDuck.modalDownload)
     const [chargeSelected, setCharge] = useState(null)
 
     const toast = useToast();
@@ -43,6 +48,7 @@ const ChargerScreen = () => {
     useEffect(() => {
         (async() => {
             dispatch(await getCharges(`?page=1&per_page=100&user_id=${userId}`,[], true))
+            dispatch(await getListUserRfc(dataUser?.auto_invoicing))
         })();
         if(isRate){
             navigation.navigate('ConfirmRate',{points:infoCharge?.score_points})
@@ -127,9 +133,16 @@ const ChargerScreen = () => {
                 <ModalAlertQuestion 
                     visible={modalCharge}
                     setVisible={() => dispatch(changeModalCharges({prop:'modalInvoicingCharge', value: false}))}
-                    onSubmit={() => {
-                        console.log('chargeSelected', chargeSelected)
-                        dispatch(invoicingFuelTransaction(chargeSelected?.id))
+                    onSubmit={(rfc) => {
+                        console.log('chargeSelected', rfc)
+                        dispatch(invoicingFuelTransaction(chargeSelected?.id, rfc?.id))
+                    }}
+                    listRfc={listRfc}
+                />
+                <ModalDownload 
+                    visible={modalDownload}
+                    setVisible={() => {
+                        dispatch(changeModalCharges({prop:'modalDownload', value: false}))
                     }}
                 />
             </HeaderLogged>

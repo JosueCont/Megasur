@@ -66,7 +66,7 @@ const DetailProduct = () => {
                 <View style={[styles.contNew,{ backgroundColor: product?.isNewProduct ? Colors.yellowStrong: Colors.white}]}>
                     {product?.isNewProduct && <Text style={[styles.lbl,{ fontSize: getFontSize(25) }]}>Nuevo</Text>}
                 </View>
-                <Text style={[styles.lbl,{ fontSize: getFontSize(24)}]}>{product.price_in_points}pts</Text>
+                <Text style={[styles.lbl,{ fontSize: getFontSize(24)}]}>{product.price_in_points} puntos</Text>
             </View>
             <View style={styles.contImages}>
                 {product?.gallery.length > 0 ? (

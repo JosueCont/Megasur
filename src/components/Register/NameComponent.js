@@ -15,7 +15,7 @@ const NameComponent = () => {
 
     return(
         <View style={styles.container}>
-            <Text style={styles.title}>¿Nos dices tu nombre, por favor?</Text>
+            <Text style={styles.title}>Escribe tu nombre completo</Text>
             <View style={styles.contForm}>
                 <Text style={styles.lbl}>Nombre(s)</Text>
                 <Input value={name} onChangeText={(value) => dispatch(changeInput({prop:'name',value})) }/>
@@ -23,7 +23,7 @@ const NameComponent = () => {
                 <Input value={lastName} onChangeText={(value) => dispatch(changeInput({prop:'lastName',value})) }/>
             </View>
             <View style={{ width: width/1.2}}>
-                <Text style={styles.legend}>Queremos saludarte por tu nombre cuando nos visites</Text>
+                <Text style={styles.legend}>Queremos saludarte por tu nombre cuando nos visites.</Text>
             </View>
         </View>
     )

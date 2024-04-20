@@ -1,26 +1,47 @@
 import React,{useEffect,useState} from "react";
-import { Modal, Text, View, TouchableOpacity, StyleSheet, Dimensions, Image } from "react-native";
+import { Modal, Text, View, TouchableOpacity, StyleSheet, Dimensions, Image, FlatList } from "react-native";
 import { Spinner } from "native-base";
 import { Colors } from "../../utils/Colors";
 import Check from '../../../assets/svg/Check'
 import { getFontSize } from "../../utils/functions";
 import { useSelector } from 'react-redux'
+import ListRfcItem from "../Invoicing/ListRfcItem";
 
 const {height, width} = Dimensions.get('window');
 
-const ModalAlertQuestion = ({visible, setVisible, onSubmit, charge}) => {
+const ModalAlertQuestion = ({visible, setVisible, onSubmit, charge, listRfc}) => {
     const loading = useSelector(state => state.chargesDuck.loadingInvoicing)
+    const [rfcSelected, setSelectedRfc] = useState(null)
+
     return(
         <Modal visible={visible} animationType='slide' transparent>
             <View style={styles.container}>
                 <View style={styles.card}>
                     <Image source={require('../../../assets/questionMark.png')} style={styles.img}/>
-                    <Text style={styles.message}>¿Desea realizar la facturación de este servicio?</Text>
+                    <Text style={styles.message}>Selecciona una razón social para facturar.</Text>
+                    <View style={{width: '100%', height:200,}}>
+                        <FlatList 
+                            data={listRfc}
+                            keyExtractor={(_,i) => i.toString()}
+                            renderItem={({item, index}) => (
+                                <ListRfcItem 
+                                    item={item} 
+                                    index={index} 
+                                    showCheck={true} 
+                                    setSelectRfc={(index) => setSelectedRfc(index)}
+                                    selectRfc={rfcSelected}
+                                />
+                            )}
+                        />
+                    </View>
                     <View style={styles.contBtns}>
                         <TouchableOpacity style={[styles.btn,{backgroundColor:Colors.grayStrong,}]} onPress={setVisible}>
                             <Text style={styles.txtBtn}>Cancelar</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={[styles.btn,{backgroundColor:Colors.blueGreen,}]} onPress={onSubmit}>
+                        <TouchableOpacity 
+                            disabled={rfcSelected != null ? false : true}
+                            style={[styles.btn,{backgroundColor: rfcSelected != null ? Colors.blueGreen :Colors.gray,}]} 
+                            onPress={() => onSubmit(listRfc[rfcSelected])}>
                             {loading ? <Spinner size={'sm'} color={'white'} /> : <Text style={styles.txtBtn}>Aceptar</Text>}
                         </TouchableOpacity>
 

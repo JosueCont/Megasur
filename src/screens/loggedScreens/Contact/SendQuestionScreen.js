@@ -64,7 +64,7 @@ const SendQuestionScreen = () => {
                     />
                 </View>
                     
-                <Text style={styles.lbl}>Cuéntanos un poco más...</Text>
+                <Text style={styles.lbl}>Cuéntanos más...</Text>
                 <TextArea 
                     w={width * .95}
                     h={180}

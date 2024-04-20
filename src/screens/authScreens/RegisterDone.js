@@ -49,7 +49,7 @@ const RegisterDone = () => {
                             flex:1,
                             backgroundColor: 'white',
                         }}
-                        source={require('./../../../assets/Coins.json')}
+                        source={require('../../../assets/Coins.json')}
                     />
                 )}
             </View>
@@ -65,7 +65,7 @@ const RegisterDone = () => {
                     animation?.current?.play();
                     setTimeout(() => {
                         dispatch(loginAction(user))
-                    },10000)
+                    },8000)
                 }}>
                 {loader ? <Spinner size={'sm'} color={'white'} /> :<Text style={styles.lblBtn}>Continuar</Text>}
             </TouchableOpacity>
