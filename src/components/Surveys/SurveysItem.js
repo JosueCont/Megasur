@@ -27,7 +27,7 @@ const SurveyItem = ({item, index, onSelectedSurvey, isAnswered=false}) => {
                 {isAnswered ? (
                     <Text style={styles.lblDate}><Text style={{color: Colors.darkGray,fontWeight:'700'}}>Respondida el:</Text> {moment(item?.answer_date).format('DD MMMM H:MM')}</Text>
                 ):(
-                    <Text style={styles.lblDate}><Text style={{color: Colors.darkGray,fontWeight:'700'}}>Valida hasta:</Text> {moment(item?.end_date).format('DD MMMM H:MM')}</Text>
+                    <Text style={styles.lblDate}><Text style={{color: Colors.darkGray,fontWeight:'700'}}>Válida hasta:</Text> {moment(item?.end_date).format('DD MMMM H:MM')}</Text>
                 )}
                 {!isAnswered && <Text style={{ color: Colors.grayStrong, fontSize: getFontSize(13), fontWeight:'700'}}>Preguntas: {item?.questions.length}</Text>}
             </View>

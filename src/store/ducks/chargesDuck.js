@@ -34,7 +34,8 @@ const initialState = {
     refresh: false,
     isInvoincing:false,
     modalInvoicingCharge: false,
-    loadingInvoicing: false
+    loadingInvoicing: false,
+    modalDownload: false
 }
 
 const chargesDuck = (state = initialState, action) => {
@@ -141,7 +142,7 @@ export const getCharges = (filters='', options, isInitial=false) => async(dispat
                 }
             }
         }
-        //console.log('cargas',chargesMonth)
+        console.log('cargas',chargesMonth)
         dispatch({type: GET_CHARGES_FUEL, payload: {chargesMonth, branches}})
     } catch (e) {
         console.log('error cargas',e)
@@ -189,10 +190,11 @@ export const onResetRate = () => {
     }
 }
 
-export const invoicingFuelTransaction = (id) => async(dispatch) => {
+export const invoicingFuelTransaction = (fuelId, rfcId) => async(dispatch) => {
     try {
         dispatch({type: LOADING_INVOICING})
-        const response = await putInvoicingTransaction(id)
+        const response = await putInvoicingTransaction(fuelId, rfcId)
+        console.log('facturando', response?.data)
         dispatch({
             type: INVOICING_CHARGE_SUCCESS,
             payload:'Factura generada correctamente'

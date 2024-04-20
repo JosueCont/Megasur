@@ -74,13 +74,14 @@ const PersonalInfoForm = () => {
 
     const handleDateChange = ({type}, selectedDate) => {
         console.log('event',type)
+        setShowDatePicker(false)
         if(type === 'set'){
             const currentDate = selectedDate || date;
             setDate(currentDate);
             if(Platform.OS === 'android'){
                 dispatch(onChangeInputProf({prop:'birthDay',value: moment(currentDate).format('YYYY-MM-DD')}))
                 //setBirthdayDate(moment(currentDate.toDateString()).format('DD/MM/YYYY'))
-                setShowDatePicker(false)
+                //setShowDatePicker(false)
             }
             //setShowDatePicker(false);
 
@@ -193,7 +194,7 @@ const PersonalInfoForm = () => {
                     maxLength={80}
                     //minLength={2}
                     setValue={(value) => {
-                        if (value === "" || /^[a-zA-ZáéíóúÁÉÍÓÚüÜ]+$/u.test(value)) {
+                        if (value === "" || /^[a-zA-ZáéíóúÁÉÍÓÚüÜ\s]+$/u.test(value)) {
                             dispatch(onChangeInputProf({prop:'name', value }))
                         }
                     }}
@@ -205,7 +206,7 @@ const PersonalInfoForm = () => {
                     value={last_name}
                     maxLength={80}
                     setValue={(value) => {
-                        if (value === "" || /^[a-zA-ZáéíóúÁÉÍÓÚüÜ]+$/u.test(value)) {
+                        if (value === "" || /^[a-zA-ZáéíóúÁÉÍÓÚüÜ\s]+$/u.test(value)) {
                             dispatch(onChangeInputProf({prop:'lastName', value}))
                             
                         }
@@ -350,7 +351,7 @@ const styles = StyleSheet.create({
     container:{
         flex:1, 
         alignItems:'center',
-        marginHorizontal:15
+        marginHorizontal:20
     },
     lbl:{
         fontSize:getFontSize(14), 
@@ -358,7 +359,7 @@ const styles = StyleSheet.create({
         fontWeight:'400', 
         marginBottom:4,
         alignSelf:'flex-start',
-        marginLeft:5,
+        //marginLeft:5,
         marginTop:8,
     },
     contBt:{

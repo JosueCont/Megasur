@@ -47,8 +47,9 @@ const LocationScreen = () => {
     const modalActive = useSelector(state => state.locationDuck.modalLocation)
     const locationStation = useSelector(state => state.locationDuck.locationStation)
     const [dataAccordion, setDataAccordion] = useState([])
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
     const [isPermissions, setIsPermission] = useState(false)
+    const [disableChange, setDisableChange] = useState(false)
 
     const sheetMaxHeight = height - 200;
     const sheetMinHeight = 75;
@@ -71,14 +72,14 @@ const LocationScreen = () => {
     useEffect(() => {
       setIsOpen(true)
       if(route?.params?.locationStation){
-        setTimeout(() => {
+        //setTimeout(() => {
             setNewRegion({
                 latitude: route?.params?.locationStation?.lat,
                 longitude: route?.params?.locationStation?.lng
     
             })
 
-        },500)
+        //},500)
       }
     },[isFocused])
  
@@ -251,11 +252,15 @@ const LocationScreen = () => {
     }
 
     const onChangeRegion = (coords) => {
+        setDisableChange(true)
         setNewRegion({
             ...region,
             latitude: coords.lat,
             longitude: coords.lng
         })
+        setTimeout(() => {
+            setDisableChange(false)
+        },1000)
     }
 
     const getZones = (branches, zone) => {
@@ -279,25 +284,29 @@ const LocationScreen = () => {
     const showPermissionsAndroid = async() => {
         try {          
             //console.log('solicitando permisos')
-            const permision = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+            const permision = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
                 {
                     title: 'Megasur solicita permiso para ubicación',
                     message: 'Los datos proporcionados serán utilizados exclusivamente para validar la sucursal de canje y garantizar la seguridad en la generación de códigos en dicha sucursal.',
                     //buttonNeutral: 'Ask Me Later',
                     buttonNegative: 'Cancel',
-                    buttonPositive: 'OK',
+                    buttonPositive: 'Aceptar',
                 });
+                //console.log('permissions',permision)
              if(permision === PermissionsAndroid.RESULTS.GRANTED){
                 const location = await getPermissionLocation()
-                setIsPermission(true)
-                setRegion({
-                    latitude: location?.coords?.latitude,
-                    longitude: location?.coords?.longitude
-                })
-                setNewRegion({
-                    latitude: location?.coords?.latitude,
-                    longitude: location?.coords?.longitude
-                })
+                //console.log('location permision', location)
+                if(location != null){
+                    setIsPermission(true)
+                    setRegion({
+                        latitude: location?.coords?.latitude,
+                        longitude: location?.coords?.longitude
+                    })
+                    setNewRegion({
+                        latitude: location?.coords?.latitude,
+                        longitude: location?.coords?.longitude
+                    })
+                }
              }
             //const location = await getPermissionLocation();
         } catch (e) {
@@ -414,25 +423,33 @@ const LocationScreen = () => {
                         <View style={styles.dragBar}/>
 
                     </View>
-                    <Animated.View style={{opacity: animatedMapOpacity}}>
-                        {!loading ? (
-                        <FlatList 
-                            data={dataAccordion}
-                            overScrollMode='always'
-                            keyExtractor={(item,i) => i.toString()}
-                            nestedScrollEnabled={true}
-                            //style={{backgroundColor:'red', }}
-                            contentContainerStyle={{ paddingBottom:30, flexGrow:1,}}
-                            renderItem={({item,index}) => (
-                                <AccordionItem 
-                                    item={item} 
-                                    index={index} 
-                                    isLocation={true}
-                                    onChangeRegion={(coords) => onChangeRegion(coords)}
-                                    onOpenMaps={(coords, name) => onOpenMaps(coords, name)}
+                        {!loading ? 
+                            dataAccordion.length > 0 ? (
+                            <Animated.View style={{opacity: animatedMapOpacity}}>
+                                <FlatList 
+                                    data={dataAccordion}
+                                    overScrollMode='always'
+                                    keyExtractor={(item,i) => i.toString()}
+                                    nestedScrollEnabled={true}
+                                    //style={{backgroundColor:'red', }}
+                                    contentContainerStyle={{ paddingBottom:30, flexGrow:1,}}
+                                    renderItem={({item,index}) => (
+                                        <AccordionItem 
+                                            item={item} 
+                                            index={index} 
+                                            isLocation={true}
+                                            onChangeRegion={(coords) => onChangeRegion(coords)}
+                                            onOpenMaps={(coords, name) => onOpenMaps(coords, name)}
+                                            disabled={disableChange}
+                                        />
+                                    )}
                                 />
-                            )}
-                        />
+                            </Animated.View>
+
+                        ):(
+                            <View style={{ justifyContent:'center', alignItems:'center', height:200}}>
+                                <Text>No se encontraron sucursales.</Text>
+                            </View>
                         ):(
                             <View style={{ justifyContent:'center', alignItems:'center', height:200}}>
                                 <Spinner size={'sm'} color={Colors.blueGreen} />
@@ -452,7 +469,6 @@ const LocationScreen = () => {
                             </View>
                         )}
 
-                    </Animated.View>
                 </Animated.View>
 
                 <ModalLocation 

@@ -51,7 +51,7 @@ const BirthdayComponent = () => {
 
     return(
         <View style={styles.container}>
-            <Text style={styles.title}>¿Cuándo podemos celebrar tu cumpleaños?</Text>
+            <Text style={styles.title}>Selecciona tu fecha de nacimiento</Text>
             <Text style={styles.lbl}>Fecha de nacimiento</Text>
             {showDatePicker && (
                 <DateTimePicker
@@ -97,7 +97,7 @@ const BirthdayComponent = () => {
                 <Text style={{color: Colors.gray, fontSize: getFontSize(16), fontWeight:'400'}}>{showDatePicker ? date ? moment(date).format('DD/MM/YYYY') : '' : 'DD / MM / YYYY'}</Text>
             </TouchableOpacity>*/}
             <View style={{ width: width/1.4}}>
-                <Text style={styles.legend}>Tu cumpleaños es especial, y queremos hacerlo aún mejor.</Text>
+                <Text style={styles.legend}>Tu cumpleaños es especial y queremos hacerlo aún mejor.</Text>
             </View>
         </View>
     )

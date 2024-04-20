@@ -11,7 +11,7 @@ import { setLocationStation } from "../store/ducks/locationsDuck";
 
 const {height, width} = Dimensions.get('window');
 
-const StationItem = ({station, index, isLocation, changeRegion, openMaps}) => {
+const StationItem = ({station, index, isLocation, changeRegion, openMaps, disabled}) => {
 
     const navigation = useNavigation();
     const dispatch = useDispatch();
@@ -22,6 +22,7 @@ const StationItem = ({station, index, isLocation, changeRegion, openMaps}) => {
     }
     return(
         <TouchableOpacity 
+            disabled={disabled}
             onPress={() => isLocation ? changeRegion(station?.location_as_lat_long) : setNavigate() }
             style={[styles.card, {marginTop: isLocation ? 10 : 0, width: isLocation ? width/1.06 : width/1.1, }]} 
             key={index}>

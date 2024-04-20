@@ -43,7 +43,7 @@ const CameraComponent = ({visible, onSavePhoto, onClose, typePhoto}) => {
             const asset = await MediaLibrary.createAssetAsync(image);
             Alert.alert(
                 'Aviso',
-                '¡Imagen guardada en Galería!','',
+                '¡Imagen guardada en Galería!',
                 [
                     {text:'Continuar', onPress: () => console.log('onPress')}
                 ]
