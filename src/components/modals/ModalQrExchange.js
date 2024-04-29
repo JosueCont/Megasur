@@ -106,7 +106,7 @@ const ModalExchangeFuel = ({visible, setVisible, onConfirm, typeFuel, totalFuel}
                     <TouchableOpacity style={styles.contClose} onPress={setVisible}>
                         <AntDesign name="close" size={24} color="black" />
                     </TouchableOpacity>
-                    <Text style={styles.title}>Muestra este código QR al despachador para pagar con puntos.</Text>
+                    {code != null && <Text style={styles.title}>Muestra este código QR al despachador para pagar con puntos.</Text>}
                     {!loader ?
                         code != null && isAllowed ? (
                             <QRCode

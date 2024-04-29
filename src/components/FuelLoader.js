@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from "react-nati
 import { getFontSize } from "../utils/functions";
 import { Colors } from "../utils/Colors";
 import Fuel from "../../assets/svg/Fuel";
-import Animated,{useSharedValue, useAnimatedStyle, withSpring} from "react-native-reanimated";
+import Animated,{useSharedValue, useAnimatedStyle, withSpring, withTiming} from "react-native-reanimated";
 
 const {height, width} = Dimensions.get('window');
 /*position:'absolute', bottom:0, right: width/4*/
@@ -21,22 +21,48 @@ const FuelLoader = ({withBorder=false, flow, color, isBig=false}) => {
             width: withSpring(`${(progress.value*100)+4}%`,{duration:1000})
         }
     })
+
+    const progressBorderRadius = useAnimatedStyle(() => {
+        return{
+            borderTopRightRadius: withTiming(
+                withBorder ? 90 :((progress.value*100)+4) >= 75 ? 90 : 0, {duration:1000}),
+            borderBottomRightRadius: withTiming(withBorder ? 90 : ((progress.value*100)+4)>= 75 ? 90 : 0, {duration:1000})
+        }
+    })
+
+    const colorFirstStep = useAnimatedStyle(() => {
+        return{
+            color: withTiming(((progress.value*100)+4) >= 25 ? Colors.white : Colors.blackInit, {duration:500})
+        }
+    })
+
+    const colorSecondStep = useAnimatedStyle(() => {
+        return{
+            color: withTiming(((progress.value*100)+4) >= 50 ? Colors.white : Colors.blackInit, {duration:500} )
+        }
+    })
+
+    const colorThirdStep = useAnimatedStyle(() => {
+        return{
+            color: withSpring(((progress.value*100)+4) >= 75 ? Colors.white : Colors.blackInit, {duration:500})
+        }
+    })
     
     return(
         <View style={[styles.container,{width: isBig ? width/1.2 : width/1.4,}]}>
             <Animated.View 
                 style={[
-                    styles.progressBar,widthStyle,
+                    styles.progressBar,widthStyle, progressBorderRadius,
                     { 
                         backgroundColor:color, 
-                        borderTopRightRadius: withBorder ? 90 : (progress.value*100)+4 >= 75 ? 90 : 0, 
-                        borderBottomRightRadius: withBorder ? 90 : (progress.value*100)+4 >= 75 ? 90 :0,
+                        //borderTopRightRadius: withBorder ? 90 : (progress.value*100)+4 >= 75 ? 90 : 0, 
+                        //borderBottomRightRadius: withBorder ? 90 : (progress.value*100)+4 >= 75 ? 90 :0,
                         }]}/>
             <Animated.Text style={[styles.lbl,{color: (progress.value*100)+4  >= 0 ? Colors.white : Colors.blackInit }]}>E</Animated.Text>
-            <Animated.Text style={[styles.lbl, {color: (progress.value*100)+4 >= 25 ? Colors.white : Colors.blackInit }]}>|</Animated.Text>
+            <Animated.Text style={[styles.lbl, colorFirstStep]}>|</Animated.Text>
             <Fuel />
-            <Animated.Text style={[styles.lbl,{color: (progress.value*100)+4 >= 50 ? Colors.white : Colors.blackInit }]}>|</Animated.Text>
-            <Animated.Text style={[styles.lbl, {color: (progress.value*100)+4 >= 75 ? Colors.white : Colors.blackInit }]}>F</Animated.Text>
+            <Animated.Text style={[styles.lbl, colorSecondStep]}>|</Animated.Text>
+            <Animated.Text style={[styles.lbl, colorThirdStep]}>F</Animated.Text>
         </View> 
     )
 }
