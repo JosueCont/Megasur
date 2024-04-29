@@ -78,12 +78,11 @@ const ChargesItem = ({charge, index, lastItem, openModal, onSetCharge}) => {
                 {/*<Text style={styles.lblPoints}>+{charge?.points || 10}</Text>*/}
                 <View style={{alignItems:'center', marginTop:5}}>
                     { charge?.score !=null && charge?.total_paid !== 0 && <Text style={styles.lblPoints}>+{points}</Text>}
-                    {charge?.is_invoiced && charge?.total_paid !== 0 && (
+                    {charge?.is_invoiced && !charge.invoiced && charge?.total_paid !== 0 ? (
                         <TouchableOpacity onPress={() => onSetCharge(charge)}>
                             <Text style={{color: Colors.blueGreen, fontSize: getFontSize(13)}}>Facturar</Text>
                         </TouchableOpacity>
-                    )} 
-                    {charge?.is_invoiced && charge.invoiced && charge?.total_paid !== 0 && (
+                    ): charge.invoiced && charge?.total_paid !== 0 ? (
                         <TouchableOpacity 
                             onPress={() => {
                                 dispatch(changeModalCharges({
@@ -92,7 +91,9 @@ const ChargesItem = ({charge, index, lastItem, openModal, onSetCharge}) => {
                             }}>
                             <Text style={{color: Colors.blueGreen, fontSize: getFontSize(13)}}>Descargar</Text>
                         </TouchableOpacity>
-                    )}
+
+                    ) : null} 
+                    
                 </View>
             </View>
         </View>

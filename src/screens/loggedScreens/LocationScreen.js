@@ -1,4 +1,4 @@
-import React,{useState,useEffect, useRef} from "react";
+import React,{useState,useEffect, useRef, useCallback} from "react";
 import { 
     View, Text, TouchableOpacity, Dimensions, Platform, ScrollView, 
     Image, StyleSheet, Linking, FlatList, PanResponder, Animated,
@@ -50,6 +50,7 @@ const LocationScreen = () => {
     const [loading, setLoading] = useState(true)
     const [isPermissions, setIsPermission] = useState(false)
     const [disableChange, setDisableChange] = useState(false)
+    const [isMapReady, setIsMapReady] = useState(false);
 
     const sheetMaxHeight = height - 200;
     const sheetMinHeight = 75;
@@ -67,21 +68,22 @@ const LocationScreen = () => {
     const sheetRef = useRef(new Animated.Value(MID_Y)).current;
     const animatedMapSize = useRef(new Animated.Value(MIN_FLEX)).current;
     const animatedMapOpacity = useRef(new Animated.Value(1)).current;
+    const timeoutId = useRef();
 
     //const { locationStation,  } = route?.params
     useEffect(() => {
       setIsOpen(true)
-      if(route?.params?.locationStation){
-        //setTimeout(() => {
+      if(route?.params?.locationStation ){
+          setTimeout(() => {
+              //onChangeRegion(route?.params?.locationStation)
             setNewRegion({
                 latitude: route?.params?.locationStation?.lat,
                 longitude: route?.params?.locationStation?.lng
-    
             })
 
-        //},500)
+        },500)
       }
-    },[isFocused])
+    },[isFocused,])
  
     useEffect(() => {
         (async() => {
@@ -251,17 +253,34 @@ const LocationScreen = () => {
         Linking.openURL(url);
     }
 
-    const onChangeRegion = (coords) => {
-        setDisableChange(true)
-        setNewRegion({
-            ...region,
-            latitude: coords.lat,
-            longitude: coords.lng
-        })
-        setTimeout(() => {
-            setDisableChange(false)
-        },1000)
-    }
+    const onChangeRegion = useCallback((coords) => {
+        //console.log('nueva region',coords)
+        //setDisableChange(true)
+        //let timeoutId;
+        //if(!isMapReady) return;
+        if(timeoutId.current){
+            clearTimeout(timeoutId.current);
+        }
+
+        timeoutId.current = setTimeout(() => {
+            handleSearch(coords);
+        }, 300); 
+
+        //setTimeout(() => {
+            //    setDisableChange(false)
+            //},1000)
+    },[handleSearch, isMapReady])
+        
+    const handleSearch = useCallback((coords) => {
+        if(region?.latitude !== coords?.lat && region?.longitude !== coords.lng){
+            setNewRegion({
+                ...region,
+                latitude: coords.lat,
+                longitude: coords.lng
+            })
+        }
+            
+    },[region, setNewRegion])
 
     const getZones = (branches, zone) => {
         let newZone = branches.filter(branch => zone === branch.name) 
@@ -347,6 +366,9 @@ const LocationScreen = () => {
         //console.log('permisos ios', permisison)
     }
 
+    const onMapReady = () => {
+        setIsMapReady(true);
+    }
     
     return(
         <HeaderLocation 
@@ -359,6 +381,7 @@ const LocationScreen = () => {
                      <MapView 
                         provider={PROVIDER_GOOGLE}
                         style={{flex:1,}}
+                        onMapReady={() => console.log('mapa listo')}
                         region={{...region, longitudeDelta: isOpen ? region?.longitudeDelta ?? 0.009 : 0.9, latitudeDelta: region?.latitudeDelta ?? 0.04}}
                         initialRegion={{
                             longitude: initialRegion?.longitude,

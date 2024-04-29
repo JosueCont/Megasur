@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from "react";
+import React, {useState, useEffect, useCallback,memo} from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Image} from "react-native";
 import { getFontSize } from "../../utils/functions";
 import { Colors } from "../../utils/Colors";
@@ -23,7 +23,6 @@ const AccordionItem = ({item,index,isLocation, onChangeRegion,onOpenMaps, disabl
     useEffect(() => {
         let timeoutId;
         if(isLocation && index === 0 && listRef.current){
-            console.log('se vuelve a correr', heightValue.value)
             timeoutId = setTimeout(() => {
                 if(heightValue.value === 0){
                     runOnUI(runOnUIThread)()
@@ -144,4 +143,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default AccordionItem;
+export default memo(AccordionItem);

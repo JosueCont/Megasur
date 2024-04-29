@@ -136,7 +136,7 @@ export const getProfileData = () => async(dispatch) => {
         if(response?.data?.id){
             dispatch({type: GET_DATA_PROFILE, payload: response?.data})
         }
-        console.log('dataUser', response?.data)
+        //console.log('dataUser', response?.data)
     } catch (e) {
         console.log('error datos user',e)
         dispatch({type: DATA_PROFILE__FAILED})
@@ -259,7 +259,7 @@ export const getVehicleData = async (userId) => {
             }
              
         }
-        console.log('dataUser', response?.data)
+        //console.log('dataUser', response?.data)
     } catch (e) {
         console.log('error datos user',e)
         // dispatch({type: DATA_PROFILE__FAILED})
@@ -282,7 +282,7 @@ export const updateVehicleData = async (userId, data) => {
             }
              
         }
-        console.log('dataUser', response?.data)
+        //console.log('dataUser', response?.data)
     } catch (e) {
         console.log('error datos user',e)
         // dispatch({type: DATA_PROFILE__FAILED})
