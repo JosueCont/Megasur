@@ -16,7 +16,7 @@ import * as MediaLibrary from 'expo-media-library';
 
 const {height, width} = Dimensions.get('window');
 
-const FlipCard = ({cards, points =0}) => {
+const FlipCard = ({cards, points =0, showQr}) => {
     const dispatch = useDispatch();
     const [isFlipped, setFlip] = useState(false)
     const [showInfo, setShowInfo] = useState(false)
@@ -128,12 +128,15 @@ const FlipCard = ({cards, points =0}) => {
                                     <View style={styles.contQr}>
                                         {code != '' && !loader ? (
                                             <>
-                                                <QRCode
-                                                    value={code}
-                                                    color={Colors.white}
-                                                    size={130}
-                                                    backgroundColor="transparent"
-                                                />
+                                                <TouchableOpacity onPress={showQr}>
+                                                    <QRCode
+                                                        value={code}
+                                                        color={Colors.white}
+                                                        size={130}
+                                                        backgroundColor="transparent"
+                                                    />
+
+                                                </TouchableOpacity>
                                                 <Text style={{color: Colors.white, marginTop:5}}>Código válido durante:</Text>
                                                 <Text style={{color: Colors.white}}>{minutes < 10 ? `0${minutes}` : minutes}:{seconds < 10 ? `0${seconds}` : seconds} {minutes <= 0 ? 'segundos' : 'minutos'}</Text>
                                             
