@@ -27,6 +27,7 @@ import ModalScreenShot from "../../components/modals/ModalScreenShot";
 import ModalInfoFuel from "../../components/modals/ModalInfoFuel";
 import { changeModalEx } from "../../store/ducks/exchangeDuck";
 import ModalSubmit from "../../components/modals/ModalSubmitForm";
+import ModalQr from "../../components/modals/ModalQr";
 
 const {height, width} = Dimensions.get('window');
 
@@ -53,10 +54,12 @@ const HomeScreen = () => {
     const showBannerCard = useSelector(state => state.homeDuck.showBannerCard)
     const modalInfo = useSelector(state => state.exchangeDuck.modalInfo)
     const answerSuccess = useSelector(state => state.homeDuck.answerSuccess)
+    const code = useSelector(state => state.homeDuck.code)
     const [dataAdvertisements, setDataAdvertisements] = useState([])
     const [dataPromotions, setDataPromotions] = useState([])
     const [location, setLocation] = useState(null)
     const [stations, setStations] = useState([])
+    const [showQr, setShowQr] = useState(false)
 
     const genders = {
         'MALE':'Bienvenido',
@@ -189,7 +192,11 @@ const HomeScreen = () => {
         <HeaderLogged 
             title={genders[gender]}
             onRefresh={() => console.log('refreshPAge')}>
-            <FlipCard cards={userCard} points={points}/>
+            <FlipCard 
+                cards={userCard} 
+                points={points} 
+                showQr={() => setShowQr(true)}
+            />
             {showBannerCard && userCard && <Question cardId={userCard[0]?.user_card_id}/>}
             <ProvitionalPoints 
                 showSurvey={() => {
@@ -232,6 +239,12 @@ const HomeScreen = () => {
                 visible={modalInfo}
                 setVisible={() => dispatch(changeModalEx({prop:'modalInfo',val:false}))}
                 message='nada'
+            />
+
+            <ModalQr 
+                code={code}
+                visible={showQr}
+                onClose={() => setShowQr(false)}
             />
         </HeaderLogged>
     )
