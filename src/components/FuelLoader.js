@@ -12,15 +12,19 @@ const FuelLoader = ({withBorder=false, flow, color, isBig=false}) => {
 
     useEffect(() => {
         progress.value = flow/4;
+        return () => {
+            progress.value = 0
+        }
     },[flow])
 
     
 
     const widthStyle = useAnimatedStyle(() => {
+        //console.log('el progreso', progress.value)
         return{
             width: withSpring(`${(progress.value*100)+4}%`,{duration:1000})
         }
-    })
+    },[progress.value])
 
     const progressBorderRadius = useAnimatedStyle(() => {
         return{
